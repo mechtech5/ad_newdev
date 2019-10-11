@@ -14,7 +14,7 @@
 Route::get('/', function(){
 	abort(404);
 });
-
+// Route::get('/','HomeController@index')->name('/');
 Auth::routes();
 
 Route::get('/user/verify/{token}', 'Auth\RegisterController@verifyUser');

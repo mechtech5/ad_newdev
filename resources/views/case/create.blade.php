@@ -33,6 +33,21 @@
 							@enderror
 						</div>
 					</div>
+
+					<div class="row from-group" style="margin-top:10px; display: none;" id="cnr_div">
+						<div class="col-md-6">
+							<label for="cnr">Do you have CNR #?</label>
+							<input type="radio" name="cnr" value="1">Yes
+							<input type="radio" name="cnr" value="0" checked>No
+						</div>
+					</div>
+					<div class="row form-group" style="margin-top:10px; display: none;" id="cnr_number_div">
+						<div class="col-md-6">							
+							<label for="cnr_number">CNR Number <span class="text-danger">*</span></label>
+							<input type="text" name="cnr_number" value="{{old('cnr_number')}}" class="form-control">
+						</div>
+					</div>
+
 					<div class="row form-group">
 						<div class="col-md-6" style="margin-top: 10px; display: none" id="no_catg_div">
 							<label>Supreme Court Of India <span class="text-danger">*</span></label>
@@ -55,21 +70,20 @@
 								</span>
 							@enderror
 						</div>
+
+						<div class="col-md-6" style="margin-top:10px; display: none;" id="bench_code_div">
+							<label for="bench_code">Bench Code <span class="text-danger">*</span></label>
+								<select class="form-control" name="bench_code" id="bench_code">
+								
+								</select>
+							@error('bench_code')
+								<span class="invalid-feedback text-danger" role="alert">
+								<strong>{{ "The selected court name is invalid." }}</strong>
+								</span>
+							@enderror
+						</div>
 					</div>	
 
-					<div class="row from-group" style="margin-top:10px; display: none;" id="cnr_div">
-						<div class="col-md-6">
-							<label for="cnr">Do you have CNR #?</label>
-							<input type="radio" name="cnr" value="1" >Yes
-							<input type="radio" name="cnr" value="0" >No
-						</div>
-					</div>
-					<div class="row form-group" style="margin-top:10px; display: none;">
-						<div class="col-md-6">							
-							<label for="cnr_number">CNR Number</label>
-							<input type="text" name="cnr_number" value="{{old('cnr_number')}}" class="form-control">
-						</div>
-					</div>
 					
 					<div class="row form-group" style="margin-top:10px; display: none;" id="no_div">
 						<div class="col-md-6">
@@ -350,7 +364,6 @@ $(document).ready(function(){
 	}
 
 	 	
-	
 
 	$('#case_category').on('change',function(){
 		var catg_code = $(this).val();  
@@ -374,7 +387,8 @@ $(document).ready(function(){
 			$('#no_catg_div').show();
 			$('#no_catg').val('0');
 			$('#no_div').hide();
-			$('#court_code_div').hide();			
+			$('#court_code_div').hide();
+			$('#cnr_div').hide();			
 			$('#no_catg').on('change',function(e){
 				e.preventDefault();
 				var no_catg = $(this).val();
@@ -394,16 +408,42 @@ $(document).ready(function(){
 			});
 		}else if(court_type =='0'){
 			$('#court_code_div').hide();
-			$('#case_no_div').hide();
 			$('#no_catg_div').hide();
 			$('#no_div').hide();
+			$('#cnr_div').hide();
 		}
 		else{	
+			case_court(court_type,court_code);
 			$('#no_catg_div').hide();	
 			$('#no_div').hide();
 			// $('#court_code_div').show();
 			$('#cnr_div').show();
-			//case_court(court_type,court_code);
+			var cnr = $('input[name="cnr"]:checked').val();
+			if(cnr == '0'){
+				$('#court_code_div').show();
+				$('#bench_code_div').show();
+				$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
+				$('#no_div').show();
+				
+			}
+			$('input[name="cnr"]').on('change', function(e){
+				e.preventDefault();
+				var cnr = $(this).val();
+				if(cnr == '0'){
+					$('#court_code_div').show();
+					$('#bench_code_div').show();
+
+					$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
+					$('#no_div').show();
+					$('#cnr_number_div').hide();
+				}
+				else{
+					$('#no_div').hide();
+					$('#cnr_number_div').show();
+					$('#court_code_div').hide();
+					$('#bench_code_div').hide();
+				}
+			})
 		}
 	});
 
