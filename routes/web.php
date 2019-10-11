@@ -13,7 +13,7 @@
 
 Route::get('/', function(){
 	abort(404);
-});
+})->name('/');
 // Route::get('/','HomeController@index')->name('/');
 Auth::routes();
 

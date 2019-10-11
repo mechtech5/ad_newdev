@@ -34,15 +34,15 @@
 						</div>
 					</div>
 
-					<div class="row from-group" style="margin-top:10px; display: none;" id="cnr_div">
-						<div class="col-md-6">
+					<div class="row from-group" style="display: none;" id="cnr_div">
+						<div class="col-md-6" style="margin-top:10px; ">
 							<label for="cnr">Do you have CNR #?</label>
 							<input type="radio" name="cnr" value="1">Yes
 							<input type="radio" name="cnr" value="0" checked>No
 						</div>
 					</div>
-					<div class="row form-group" style="margin-top:10px; display: none;" id="cnr_number_div">
-						<div class="col-md-6">							
+					<div class="row form-group" style="display: none;" id="cnr_number_div">
+						<div class="col-md-6" style="margin-top:10px; ">							
 							<label for="cnr_number">CNR Number <span class="text-danger">*</span></label>
 							<input type="text" name="cnr_number" value="{{old('cnr_number')}}" class="form-control">
 						</div>
@@ -70,32 +70,37 @@
 								</span>
 							@enderror
 						</div>
+					</div>	
+					<div class="row from-group" style="display: none;" id="case_type_div">
+						<div class="col-md-6" style="margin-top: 10px; ">
+							<label for="case_type_id">Case Type <span class="text-danger">*</span></label>
+							<select class="form-control" name="case_type_id">
+								<option value="0">Select Case Type</option>
+								@foreach($case_types as $case_type)
 
-						<div class="col-md-6" style="margin-top:10px; display: none;" id="bench_code_div">
-							<label for="bench_code">Bench Code <span class="text-danger">*</span></label>
-								<select class="form-control" name="bench_code" id="bench_code">
-								
-								</select>
-							@error('bench_code')
+								<option value="{{$case_type->case_type_id}}" {{old('case_type_id')==$case_type->case_type_id ? 'selected' : ''}}>{{$case_type->case_type_desc}}</option>									    
+								@endforeach
+							</select>
+							@error('case_type_id')
 								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ "The selected court name is invalid." }}</strong>
+								<strong>{{ "The selected case type is invalid" }}</strong>
 								</span>
 							@enderror
 						</div>
-					</div>	
-
+					</div>
 					
-					<div class="row form-group" style="margin-top:10px; display: none;" id="no_div">
-						<div class="col-md-6">
+					<div class="row form-group" style="display: none;" id="no_div">
+						<div class="col-md-6" style="margin-top:10px; ">
 							<label for="case_number" id="no_label"> </label>
 							<input type="text" name="case_number" class="form-control" placeholder="Number">
 						</div>
-						<div class="col-md-6" >
+						<div class="col-md-6" style="margin-top:10px; ">
 							<label for="year">Year <span class="text-danger">*</span></label>
 							<input type="text" name="year" class="form-control" placeholder="Year">
 						</div>
 						
 					</div>
+
 					<div class="row form-group">
 						<div class="col-md-6" style="margin-top:10px;">
 							<label for="client_name">Client Name <span class="text-danger">*</span></label>
@@ -143,21 +148,7 @@
 							@enderror
 						</div> --}}
 					
-						<div class="col-md-6" style="margin-top:10px;">
-							<label for="case_type_id">Case Type <span class="text-danger">*</span></label>
-							<select class="form-control" name="case_type_id">
-								<option value="0">Select Case Type</option>
-								@foreach($case_types as $case_type)
-							    
-							    <option value="{{$case_type->case_type_id}}" {{old('case_type_id')==$case_type->case_type_id ? 'selected' : ''}}>{{$case_type->case_type_desc}}</option>									    
-								@endforeach
-							</select>
-							@error('case_type_id')
-								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ "The selected case type is invalid" }}</strong>
-								</span>
-							@enderror
-						</div>
+						
 					</div>
 					<div class="row form-group">
 						<div class="col-md-6" style="margin-top:10px;">
@@ -387,6 +378,7 @@ $(document).ready(function(){
 			$('#no_catg_div').show();
 			$('#no_catg').val('0');
 			$('#no_div').hide();
+			$('#case_type_div').hide();
 			$('#court_code_div').hide();
 			$('#cnr_div').hide();			
 			$('#no_catg').on('change',function(e){
@@ -396,11 +388,13 @@ $(document).ready(function(){
 				if(no_catg == 'd_no'){
 					$('#no_label').empty().html('Diary Number <span class="text-danger">*</span>');
 					$('#no_div').show();
+					$('#case_type_div').hide();
 
 				}	
 				else if(no_catg == 'c_no'){
 					$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
 					$('#no_div').show();
+					$('#case_type_div').show();
 				}
 				else{
 					$('#no_div').hide();
@@ -411,6 +405,7 @@ $(document).ready(function(){
 			$('#no_catg_div').hide();
 			$('#no_div').hide();
 			$('#cnr_div').hide();
+			$('#case_type_div').hide();
 		}
 		else{	
 			case_court(court_type,court_code);
@@ -421,9 +416,10 @@ $(document).ready(function(){
 			var cnr = $('input[name="cnr"]:checked').val();
 			if(cnr == '0'){
 				$('#court_code_div').show();
-				$('#bench_code_div').show();
+				// $('#bench_code_div').show();
 				$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
 				$('#no_div').show();
+				$('#case_type_div').show();
 				
 			}
 			$('input[name="cnr"]').on('change', function(e){
@@ -431,17 +427,18 @@ $(document).ready(function(){
 				var cnr = $(this).val();
 				if(cnr == '0'){
 					$('#court_code_div').show();
-					$('#bench_code_div').show();
-
+					// $('#bench_code_div').show();
 					$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
 					$('#no_div').show();
 					$('#cnr_number_div').hide();
+					$('#case_type_div').show();
 				}
 				else{
 					$('#no_div').hide();
 					$('#cnr_number_div').show();
 					$('#court_code_div').hide();
-					$('#bench_code_div').hide();
+					$('#case_type_div').hide();
+					// $('#bench_code_div').hide();
 				}
 			})
 		}
