@@ -11,7 +11,9 @@
 |
 */
 
-Route::get('/', 'HomeController@index')->name('/');
+Route::get('/', function(){
+	abort(404);
+});
 
 Auth::routes();
 
