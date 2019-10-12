@@ -37,12 +37,11 @@ class HomeController extends FindlawyerController
         return response()->json($states);
     }
     
-    public function getCityList(Request $request)
+    public function getCityList()
     {
-        
-        $cities = City::where("state_code",$request->state_code)->get();
-
-       return response()->json($cities);
+      
+      $cities = City::where("state_code",request()->state_code)->get();
+      return response()->json($cities);
     }
 
 

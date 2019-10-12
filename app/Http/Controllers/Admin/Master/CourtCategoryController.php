@@ -68,7 +68,7 @@ class CourtCategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -110,7 +110,8 @@ class CourtCategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $court_type =  CourtType::find($id)->delete();
+        return redirect()->back()->with('success','Court Type Deleted Successfully');
     }
     public function validation($request){
         return $request->validate([

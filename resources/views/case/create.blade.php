@@ -20,7 +20,7 @@
 					<div class="row form-group">
 						<div class="col-md-6" style="margin-top:10px; ">
 							<label for="court_type">Court Type Name <span class="text-danger">*</span></label>
-							<select class="form-control" name="court_type" id="court_type">
+							<select class="form-control" name="court_type" id="case_court_type">
 								<option value="0"> Select Court Type Name</option>
 								@foreach($courts as $court)
 									<option value="{{$court->court_type}}" {{old('court_type') == $court->court_type ? 'selected' : ''}} >{{$court->court_type_desc}}</option>
@@ -71,6 +71,23 @@
 							@enderror
 						</div>
 					</div>	
+					<div class="row form-group" style="display: none;" id="state_city_div">
+						<div class="col-md-6" style="margin-top:10px;" >
+							<label for="state_code">State Name <span class="text-danger">*</span></label>
+							<select name="state_code" class="form-control" id="state">
+								<option value="0">Select State</option>
+								@foreach($states as $state)
+									<option value="{{$state->state_code}}">{{$state->state_name}}</option>
+								@endforeach
+							</select>
+						</div> 
+						<div class="col-md-6" style="margin-top:10px;">
+							<label for="city_code">City Name <span class="text-danger">*</span></label>
+							<select name="city_code" class="form-control" id="city">
+																
+							</select>
+						</div> 
+					</div>
 					<div class="row from-group" style="display: none;" id="case_type_div">
 						<div class="col-md-6" style="margin-top: 10px; ">
 							<label for="case_type_id">Case Type <span class="text-danger">*</span></label>
@@ -369,86 +386,22 @@ $(document).ready(function(){
     	case_subcategory(catg_code,subcatg_code);
     }
 	        
-	$("#court_type").on('change',function(e){
-		e.preventDefault();
-		var court_type = $(this).val();
-		var court_code = "";
-		//alert(court_type);
-		if(court_type =='1'){
-			$('#no_catg_div').show();
-			$('#no_catg').val('0');
-			$('#no_div').hide();
-			$('#case_type_div').hide();
-			$('#court_code_div').hide();
-			$('#cnr_div').hide();			
-			$('#no_catg').on('change',function(e){
-				e.preventDefault();
-				var no_catg = $(this).val();
-				// alert(no_catg);
-				if(no_catg == 'd_no'){
-					$('#no_label').empty().html('Diary Number <span class="text-danger">*</span>');
-					$('#no_div').show();
-					$('#case_type_div').hide();
-
-				}	
-				else if(no_catg == 'c_no'){
-					$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
-					$('#no_div').show();
-					$('#case_type_div').show();
-				}
-				else{
-					$('#no_div').hide();
-				}
-			});
-		}else if(court_type =='0'){
-			$('#court_code_div').hide();
-			$('#no_catg_div').hide();
-			$('#no_div').hide();
-			$('#cnr_div').hide();
-			$('#case_type_div').hide();
-		}
-		else{	
-			case_court(court_type,court_code);
-			$('#no_catg_div').hide();	
-			$('#no_div').hide();
-			// $('#court_code_div').show();
-			$('#cnr_div').show();
-			var cnr = $('input[name="cnr"]:checked').val();
-			if(cnr == '0'){
-				$('#court_code_div').show();
-				// $('#bench_code_div').show();
-				$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
-				$('#no_div').show();
-				$('#case_type_div').show();
-				
-			}
-			$('input[name="cnr"]').on('change', function(e){
-				e.preventDefault();
-				var cnr = $(this).val();
-				if(cnr == '0'){
-					$('#court_code_div').show();
-					// $('#bench_code_div').show();
-					$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
-					$('#no_div').show();
-					$('#cnr_number_div').hide();
-					$('#case_type_div').show();
-				}
-				else{
-					$('#no_div').hide();
-					$('#cnr_number_div').show();
-					$('#court_code_div').hide();
-					$('#case_type_div').hide();
-					// $('#bench_code_div').hide();
-				}
-			})
-		}
-	});
-
+	
 	var court_type = "{{old('court_type')}}";
 	var court_code = "{{old('court_code')}}";
 	if(court_type !=0){
 		court(court_type,court_code);
 	}
+
+
+	$('#state').on('change',function(e){
+		e.preventDefault();
+		var state_code = $(this).val();
+		var city_code = "{{old('city_code')}}";
+		state(state_code, city_code);
+	});
+
+
 });
 </script>
 @endsection

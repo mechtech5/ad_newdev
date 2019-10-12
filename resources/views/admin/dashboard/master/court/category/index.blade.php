@@ -32,10 +32,15 @@
                      <td>{{$court_type->short_desc}}</td>
                      <td>{{$court_type->court_group_name}}</td>
                      <td>
-                      <a href="{{route('court_category.edit',['id'=>$court_type->court_type])}}"><i class="fa fa-edit text-green btn btn-sm"></i></a>
+                      <form action="{{route('court_category.destroy', ['id' =>  $court_type->court_type ])}}" method="POST" id="delform_{{ $court_type->court_type }}">
+                        @method('DELETE')
 
-                      <a href="{{route('court_category.destroy',['id'=>$court_type->court_type])}}"><i class="fa fa-trash text-danger btn btn-sm"></i></a>
+                        <a href="{{route('court_category.edit',['id'=>$court_type->court_type])}}"><i class="fa fa-edit text-green btn btn-sm"></i></a>
 
+                        <a href="javascript:$('#delform_{{ $court_type->court_type }}').submit();"  onclick="return confirm('Are you sure?')" ><i class="fa fa-trash text-danger btn btn-sm" ></i></a>
+
+                        @csrf
+                      </form>
                      </td>
                   </tr>
                 @endforeach

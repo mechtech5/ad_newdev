@@ -117,7 +117,8 @@ class CourtSubCategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+       CourtMast::find($id)->delete();
+       return redirect()->back()->with('success','Court Deleted Successfully');
     }
     public function validation($request){
         return $request->validate([

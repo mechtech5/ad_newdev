@@ -36,10 +36,10 @@ class CaseMastController extends Controller
 		$case_types = CaseType::all();
 		$courts = CourtType::all();
 		$categories = CatgMast::all();
-
+		$states = State::all();
 		$clients = Customer::where('user_id',Auth::user()->id)->where('status_id','A')->get();  
 
-		return view('case.create', compact('cust_id','case_types','courts','page_name','clients','categories'));
+		return view('case.create', compact('cust_id','case_types','courts','page_name','clients','categories','states'));
 	}
 
 

@@ -35,9 +35,16 @@
                      <td>{{$court->court_group_name}}</td>
                      <td>{{$court->court_type_name}}</td>
                      <td>
-                      <a href="{{route('court_subcategory.edit',['id'=>$court->court_code])}}"><i class="fa fa-edit text-green btn btn-sm"></i></a>
+                    <form action="{{route('court_subcategory.destroy', ['id' =>  $court->court_code ])}}" method="POST" id="delform_{{ $court->court_code }}">
+                        @method('DELETE')
+                        <a href="{{route('court_subcategory.edit',['id'=>$court->court_code])}}"><i class="fa fa-edit text-green btn btn-sm"></i></a>
 
-                      <a href="{{route('court_subcategory.destroy',['id'=>$court->court_code])}}"><i class="fa fa-trash text-danger btn btn-sm"></i></a>
+                        <a href="javascript:$('#delform_{{ $court->court_code }}').submit();"  onclick="return confirm('Are you sure?')" ><i class="fa fa-trash text-danger btn btn-sm" ></i></a>
+
+                        @csrf
+                      </form>
+
+
 
                      </td>
                   </tr>

@@ -79,3 +79,141 @@ function case_court(court_type,court_code){
 		$("#court_code").empty();
 	}
 }
+function state(state_code,city_code){
+	 if(state_code !='0'){
+        $.ajax({
+           type:"GET",
+           url:"/city_fetch?state_code="+state_code,
+           success:function(res){                     
+            if(res){
+                $("#city").empty();
+                $.each(res,function(key,value){
+                    $("#city").append('<option value="'+value.city_code+'" '+(value.city_code == city_code ? 'selected="selected"' : '' )+'>'+value.city_name+'</option>');
+                });
+           
+            }else{
+               $("#city").empty();
+            }
+           }
+        });
+    }else{
+        $("#city").empty();
+    }
+}
+
+
+$("#case_court_type").on('change',function(e){
+		e.preventDefault();
+		var court_type = $(this).val();
+		var court_code = "";
+		//alert(court_type);
+		if(court_type =='1'){
+			$('#no_catg_div').show();
+			$('#no_catg').val('0');
+			$('#no_div').hide();
+			$('#case_type_div').hide();
+			$('#court_code_div').hide();
+			$('#cnr_div').hide();
+			$('#cnr_number_div').hide();
+			$('#no_catg').on('change',function(e){
+				e.preventDefault();
+				var no_catg = $(this).val();
+				// alert(no_catg);
+				if(no_catg == 'd_no'){
+					$('#no_label').empty().html('Diary Number <span class="text-danger">*</span>');
+					$('#no_div').show();
+					$('#case_type_div').hide();
+
+				}	
+				else if(no_catg == 'c_no'){
+					$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
+					$('#no_div').show();
+					$('#case_type_div').show();
+				}
+				else{
+					$('#no_div').hide();
+				}
+			});
+		}else if(court_type =='0'){
+			$('#court_code_div').hide();
+			$('#no_catg_div').hide();
+			$('#no_div').hide();
+			$('#cnr_div').hide();
+			$('#case_type_div').hide();
+			$('#cnr_number_div').hide();
+			$('#state_city_div').hide();
+		}
+		else if(court_type =='2' || court_type == '3'){	
+			case_court(court_type,court_code);
+			$('#no_catg_div').hide();	
+			$('#no_div').hide();
+			// $('#court_code_div').show();
+			$('#cnr_div').show();
+			var cnr = $('input[name="cnr"]:checked').val();
+			if(cnr == '0'){
+				if(court_type == '3'){
+					$('#state_city_div').show();
+					$('#court_code_div').hide();
+				}
+				else if(court_type == '2'){
+					$('#court_code_div').show();
+					$('#state_city_div').hide();
+				}
+					// $('#bench_code_div').show();
+					$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
+					$('#no_div').show();
+					$('#cnr_number_div').hide();
+					$('#case_type_div').show();
+				}
+				else{
+					
+					$('#state_city_div').hide();					
+					$('#court_code_div').hide();
+					
+					$('#no_div').hide();
+					$('#cnr_number_div').show();
+					$('#court_code_div').hide();
+					$('#case_type_div').hide();
+					// $('#bench_code_div').hide();
+				}
+			$('input[name="cnr"]').on('change', function(e){
+				e.preventDefault();
+				var cnr = $(this).val();
+					if(cnr == '0'){
+						if(court_type == '3'){
+							$('#state_city_div').show();
+							$('#court_code_div').hide();
+						}
+						else if(court_type == '2'){
+							$('#court_code_div').show();
+							$('#state_city_div').hide();
+
+						}
+					
+						// $('#bench_code_div').show();
+						$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
+						$('#no_div').show();
+						$('#cnr_number_div').hide();
+						$('#case_type_div').show();
+				}
+				else{
+					
+					$('#cnr_number_div').show();
+					$('#state_city_div').hide();
+					$('#no_div').hide();
+					$('#court_code_div').hide();				
+					$('#case_type_div').hide();
+					// $('#bench_code_div').hide();
+				}
+			})
+		}
+		else{
+			$('#cnr_number_div').show();	
+			$('#cnr_div').hide();
+			$('#court_code_div').hide();
+			$('#no_div').hide();
+			$('#case_type_div').hide();
+			$('#state_city_div').hide();
+		}
+		
+	});
