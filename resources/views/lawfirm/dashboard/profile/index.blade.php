@@ -19,9 +19,9 @@
 				<div class="row">
 					<div class="col-md-4 col-sm-4 col-xl-4 text-center " style="margin-top: 20px">
 						@if($user->photo)
-							<img src="{{ asset('storage/app/public/profile_photo/'.$user->photo)}}" class="img-circle" style="width: 200px; height: 175px;" >
+							<img src="{{ asset('storage/profile_photo/'.$user->photo)}}" class="img-circle" style="width: 200px; height: 175px;" >
 						@else
-							<img src="{{ asset('storage/app/public/profile_photo/default.png') }}" class="img-circle " style="width: 200px; height: 175px;" >
+							<img src="{{ asset('storage/profile_photo/default.png') }}" class="img-circle " style="width: 200px; height: 175px;" >
 						@endif
 					</div>
 					<div class="col-md-8 col-sm-8 col-xl-8" style="margin-top: 20px">

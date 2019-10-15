@@ -1,6 +1,11 @@
 @extends('lawfirm.layouts.main')
 @section('content')
 <section class="content">
+	<style type="text/css">
+		.select2-container--default .select2-selection--multiple .select2-selection__choice{
+			background-color: #247ae4;
+		}
+	</style>
 <div class="row">
 	<div class="col-md-12">
 		<div class="box box-primary">
@@ -21,14 +26,14 @@
 						<div class="col-md-6" style="margin-top:10px; ">
 							<label for="court_type">Court Type Name <span class="text-danger">*</span></label>
 							<select class="form-control" name="court_type" id="case_court_type">
-								<option value="0"> Select Court Type Name</option>
+								<option value="0" > Select Court Type Name</option>
 								@foreach($courts as $court)
 									<option value="{{$court->court_type}}" {{old('court_type') == $court->court_type ? 'selected' : ''}} >{{$court->court_type_desc}}</option>
 								@endforeach
 							</select>
 							@error('court_type')
 								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ "The selected court name is invalid." }}</strong>
+								<strong>{{ "The selected court type name is invalid." }}</strong>
 								</span>
 							@enderror
 						</div>
@@ -37,14 +42,19 @@
 					<div class="row from-group" style="display: none;" id="cnr_div">
 						<div class="col-md-6" style="margin-top:10px; ">
 							<label for="cnr">Do you have CNR #?</label>
-							<input type="radio" name="cnr" value="1">Yes
-							<input type="radio" name="cnr" value="0" checked>No
+							<input type="radio" name="cnr" value="1" {{old('cnr') == '1' ? 'checked' : ''}}>Yes
+							<input type="radio" name="cnr" value="0" {{old('cnr') == '0' ? 'checked' : ''}} {{old('cnr') == '1' ? '' : 'checked'}}>No
 						</div>
 					</div>
 					<div class="row form-group" style="display: none;" id="cnr_number_div">
 						<div class="col-md-6" style="margin-top:10px; ">							
 							<label for="cnr_number">CNR Number <span class="text-danger">*</span></label>
-							<input type="text" name="cnr_number" value="{{old('cnr_number')}}" class="form-control">
+							<input type="text" name="cnr_number" value="{{old('cnr_number')}}" class="form-control text-capitalize">
+							@error('cnr_number')
+								<span class="invalid-feedback text-danger" role="alert">
+								<strong>{{ $message }}</strong>
+								</span>
+							@enderror
 						</div>
 					</div>
 
@@ -53,10 +63,14 @@
 							<label>Supreme Court Of India <span class="text-danger">*</span></label>
 							<select class="form-control" name="no_catg" id="no_catg">
 								<option value="0">Select type</option>
-								<option value="c_no">Case Number</option>
-								<option value="d_no">Diary Number</option>
+								<option value="c_no" {{old('no_catg') == 'c_no' ? 'selected' : ''}}>Case Number</option>
+								<option value="d_no" {{old('no_catg') == 'd_no' ? 'selected' : ''}}>Diary Number</option>
 							</select>
-
+							@error('no_catg')
+								<span class="invalid-feedback text-danger" role="alert">
+								<strong>{{ "The selected supreme court type is invalid." }}</strong>
+								</span>
+							@enderror
 						</div>
 				
 						<div class="col-md-6" style="margin-top:10px; display: none;" id="court_code_div">
@@ -77,19 +91,29 @@
 							<select name="state_code" class="form-control" id="state">
 								<option value="0">Select State</option>
 								@foreach($states as $state)
-									<option value="{{$state->state_code}}">{{$state->state_name}}</option>
+									<option value="{{$state->state_code}}" {{old('state_code') == $state->state_code ? 'selected' : ''}}>{{$state->state_name}}</option>
 								@endforeach
 							</select>
+							@error('state_code')
+								<span class="invalid-feedback text-danger" role="alert">
+								<strong>{{ "The selected state name is invalid" }}</strong>
+								</span>
+							@enderror
 						</div> 
 						<div class="col-md-6" style="margin-top:10px;">
 							<label for="city_code">City Name <span class="text-danger">*</span></label>
 							<select name="city_code" class="form-control" id="city">
 																
 							</select>
+							@error('city_code')
+								<span class="invalid-feedback text-danger" role="alert">
+								<strong>{{ "The selected city name is invalid" }}</strong>
+								</span>
+							@enderror
 						</div> 
 					</div>
-					<div class="row from-group" style="display: none;" id="case_type_div">
-						<div class="col-md-6" style="margin-top: 10px; ">
+					<div class="row from-group" style="" >
+						<div class="col-md-6" style="margin-top: 10px; display: none; " id="case_type_div">
 							<label for="case_type_id">Case Type <span class="text-danger">*</span></label>
 							<select class="form-control" name="case_type_id">
 								<option value="0">Select Case Type</option>
@@ -104,45 +128,31 @@
 								</span>
 							@enderror
 						</div>
-					</div>
 					
-					<div class="row form-group" style="display: none;" id="no_div">
-						<div class="col-md-6" style="margin-top:10px; ">
-							<label for="case_number" id="no_label"> </label>
-							<input type="text" name="case_number" class="form-control" placeholder="Number">
-						</div>
-						<div class="col-md-6" style="margin-top:10px; ">
-							<label for="year">Year <span class="text-danger">*</span></label>
-							<input type="text" name="year" class="form-control" placeholder="Year">
-						</div>
-						
-					</div>
-
-					<div class="row form-group">
-						<div class="col-md-6" style="margin-top:10px;">
-							<label for="client_name">Client Name <span class="text-danger">*</span></label>
-							@if($cust_id == '')
-								<select class="form-control" name="cust_id">
-									<option value="0"> Select Client Name</option>
-									@foreach($clients as $client)
-										<option value="{{$client->cust_id}}" {{old('cust_id') == $client->cust_id ? 'selected' : ''}}>{{$client->cust_name}}</option>
-									@endforeach
-								</select>
-							@else
-								<select class="form-control" name="cust_id">
-									@foreach($clients as $client)
-										<option value="{{$client->cust_id}}" {{$cust_id == $client->cust_id ? 'selected' : ''}}>{{$client->cust_name}}</option>
-										@php  break; @endphp
-									@endforeach
-								</select>
-							@endif
-
-							@error('cust_id')
+						<div class="col-md-6" style="margin-top:10px; display: none; " id="no_div">
+							<label for="c_d_number" id="no_label"> </label>
+							<input type="text" name="c_d_number" class="form-control" placeholder="Number" value="{{old('c_d_number')}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+							@error('c_d_number')
 								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ "The selected customer name is invalid." }}</strong>
+								<strong id="err_c_d_number"> {{ $message }}</strong>
 								</span>
 							@enderror
 						</div>
+					
+					</div>
+
+					<div class="row form-group">
+
+						<div class="col-md-6" style="margin-top:10px;">
+							<label for="case_reg_date">Case Registration Date <span class="text-danger">*</span></label>
+							<input type="text" value="{{old('case_reg_date')}}" class="form-control " name="case_reg_date" required autocomplete="case_reg_date" autofocus  id="regdatepicker" placeholder="Enter case registration date "  data-date-format="yyyy-mm-dd">
+							@error('case_reg_date')
+								<span class="invalid-feedback text-danger" role="alert">
+								<strong>{{ $message }}</strong>
+								</span>
+							@enderror
+						</div>
+						
 											
 						<div class="col-md-6" style="margin-top:10px; ">
 							<label for="case_title">Case Title <span class="text-danger">*</span></label>
@@ -154,19 +164,6 @@
 							@enderror
 						</div>
 					</div>					
-					<div class="row form-group">
-						{{-- <div class="col-md-6" style="margin-top:10px;">
-							<label for="case_number">Case Number <span class="text-danger">*</span></label>
-							<input type="text" name="case_number" class="form-control" placeholder="Enter Case Number" value="{{ old('case_number')}}" >
-							@error('case_number')
-								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ $message }}</strong>
-								</span>
-							@enderror
-						</div> --}}
-					
-						
-					</div>
 					<div class="row form-group">
 						<div class="col-md-6" style="margin-top:10px;">
 							<label for="catg_code">Case Category <span class="text-danger">*</span></label>
@@ -197,47 +194,6 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						{{-- <div class="col-md-6" style="margin-top:10px;">
-							<label for="court_code">Case Court Name <span class="text-danger" >*</span></label>
-							<select class="form-control" name="court_code">
-								<option value="0">Select Case Court</option>
-								@foreach($courts as $court)
-								
-								<option value="{{$court->court_code}}" {{old('court_code')==$court->court_code ? 'selected' : ''}}>{{$court->court_name}}</option>
-								
-								@endforeach
-							</select>
-							@error('court_code')
-								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ "The selected case court is invalid." }}</strong>
-								</span>
-							@enderror
-						</div> --}}
-					
-						{{-- <div class="col-md-6" style="margin-top:10px;">
-							<label for="city_code">City Name</label>
-							<select class="form-control" name="city_code">
-								<option value="0">Select City</option>
-
-							</select>
-							@error('city_code')
-								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ $message }}</strong>
-								</span>
-							@enderror
-						</div> --}}
-
-						<div class="col-md-6" style="margin-top:10px;">
-							<label for="case_reg_date">Case Registration Date <span class="text-danger">*</span></label>
-							<input type="text" value="{{old('case_reg_date')}}" class="form-control " name="case_reg_date" required autocomplete="case_reg_date" autofocus  id="regdatepicker" data-date-format="yyyy-mm-dd" placeholder="Enter case registration date ">
-							@error('case_reg_date')
-								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ $message }}</strong>
-								</span>
-							@enderror
-						</div>
-					</div>
-					<div class="row form-group">
 						<div class="col-md-6" style="margin-top:10px;">
 							<label for="appellant_name">Appellant Name</label>
 							<input type="text" name="appellant_name" class="form-control" placeholder="Enter Appellant Name" value="{{ old('appellant_name')}}" >
@@ -259,9 +215,53 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						
+						<div class="col-md-12" style="margin-top:10px;">
+							<label for="client_name">Client Name <span class="text-danger">*</span></label>
+							@if($cust_id == '')
+								<select class="form-control" name="cust_id">
+									<option value="0"> Select Client Name</option>
+									@foreach($clients as $client)
+										<option value="{{$client->cust_id}}" {{old('cust_id') == $client->cust_id ? 'selected' : ''}}>{{$client->cust_name}}</option>
+									@endforeach
+								</select>
+							@else
+								<select class="form-control" name="cust_id">
+									@foreach($clients as $client)
+										<option value="{{$client->cust_id}}" {{$cust_id == $client->cust_id ? 'selected' : ''}}>{{$client->cust_name}}</option>
+										@php  break; @endphp
+									@endforeach
+								</select>
+							@endif
+
+							@error('cust_id')
+								<span class="invalid-feedback text-danger" role="alert">
+								<strong>{{ "The selected customer name is invalid." }}</strong>
+								</span>
+							@enderror
+						</div>
+					</div>
+					
+					<div class="row form-group">
+						<div class="col-md-6" style="margin-top: 10px;">
+							<label for="affidavit_status">Is the affidavit/vakalath filed?</label>
+							<input type="radio" name="affidavit_status" value="1" {{old('affidavit_status') == '1' ? 'checked' : ''}}> Yes
+							<input type="radio" name="affidavit_status" value="0" {{old('affidavit_status') == '0' ? 'checked' : ''}} {{old('affidavit_status') == '1' ? '' : 'checked'}}> No
+							
+						</div>
+					</div>
+					<div class="row form-group" >
+						<div class="col-md-6" style="margin-top: 10px; display: none;" id="affidavit_date_div">
+							<label for="affidavit_date">Affidavit Date <span class="text-danger">*</span></label>
+							<input type="text" name="affidavit_date" class="form-control" placeholder="Enter Affidavit Date" id="affidavit_date" data-date-format="yyyy-mm-dd"  value="{{old('affidavit_date')}}">
+							@error('affidavit_date')
+								<span class="invalid-feedback text-danger" role="alert">
+								<strong>{{ $message }}</strong>
+								</span>
+							@enderror
+
+						</div>
 						<div class="col-md-6" style="margin-top:10px;">
-							<label for="case_fees">Case Fees</label>
+							<label for="case_fees">Case Fees </label><span class="text-muted">(Case fees format ex. 1000.00)</span>
 							<input type="text" name="case_fees" class="form-control" placeholder="Enter Case Fees" value="{{ old('case_fees')}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" >
 							@error('case_fees')
 								<span class="invalid-feedback text-danger" role="alert">
@@ -274,11 +274,9 @@
 						<div class="col-md-6" style="margin-top:10px;">
 							<label for="case_status">Case Status <span class="text-danger">*</span></label>
 							<select class="form-control" name="case_status">
-								<option value="0">Select Case Status</option>
-								<option value="cg" {{old('case_status') == 'cg' ? 'selected' : 'selected'}} >On going case</option>
-								<option value="cw" {{old('case_status') == 'cw' ? 'selected' : ''}}>Case over in favour of client</option>
-								<option value="cl" {{old('case_status') == 'cl' ? 'selected' : ''}}>Case over against the favour of client</option>
-								<option value="ct" {{old('case_status') == 'ct' ? 'selected' : ''}}>Case withdrawn by client</option>
+								@foreach($case_status as $case_st)
+									<option value="{{$case_st->case_status_id}}" {{old('case_status') == $case_st->case_status_id  ? 'selected' : ''}} {{$case_st->case_status_id == 'cr' ? 'selected' : ''}}>{{$case_st->case_status_desc}}</option>
+								@endforeach
 							</select>
 							@error('case_status')
 								<span class="invalid-feedback text-danger" role="alert">
@@ -289,7 +287,7 @@
 
 						<div class="col-md-6" style="margin-top:10px; display: none;"  id="caseOverDate">							
 								<label for="case_over_date">Case Over Date <span class="text-danger">*</span></label>
-								<input type="text" value="{{old('case_over_date')}}" class="form-control" name="case_over_date" id="datepicker" data-date-format="yyyy-mm-dd" placeholder="Case over date">
+								<input type="text" value="{{old('case_over_date')}}" class="form-control" name="case_over_date" id="datepicker" data-date-format="yyyy-mm-dd" placeholder="Case over date" >
 								
 							
 								@error('case_over_date')
@@ -304,9 +302,9 @@
 					
 					<div class="row form-group">
 						<div class="col-md-12" style="margin-top:10px;">
-							<label for="case_summary">Case Summary <span class="text-danger">*</span></label>
-							<textarea name="case_summary" rows="5" cols="50" class="form-control tinymce" placeholder="Brief details about the case as explained by the customer..."  id="summernote" >{{old('case_summary')}}</textarea>
-							@error('case_summary')
+							<label for="case_description">Case Description <span class="text-danger">*</span> </label> <span class="text-muted form-text">(Brief details about the case as explained by the customer</span>
+							<textarea name="case_description" rows="5" cols="50" class="form-control tinymce"   id="summernote" >{{old('case_description')}}</textarea>
+							@error('case_description')
 								<span class="invalid-feedback text-danger" role="alert">
 								<strong>{{ $message }}</strong>
 								</span>
@@ -314,20 +312,10 @@
 							
 						</div>
 					</div>
-					<div class="row form-group">
-						<div class="col-md-12" style="margin-top:10px;">
-							<label for="case_remark">Case Remark <span class="text-danger">*</span></label>
-							<textarea name="case_remark" rows="4" cols="50" class="form-control tinymce" placeholder="Your personal information about the case ..."  id="summernote" >{{old('case_remark')}}</textarea>
-							@error('case_remark')
-								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ $message }}</strong>
-								</span>
-							@enderror
-						</div>
-					</div>
+					
 					<div class="row form-group">				
 						<div class="col-md-12" style="margin-top:10px;">
-							<input type="hidden" name="user_id" value="{{ Auth::user()->id }}">							
+													
 							<input type="hidden" name="page_name" value="{{$page_name}}" >
 							<button type="submit" class="btn btn-primary btn-md">Submit</button>
 						</div>
@@ -341,34 +329,54 @@
 </section>
 <script>
 $(document).ready(function(){		
+	// $(function () {
+	// 	$("#regdatepicker").datepicker({ 				
+	// 	//	endDate: new Date(),
+	// 	});
+	// });		
 	$(function () {
-		$("#regdatepicker").datepicker({ 				
-		//	endDate: new Date(),
-		});
-	});		
-	$(function () {
-		$("#datepicker").datepicker();
+		$("#datepicker,#affidavit_date,#regdatepicker").datepicker();
 	});
+
+
+	$('input[name="affidavit_status"]').on('change',function(e){
+		var status = $(this).val();
+		if(status == '0'){
+			$('#affidavit_date_div').hide();
+		}
+		else{
+			$('#affidavit_date_div').show();
+		}
+
+	});
+	var affidavit_status = $('input[name="affidavit_status"]:checked').val(); 
+
+	if(affidavit_status == '0'){
+			$('#affidavit_date_div').hide();
+		}
+		else{
+			$('#affidavit_date_div').show();
+		}
 
 	$("select[name='case_status']").on('change',function(e){
 		e.preventDefault();
 	 	var case_status = $(this).val();
 	 	// console.log(case_status);
-	 	if(case_status == 'cw' || case_status == 'cl' || case_status == 'ct'){
-	 		$('#caseOverDate').show();
-	 	}
-	 	else if(case_status == 'cg' || case_status == 0){
-	 		$('#caseOverDate').hide();
-	 	}
+		if(case_status == 'cr' ){
+			$('#caseOverDate').hide();
+		}
+		else {
+			$('#caseOverDate').show();
+		}
 	});
 
-	var case_status = "{{old('case_status')}}";
+	var case_status = "{{old('case_status') != '' ? old('case_status') : 'cr'}}";
 
-	if(case_status == 'cw' || case_status == 'cl' || case_status == 'ct'){
-		$('#caseOverDate').show();
-	}
-	else if(case_status == 'cg' || case_status == 0){
+	if(case_status == 'cr'  ){
 		$('#caseOverDate').hide();
+	}
+	else {
+		$('#caseOverDate').show();
 	}
 
 	 	
@@ -385,21 +393,51 @@ $(document).ready(function(){
     if(catg_code !=0){
     	case_subcategory(catg_code,subcatg_code);
     }
-	        
-	
-	var court_type = "{{old('court_type')}}";
-	var court_code = "{{old('court_code')}}";
-	if(court_type !=0){
-		court(court_type,court_code);
-	}
-
 
 	$('#state').on('change',function(e){
 		e.preventDefault();
 		var state_code = $(this).val();
-		var city_code = "{{old('city_code')}}";
+		var city_code = "";
 		state(state_code, city_code);
 	});
+	   
+	var state_code = "{{old('state_code')}}";  
+	var city_code = "{{old('city_code')}}";
+	if(state_code !=''){
+		state(state_code, city_code);
+	}
+
+	var court_type = "{{old('court_type')}}";
+	var court_code = "{{old('court_code')}}";
+		
+
+	if(court_type !=''){
+		var court_type = "{{old('court_type')}}";
+		var court_code = "{{old('court_code')}}";
+		var no_catg = "{{old('no_catg')}}";
+		var cnr = "{{old('cnr')}}";
+		case_court_select(court_code, court_type, no_catg, cnr);
+		$("#case_court_type").on('change',function(e){
+			var court_type = $(this).val();
+			var court_code = "";
+			var no_catg = "";
+			var cnr = "";
+			case_court_select(court_code, court_type, no_catg, cnr);
+		});
+	}
+	else{
+		
+		$("#case_court_type").on('change',function(e){
+			var court_type = $(this).val();
+			var court_code = "";
+			var no_catg = "";
+			var cnr = "";
+			case_court_select(court_code, court_type, no_catg, cnr);
+		});
+	}
+
+
+
 
 
 });

@@ -30,7 +30,7 @@
 	                        <strong id="court_type_error"></strong>
 	                    </span>						
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3" id="court_code_div">
 						<label>Court Name<span class="text-danger" >*</span></label>
 						<select class="form-control" name="court_code" id="court_code">
 							
@@ -164,27 +164,16 @@ $(document).ready(function() {
 	$("#court_type").on('change',function(e){
 		e.preventDefault();
 		var court_type = $(this).val();
-		
-		$.ajax({ 
-			type:"Post",
-			url:"{{route('court_category')}}",
-			data : {court_type:court_type},
-			success:function(res){   	
-				// alert(res);
-				// console.log(res);
-				if(res.length !=0){
-					$("#court_code").empty();
+		var court_code = "";
+		if(court_type =='1' || court_type =='2'){
+			// $('#court_code_div').show();
+			court(court_type,court_code);
 
-					$("#court_code").append('<option value="0">Select Court Type</option>');
-					$.each(res,function(key,value){
-					$("#court_code").append('<option value="'+value.court_code+'">'+value.court_name+'</option>');
-					});
-				}
-				else{
-					$("#court_code").empty();		              
-				}
-			}
-		});
+		}
+		else{
+			// $('#court_code_div').hide();
+		}
+		
 	});
 
 	$.ajaxSetup({
@@ -207,7 +196,7 @@ $(document).ready(function() {
 		var catg_desc 		= $('select[name="catg_code"] option:selected').text();
 		var judgment_date	= $('input[name="judgment_date"]').val();
 
-		if(judgment_title != '' && judgment_date != '' && court_type !='0' && court_code !='0' && catg_code != '0'){
+		if(judgment_title != '' && judgment_date != '' && court_type !='0' && court_code =='0' && catg_code != '0'){
 			$('#judgment').val(judgment_title);
 			$('#court_type_desc').val(court_type_desc);
 			$('#court_name').val(court_name);

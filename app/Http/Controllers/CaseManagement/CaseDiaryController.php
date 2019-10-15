@@ -29,31 +29,31 @@ class CaseDiaryController extends Controller
 
     $client_ids = Helpers::deletedClients();
     $id =Auth::user()->id;
-    $onCases = CaseMast::with('casetype','client')
+    $cases = CaseMast::with('casetype','client')
                         ->where('case_mast.user_id',$id)
-                        ->where('case_mast.case_status','cg')
+                        ->where('case_mast.case_status','cr')
                         ->whereNotIn('cust_id',$client_ids)
                         ->get();
 
-    $winCases = CaseMast::with('casetype','client')
-                          ->where('case_mast.user_id',$id)
-                          ->where('case_mast.case_status','cw')
-                          ->whereNotIn('cust_id',$client_ids)
-                          ->get();
+    // $winCases = CaseMast::with('casetype','client')
+    //                       ->where('case_mast.user_id',$id)
+    //                       ->where('case_mast.case_status','cw')
+    //                       ->whereNotIn('cust_id',$client_ids)
+    //                       ->get();
 
-    $lostCases = CaseMast::with('casetype','client')
-                          ->where('case_mast.user_id',$id)
-                          ->where('case_mast.case_status','cl')
-                          ->whereNotIn('cust_id',$client_ids)
-                          ->get();
+    // $lostCases = CaseMast::with('casetype','client')
+    //                       ->where('case_mast.user_id',$id)
+    //                       ->where('case_mast.case_status','cl')
+    //                       ->whereNotIn('cust_id',$client_ids)
+    //                       ->get();
 
-    $allcase = CaseMast::with('casetype','client')->where('case_mast.user_id',$id)->whereNotIn('cust_id',$client_ids)->get();
+    // $allcase = CaseMast::with('casetype','client')->where('case_mast.user_id',$id)->whereNotIn('cust_id',$client_ids)->get();
 
     $courts = CourtMast::all();
-    $clients = Customer::where('user_id',Auth::user()->id)->where('status_id','A')->get();
-    $caseTypes = CaseType::all();
-    $categories = CatgMast::all();
-   return view('case.case_diary.index',compact('onCases','winCases','lostCases','allcase','caseBtn','courts','clients','caseTypes','categories'));
+    // $clients = Customer::where('user_id',Auth::user()->id)->where('status_id','A')->get();
+    // $caseTypes = CaseType::all();
+    // $categories = CatgMast::all();
+   return view('case.case_diary.index',compact('cases','caseBtn'));
   }
 
   public function show($id){

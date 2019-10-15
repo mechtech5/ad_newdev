@@ -13,7 +13,7 @@ class Helpers
 		$client_ids = array();
 
 		foreach($client_datas as $client_data){
-		$client_ids[] = $client_data->cust_id;
+			$client_ids[] = $client_data->cust_id;
 		}
 		return $client_ids;
 	}

@@ -101,32 +101,52 @@ function state(state_code,city_code){
     }
 }
 
+function case_court_select(court_code, court_type, no_catg, cnr){
 
-$("#case_court_type").on('change',function(e){
-		e.preventDefault();
-		var court_type = $(this).val();
-		var court_code = "";
-		//alert(court_type);
+		// alert(court_type);
 		if(court_type =='1'){
 			$('#no_catg_div').show();
-			$('#no_catg').val('0');
+			
 			$('#no_div').hide();
 			$('#case_type_div').hide();
 			$('#court_code_div').hide();
 			$('#cnr_div').hide();
 			$('#cnr_number_div').hide();
+
+			var sno_catg = $('#no_catg').val();
+			var no_catg =( no_catg !='0' ? no_catg : sno_catg ) ;
+			
+			if(no_catg == 'd_no'){
+				$('#no_label').empty().html('Diary Number <span class="text-danger">*</span>');
+				$('#no_div').show();
+
+				$('#case_type_div').hide();
+
+			}	
+			else if(no_catg == 'c_no'){
+				$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
+				$('#no_div').show();
+				$('#case_type_div').show();
+			}
+			else{
+				$('#no_div').hide();
+			}
 			$('#no_catg').on('change',function(e){
 				e.preventDefault();
 				var no_catg = $(this).val();
 				// alert(no_catg);
 				if(no_catg == 'd_no'){
 					$('#no_label').empty().html('Diary Number <span class="text-danger">*</span>');
+					$('input[name="c_d_number"]').val('');
+					$('#err_c_d_number').html('');
 					$('#no_div').show();
 					$('#case_type_div').hide();
 
 				}	
 				else if(no_catg == 'c_no'){
 					$('#no_label').empty().html('Case Number <span class="text-danger">*</span>');
+					$('input[name="c_d_number"]').val('');
+					$('#err_c_d_number').html('');
 					$('#no_div').show();
 					$('#case_type_div').show();
 				}
@@ -149,7 +169,11 @@ $("#case_court_type").on('change',function(e){
 			$('#no_div').hide();
 			// $('#court_code_div').show();
 			$('#cnr_div').show();
-			var cnr = $('input[name="cnr"]:checked').val();
+			var scnr = $('input[name="cnr"]:checked').val();
+
+			var cnr = (cnr != '' ? cnr : scnr );
+
+				
 			if(cnr == '0'){
 				if(court_type == '3'){
 					$('#state_city_div').show();
@@ -216,4 +240,4 @@ $("#case_court_type").on('change',function(e){
 			$('#state_city_div').hide();
 		}
 		
-	});
+	}

@@ -132,7 +132,7 @@ class CaseTypeController extends Controller
 
             'court_type' => 'required|not_in:0',
             'court_code' => 'required|not_in:0',
-            'case_type_desc' => 'required|string|max:25|min:2',
+            'case_type_desc' => 'required|string|max:45|min:2',
         ]);
        
        

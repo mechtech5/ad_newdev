@@ -285,9 +285,9 @@
 				<div class="row">
 					<div class="col-md-12" style="margin-top:10px;"> 
 						@if(Auth::user()->photo !='')
-					        <img src="{{ asset('storage/app/public/profile_photo/'.Auth::user()->photo)}}"  style="width: 100px; height: 100px;" class="form-control" />
+					        <img src="{{ asset('storage/profile_photo/'.Auth::user()->photo)}}"  style="width: 100px; height: 100px;" class="form-control" />
 					    @else
-					        <img src="{{asset('storage/app/public/profile_photo/default.png')}}"  style="width: 100px; height: 100px;" class="form-control" />
+					        <img src="{{asset('storage/profile_photo/default.png')}}"  style="width: 100px; height: 100px;" class="form-control" />
 
 					    @endif
 				    	

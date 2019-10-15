@@ -1,16 +1,31 @@
 @extends('lawfirm.layouts.main')
 @section('content')
 <section class="content">
-<div class="row">
-	<div class="col-md-12 m-auto" >
-		<div class="box box-primary ">
-  			<div class="box-header with-border"> 	 
-                    
-             <div class="row">
-               <div class="col-md-6" style="margin-top: 10px;">
-                <a href="{{route('case_mast.create', ['cust_id'=>",case_diary"])}}" class="btn btn-md btn-primary">Add New Case</a>
-                </div>
-                <div class="col-md-6" style="margin-top: 10px;">
+  <div class="row">
+    <div class="col-md-12 m-auto" >
+      <div class="box box-primary ">
+        <div class="box-header with-border"> 	 
+            <h4 class="">
+                Runnig Cases (0)
+              <a href="{{route('case_mast.create', ['cust_id'=>",case_diary"])}}" class="btn btn-md btn-primary pull-right">Add New Case</a>
+
+            </h4>
+            @if($message = Session::get('success'))
+              <div class="alert bg-success">
+                  {{$message}}
+              </div>
+            @endif   
+        </div>
+        <div class="box-body table-responsive" id="table_div">
+              @include('case.case_diary.case_table')
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+               {{--  <div class="col-md-6" style="margin-top: 10px;">
                  <ul class="list-inline" >
                    <li class="list-inline-item btn btn-md btn-default {{$caseBtn == 'cg' ? 'btn-info' : '' }} big" id="cg" style="padding-right: 17px;">
                      <input type="radio" name="cases" class="invisible"  value="cg" {{$caseBtn == 'cg' ? 'checked' : '' }} >
@@ -29,14 +44,14 @@
 
                  </ul>
                </div>
-             </div>
-              <div class="row">
+             </div> --}}
+            {{--   <div class="row">
                 <div class="col-md-12 form-group">
                    <h4 style="font-weight: 700"><b>Filter</b></h4 >
                 </div>
               </div>
-
-              <div class="row">
+ --}}
+            {{--   <div class="row">
                 <div class="col-md-3 form-group">
                    <input type="text" name="case_number" placeholder="Case Number" class="form-control">
                 </div>
@@ -92,157 +107,47 @@
                   <button class="btn btn-md btn-primary" id="clearBtn">Clear Filter</button>
               </div>
           </div>
-  			</div>
-        <div class="box-body" id="ongoingCaseBody">
-          @if($message = Session::get('success'))
-            <div class="alert bg-success">
-              {{$message}}
-            </div>
-          @endif       
-          
-            <div class="row">
-              <div class="col-md-12 table-responsive tableOnCase">
-            	         @include('case.case_diary.table.on_going_case')
-              </div>
-            </div>
-          </div>
+  			</div> --}}
 
-      <div class="box-body" id="allCaseBody"  style="
-          display: none">   
-            <div class="row">
-              <div class="col-md-12 table-responsive tableAllCase">
-                 @include('case.case_diary.table.all_case')
-              </div>
-            </div>             
-      </div>
-      <div class="box-body table-responsive" id="winCaseBody" style="
-        display: none">
-            <div class="row">
-              <div class="col-md-12 table-responsive tableWinCase">
-                 @include('case.case_diary.table.win_case')
-              </div>
-            </div>            
-        
-      </div>
-      <div class="box-body table-responsive" id="loseCaseBody" style="
-        display: none">
-            <div class="row">
-              <div class="col-md-12 table-responsive tableLostCase">
-                 @include('case.case_diary.table.lost_case')
-              </div>
-            </div>            
-      </div>
-		</div>
-	</div>
-</div>
-</section>
 <script>
 	$(document).ready(function (){
-
-    $('#selectClient').select2();
-
-
-    $('.big').click(function() {   
-      $('.btn-info').removeClass('btn-info');
-      $(this).addClass('btn-info').find('input').prop('checked', true) ;   
-
-      var cases = $("input[name='cases']:checked").val();
     
-      if(cases == 'cg'){
-        $('#ongoingCaseBody').show();
-        $('#allCaseBody').hide();
-        $('#winCaseBody').hide();
-        $('#loseCaseBody').hide();
-      }
-      else if(cases == 'ca'){
-        $('#allCaseBody').show();
-        $('#ongoingCaseBody').hide();
-        $('#winCaseBody').hide();
-        $('#loseCaseBody').hide();
-      }
-      else if(cases == 'cw'){
-        $('#winCaseBody').show();
-        $('#allCaseBody').hide();
-        $('#ongoingCaseBody').hide();
-        $('#loseCaseBody').hide();
-      }
-      else if(cases == 'cl'){
-        $('#loseCaseBody').show();
-        $('#allCaseBody').hide();
-        $('#ongoingCaseBody').hide();
-        $('#winCaseBody').hide();
-      }
-    });
 
-      var cases = "{{$caseBtn}}";
-      if(cases == 'cg'){
-        $('#ongoingCaseBody').show();
-        $('#allCaseBody').hide();
-        $('#winCaseBody').hide();
-        $('#loseCaseBody').hide();
-      }
-      else if(cases == 'ca'){
-        $('#allCaseBody').show();
-        $('#ongoingCaseBody').hide();
-        $('#winCaseBody').hide();
-        $('#loseCaseBody').hide();
-      }
-      else if(cases == 'cw'){
-        $('#winCaseBody').show();
-        $('#allCaseBody').hide();
-        $('#ongoingCaseBody').hide();
-        $('#loseCaseBody').hide();
-      }
-      else if(cases == 'cl'){
-        $('#loseCaseBody').show();
-        $('#allCaseBody').hide();
-        $('#ongoingCaseBody').hide();
-        $('#winCaseBody').hide();
-      }
+    // $('#selectClient').select2();
 
+    //   $(function() {
 
-  
-	$('.myTable').DataTable({
-        	searching:false,
-        	scrolling:true,
-          destroy: true,
-		});
+    //     var start = moment().subtract(3,'year');
+    //     var end = moment();
 
-      
+    //     function cb(start, end) {
+    //         $('#reportrange span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
+    //     }
 
-      $(function() {
+    //     $('#reportrange').daterangepicker({
+    //         startDate: start,
+    //         endDate: end,
+    //         ranges: {
+    //            'Today': [moment(), moment()],
+    //            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+    //            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+    //            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+    //            'This Month': [moment().startOf('month'), moment().endOf('month')],
+    //            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    //         }
+    //     }, cb);
 
-        var start = moment().subtract(3,'year');
-        var end = moment();
+    //     cb(start, end);
 
-        function cb(start, end) {
-            $('#reportrange span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
-        }
+    // });
 
-        $('#reportrange').daterangepicker({
-            startDate: start,
-            endDate: end,
-            ranges: {
-               'Today': [moment(), moment()],
-               'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-               'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-               'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-               'This Month': [moment().startOf('month'), moment().endOf('month')],
-               'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            }
-        }, cb);
+    // $.ajaxSetup({
+    //   headers: {
+    //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //   }
+    // });
 
-        cb(start, end);
-
-    });
-
-    $.ajaxSetup({
-      headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-
-    $('#filterBtn').on('click',function(e){
+   /* $('#filterBtn').on('click',function(e){
         e.preventDefault();
         var date = $('#reportrange span').html();
         var case_number = $("input[name='case_number']").val();
@@ -282,15 +187,15 @@
               
             }
         });
-    });
-     $('#clearBtn').on('click',function(e){
-        $("input[name='case_number']").val('');
-        $("select[name='case_court']").val(0);
-        $("#selectClient").select2("val",'0');
-        $("select[name='case_type']").val(0);
-        $("select[name='catg_code']").val(0);
-        $("select[name='subcatg_code']").empty();
-    });
+    });*/
+    //  $('#clearBtn').on('click',function(e){
+    //     $("input[name='case_number']").val('');
+    //     $("select[name='case_court']").val(0);
+    //     $("#selectClient").select2("val",'0');
+    //     $("select[name='case_type']").val(0);
+    //     $("select[name='catg_code']").val(0);
+    //     $("select[name='subcatg_code']").empty();
+    // });
 
 });
 </script>
