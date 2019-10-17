@@ -38,16 +38,20 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
 
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' />
-
+  <style type="text/css">
+   .select2-container--default .select2-selection--multiple .select2-selection__choice {
+      background-color: #247ae4;
+    } 
+</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 @php
 
-      $msg = \App\Models\MessageTalk::where('recv_id',Auth::user()->id)->where('status',0)->get();         
-    $users = \App\User::join('comp_mast_view', 'users.parent_id', '=','comp_mast_view.parent_id')->where('users.id',Auth::user()->id)->where('user_flag','cl')->first();
+    $msg = \App\Models\MessageTalk::where('recv_id',Auth::user()->id)->where('status',0)->get();         
+    $users = \App\User::join('comp_mast_view', 'users.parent_id', '=','comp_mast_view.parent_id')->where('users.id',Auth::user()->id)->first();
 
-    $company_name = !empty($users->comp_name)?$users->comp_name:'';
+    $company_name = !empty($users->comp_name) ? $users->comp_name : '';
 
     $unbookings =  \App\Models\Booking::where('user_id',Auth::user()->id)
                 ->where('client_status',1)
@@ -251,12 +255,12 @@
               <span >Practicing in courts</span>
             </a>
           </li>  
-             <li class="{{Request()->segment(1) == 'landmarkcase' ? 'active' : '' }} nav-item">
+           {{--   <li class="{{Request()->segment(1) == 'landmarkcase' ? 'active' : '' }} nav-item">
             <a class="nav-link" href="{{route('landmarkcase.index')}}">
               <i class="fa fa-gavel"></i>
               <span >My Landmark Cases</span>
             </a>
-          </li> 
+          </li>  --}}
 
           @role('lawyer')
           <li class="{{Request()->segment(1) == 'qualification' ? 'active' : '' }} nav-item">
@@ -338,7 +342,7 @@
 
 
           <li class="{{Request()->segment(1) == 'case_diary' ? 'active' : '' }} {{$page_name == 'case_diary' ? 'active' : '' }} nav-item">
-            <a class="nav-link" href="{{route('case_diary.index',['caseBtn' =>'cg'])}}">
+            <a class="nav-link" href="{{route('case_mast.index',['caseBtn' =>'cr'])}}">
               <i class="fa fa-book"></i>
               <span >Case Diary</span>
 
@@ -364,12 +368,12 @@
               </a>
           </li>
 
-          <li class="{{Request()->segment(1) == 'case_allocation' ? 'active' : ''}} nav-item">
+         {{--  <li class="{{Request()->segment(1) == 'case_allocation' ? 'active' : ''}} nav-item">
               <a class="nav-link" href="{{route('case_allocation.index')}}">
               <i class="fa fa-exchange"></i>
               <span > Case Allocation</span>
               </a>
-          </li>
+          </li> --}}
 
         <li class="{{Request()->segment(1) == 'teams' ? 'active' : '' }} nav-item">
           <a class="nav-link" href="{{route('teams.index')}}">
@@ -387,7 +391,7 @@
       
         {{-- @endif --}}
 
-          @role('lawyer')
+{{--           @role('lawyer')
            @if($company_name)
               <li class="header">Welcome to {{$company_name}} </li>
               <li class="{{Request()->segment(1) == 'company_profile' ? 'active' : '' }} treeview">
@@ -410,7 +414,7 @@
             @endif   
 
             @endrole
-
+ --}}
 
            {{--  <li class="header bg-red"><p style="padding-top:8px; padding-bottom: 0px; font-size: 12px; ">Launching Soon..</p></li> --}}
         
@@ -445,9 +449,9 @@
       <ol class="breadcrumb">
         <li><a href=""><i class="fa fa-dashboard"></i> Home</a></li>
 
-        <li class="active text-capitalize">{{(__('lawyer'))}}</li>
-        @if(Request()->segment(2) != '')
-        <li class="active text-capitalize">{{Request()->segment(2)}}</li>
+        {{-- <li class="active text-capitalize">{{(__('lawyer'))}}</li> --}}
+        @if(Request()->segment(1) != '')
+          <li class="active text-capitalize">{{Request()->segment(1)}}</li>
         @endif
       </ol>
     </section>

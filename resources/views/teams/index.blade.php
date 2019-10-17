@@ -6,45 +6,29 @@
 	<div class="col-md-12">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<div class="box-title" >
-						<div class="col-md-4 col-xl-4  text-center btn big bg-green btn-default" id="all_lawyer">
-							All Team Member
-							<input id="chb1" type="radio" name="mylawyers" value="all" style="visibility: hidden" />
-						</div>
-
-						<div class="col-md-4 col-xl-4 text-center btn big btn-default" id="approve_lawyer">
-							Approved Team Member
-							<input id="chb2" type="radio" name="mylawyers" value="approve" style="visibility: hidden" />
-						</div>
-						<div class="col-md-4 col-xl-4 text-center btn big btn-default" id="pending_lawyer">
-							Pending Team Member
-							<input id="chb3" type="radio" name="mylawyers" value="pending" style="visibility: hidden"   />
-						</div>
-					</div>
-					<div class="box-tools pull-right">
-						<a href="{{route('teams.create')}}" class="btn btn-md btn-primary pull-left">Create Team Member</a>
-					</div>
+				<div class="box-title" >Team Member ({{count($members)}})</div>
+				<div class="box-tools pull-right">
+					<a href="{{route('teams.create')}}" class="btn btn-md btn-primary pull-left">Create Team Member</a>
+				</div>
 					
-					<div class="row">
-						<div class="col-md-12">
-							@if($message = Session::get('success'))
-								<div class="alert bg-success">
-									{{$message}}
-								</div>
-							@endif
-						</div>
+				<div class="row">
+					<div class="col-md-12">
+						@if($message = Session::get('success'))
+							<div class="alert bg-success">
+								{{$message}}
+							</div>
+						@endif
 					</div>
+				</div>
 			</div>	
 
 			<div class="box-body table-responsive " id="mytable1">
-				
 				<table class="table table-striped table-bordered" id="all_table" style="width: 100%">
 					<thead>
 						<tr>
 							<td>#</td>
 							<td>Name</td>
 							<td>Email</td>
-							<td>Destination</td>
 							<td>Mobile Number</td>
 							<td>Status</td>						
 							<td>Action</td>						
@@ -57,18 +41,9 @@
 								<td>{{$count++}}</td>
 								<td>{{$member->name}}</td>
 								<td>{{$member->email}}</td>
-								<td>
-									@if($member->city['city_name']!=''|| $member->state['state_name'] !='' || $member->zip_code !='')
-									{{$member->city['city_name'] . ', '. $member->state['state_name'].', '. $member->zip_code }}
-									@else
-
-									@endif
-								</td>
 								<td>{{$member->mobile}}</td>						
-								<td>{{$member->user_flag == 'ct' ? 'Approved' : 'Pending'}}</td>
+								<td>{{$member->status == 'A' ? 'Verified by Email' : 'Pending'}}</td>
 								<td>
-									
-								
 									<form action="{{route('teams.destroy', ['id' =>  $member->id ])}}" method="POST" id="delform_{{ $member->id}}">
 											@method('DELETE')
 									@role(['lawcompany','lawyer'])
@@ -86,87 +61,6 @@
 						@endforeach						
 					</tbody>
 				</table>
-			</div>
-
-				{{-- Approve lawyer list table --}}
-			<div class="box-body table-responsive " id="mytable2" style="display: none">
-				<table class="table table-striped table-bordered" id="all_table" style="width: 100%">
-					<thead>
-						<tr>
-							<td>#</td>
-							<td>Name</td>
-							<td>Email</td>
-							<td>Destination</td>
-							<td>Mobile Number</td>
-							<td>Status</td>										
-						</tr>
-					</thead>
-					<tbody>
-						@php $count = 1; @endphp
-						@foreach($members as $member)						
-							@if($member->user_flag == 'ct' || $member->user_flag == 'cl')
-								<tr>
-									<td>{{$count++}}</td>
-									<td>{{$member->name}}</td>
-									<td>{{$member->email}}</td>
-									<td>
-										@if($member->city['city_name']!=''|| $member->state['state_name'] !='' || $member->zip_code !='')
-										{{$member->city['city_name'] . ', '. $member->state['state_name'].', '. $member->zip_code }}
-										@else
-
-										@endif
-									</td>
-									<td>{{$member->mobile}}</td>						
-									<td>{{$member->user_flag == 'ct' ? 'Approved' : 'Pending'}}</td>
-								</tr>
-							@endif
-						@endforeach						
-					</tbody>
-				</table>
-
-			
-			</div>
-					{{-- Pending lawyer list table --}}
-			<div class="box-body table-responsive " id="mytable3" style="display: none">
-					<table class="table table-striped table-bordered" id="all_table" style="width: 100%">
-					<thead>
-						<tr>
-							<td>#</td>
-							<td>Name</td>
-							<td>Email</td>
-							<td>Destination</td>
-							<td>Mobile Number</td>
-							<td>Status</td>						
-							<td>Action</td>						
-						</tr>
-					</thead>
-					<tbody>
-						@php $count = 1; @endphp
-						@foreach($members as $member)
-							@if($member->user_flag == 'P')
-								<tr>
-									<td>{{$count++}}</td>
-									<td>{{$member->name}}</td>
-									<td>{{$member->email}}</td>
-									<td>
-										@if($member->city['city_name']!=''|| $member->state['state_name'] !='' || $member->zip_code !='')
-										{{$member->city['city_name'] . ', '. $member->state['state_name'].', '. $member->zip_code }}
-										@else
-
-										@endif
-									</td>
-									<td>{{$member->mobile}}</td>						
-									<td>{{$member->user_flag == 'ct' ? 'Approved' : 'Pending'}}</td>
-									<td>
-										<a class="btn btn-sm btn-success text-white approveBtn" data-id="{{ $member->id}}" id="approveBtn"> <i class="fa fa-check-circle"></i></a>
-										<a class="btn btn-sm btn-danger text-white declineBtn" id="declineBtn" data-id="{{ $member->id}}"> <i class="fa fa-ban"></i></a>
-									</td>
-								</tr>
-							@endif
-						@endforeach						
-					</tbody>
-				</table>
-
 			</div>
 		</div>
 	</div>
@@ -268,56 +162,56 @@
 			$('.bg-green').removeClass('bg-green');
 			$(this).addClass('bg-green').find('input').prop('checked', true) ;   
 		});
-		$('#all_lawyer,#approve_lawyer,#pending_lawyer').on('click',function(){
-			var mylawyers = $("input[name='mylawyers']:checked").val();
-			if(mylawyers=='all'){
-				$('#mytable1').show();
-				$('#mytable2').hide();
-				$('#mytable3').hide();
-			}
-			else if(mylawyers=='approve'){
-				$('#mytable1').hide();
-				$('#mytable2').show();
-				$('#mytable3').hide();
-			}
-			else{
-				$('#mytable1').hide();
-				$('#mytable2').hide();
-				$('#mytable3').show();
-			}
-		});
+		// $('#all_lawyer,#approve_lawyer,#pending_lawyer').on('click',function(){
+		// 	var mylawyers = $("input[name='mylawyers']:checked").val();
+		// 	if(mylawyers=='all'){
+		// 		$('#mytable1').show();
+		// 		$('#mytable2').hide();
+		// 		$('#mytable3').hide();
+		// 	}
+		// 	else if(mylawyers=='approve'){
+		// 		$('#mytable1').hide();
+		// 		$('#mytable2').show();
+		// 		$('#mytable3').hide();
+		// 	}
+		// 	else{
+		// 		$('#mytable1').hide();
+		// 		$('#mytable2').hide();
+		// 		$('#mytable3').show();
+		// 	}
+		// });
 	$.ajaxSetup({
 		headers: {
 		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
 	
-		$('.approveBtn, .declineBtn').on('click',function(){
-			var btnType = $(this).attr('id');
-			var member_id = $(this).data('id');
+		// $('.approveBtn, .declineBtn').on('click',function(){
+		// 	var btnType = $(this).attr('id');
+		// 	var member_id = $(this).data('id');
 			
-			var tr = $(this).closest('tr');
-			console.log(tr);
+		// 	var tr = $(this).closest('tr');
+		// 	console.log(tr);
 
-			$.ajax({
-				type:'POST',
-				url:"{{route('approve_decline_member')}}",
-				data:{btnType:btnType, member_id:member_id },
-				success:function(data){
-					swal({
-		                    text: data,
-		                    icon : 'success',
-		                  });
+		// 	$.ajax({
+		// 		type:'POST',
+		// 		url:"{{route('approve_decline_member')}}",
+		// 		data:{btnType:btnType, member_id:member_id },
+		// 		success:function(data){
+		// 			swal({
+		//                     text: data,
+		//                     icon : 'success',
+		//                   });
 		                 
-				  	 tr.find('td').fadeOut(1000,function(){ 
-                            tr.remove();                    
-                     }); 
-                     setTimeout(function(){
-		                     location.reload(); 
-		                  }, 3000); 
-				}
-			});
-		});
+		// 		  	 tr.find('td').fadeOut(1000,function(){ 
+  //                           tr.remove();                    
+  //                    }); 
+  //                    setTimeout(function(){
+		//                      location.reload(); 
+		//                   }, 3000); 
+		// 		}
+		// 	});
+		// });
 
 	});
 </script>

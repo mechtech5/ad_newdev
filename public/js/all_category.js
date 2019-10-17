@@ -241,3 +241,16 @@ function case_court_select(court_code, court_type, no_catg, cnr){
 		}
 		
 	}
+
+function case_table(case_status,case_status_text,cust_id){
+
+	$.ajax({
+		type:"GET",
+		url: '/cases_table?case_status='+case_status+"&cust_id="+cust_id,
+		success:function(res){
+			var case_text = case_status_text + ' Cases';
+ 			$('#case_status_label').empty().html(case_text);
+			$('#table_div').empty().html(res);
+		}
+	})
+}

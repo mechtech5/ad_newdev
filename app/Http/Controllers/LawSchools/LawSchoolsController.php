@@ -112,17 +112,6 @@ class LawSchoolsController extends Controller
 			$data['dob'] 	 	 = $verify['dob'];
 			$data['estd_year'] 	 = $verify['estd_year'];
 
-			if($request->user_flag == 'ct'){
-				$verify = $request->validate([
-          			'parent_id'   => 'required|not_in:0'
-				]);
-				$data['user_flag'] = 'P';
-            	$data['parent_id'] = $verify['parent_id'];
-			}
-			else if($request->user_flag == 'il'){
-				$data['user_flag'] = $request->user_flag;
-			}
-
 		}
 		elseif($user_data->user_catg_id == '7'){
 

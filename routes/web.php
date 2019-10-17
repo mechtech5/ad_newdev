@@ -11,10 +11,10 @@
 |
 */
 
-Route::get('/', function(){
-	abort(404);
-})->name('/');
-// Route::get('/','HomeController@index')->name('/');
+// Route::get('/', function(){
+// 	abort(404);
+// })->name('/');
+Route::get('/','HomeController@index')->name('/');
 Auth::routes();
 
 Route::get('/user/verify/{token}', 'Auth\RegisterController@verifyUser');
@@ -127,11 +127,16 @@ Route::group(['middleware' => ['role:lawyer|lawcompany']], function() {
 	Route::resource('/clients', 'ClientsController');
 	Route::resource('/appointment', 'AppointmentController');	
 	Route::resource('/case_mast', 'CaseManagement\CaseMastController');
-	Route::resource('/case_detail', 'CaseManagement\CaseHearingController');
+	Route::get('case_details/{id}','CaseManagement\CaseMastController@case_details')->name('case_details');
+	Route::get('/cases_table','CaseManagement\CaseMastController@cases_table');
+	
+	Route::resource('/case_hearing', 'CaseManagement\CaseHearingController');
 	Route::resource('/case_doc', 'CaseManagement\CaseDocController');
 	Route::resource('/case_notes', 'CaseManagement\CaseNotesController');
 	Route::resource('/case_diary', 'CaseManagement\CaseDiaryController');
 	Route::post('/case_diary/filter','CaseManagement\CaseDiaryController@filter')->name('case_diary.filter');
+
+
 	Route::get('/fileDownload', 'CaseManagement\CaseDocController@fileDownload')->name('fileDownload');
 
 

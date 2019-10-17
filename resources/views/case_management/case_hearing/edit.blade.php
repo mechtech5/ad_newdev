@@ -6,17 +6,11 @@
 		<div class="box box-primary">
 			<div class="box-header with-border" >
 				<h3 style="margin-top: 10px;">Edit Case Hearing
-					
-					@if($page_name == 'clients')
-						<a href="{{route('case_mast.show', $edit_detail->case_id.',clients')}}" class="btn btn-sm btn-info pull-right">Back</a>
-					@else
-						<a href="{{route('case_mast.show', $edit_detail->case_id.',case_diary')}}" class="btn btn-sm btn-info pull-right">Back</a>
-					@endif
-
+					<a href="{{route('case_mast.show', $edit_detail->case_id.','.$page_name)}}" class="btn btn-md btn-info pull-right">Back</a>
 				</h3>
 			</div>
 			<div class="box-body">
-				<form action="{{route('case_detail.update',$edit_detail->case_tran_id)}}" method="post">
+				<form action="{{route('case_hearing.update',$edit_detail->case_tran_id)}}" method="post">
 					@csrf
 					@method('PATCH')
 					<div class="row form-group ">

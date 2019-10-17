@@ -1,21 +1,17 @@
 @extends('lawfirm.layouts.main')
 @section('content')
 <section class="content">
+
 <div class="row">
 	<div class="col-md-12 ">
 		<div class="box box-primary">
 			<div class="box-header with-border" >
 				<h3 style="margin-top: 10px;">Add Case Hearing 
-					@if($page_name == 'clients')
-						<a href="{{route('case_mast.show', $select->case_id.',clients')}}" class="btn btn-sm btn-info pull-right">Back</a>
-					@else
-						<a href="{{route('case_mast.show', $select->case_id.',case_diary')}}" class="btn btn-sm btn-info pull-right">Back</a>
-					@endif
-
+					<a href="{{route('case_mast.show', $case->case_id.','.$page_name)}}" class="btn btn-md btn-info pull-right">Back</a>		
 				</h3> 
 			</div>
 			<div class="box-body">
-				<form action="{{route('case_detail.store')}}" method="post">
+				<form action="{{route('case_hearing.store')}}" method="post">
 				@csrf
 					<div class="row form-group ">
 						<div class="col-md-6">
@@ -68,8 +64,8 @@
 							<label for="case_charges_type">Case Charge Type <span class="text-danger" >*</span></label>
 							<select name='case_charges_type' class="form-control">
 								<option value="0">select</option>
-								<option value="1" {{ (Input::old('case_charges_type') == '1') ? 'selected' : ''}} >Cash</option>
-								<option value="2" {{ (Input::old('case_charges_type') == '2') ? 'selected' : ''}}>Chaque</option>
+								<option value="1" {{ old('case_charges_type') == '1' ? 'selected' : ''}} >Cash</option>
+								<option value="2" {{ old('case_charges_type') == '2' ? 'selected' : ''}}>Chaque</option>
 							</select>
 							@error('case_charges_type')
 								<span class="invalid-feedback text-danger" role="alert">
@@ -81,11 +77,11 @@
 					<div class="row form-group">
 						<div class="col-md-6" style="margin-top:10px;" >
 							<label for="lawyer_names">Lawyer Names <span class="text-danger" >*</span></label>
-							<table id='dynamic_field' class='table'>
-
-							<tr><td class="pb-0 pl-0 border-0"><input type="text" name="lawyer_names[]" class="form-control" placeholder="Enter Lawyer Names" required></td></tr></table>
-
-							<button type="button" name="add" id="add" class="btn btn-success btn-sm">Add More</button>
+							<select name="lawyer_names[]" class="form-control" multiple="multiple" id="select2">
+								@foreach($assign_mem as $assign_m)
+									<option value="{{$assign_m->user_id1}}" {{ (collect(old('lawyer_names'))->contains($assign_m->user_id1)) ? 'selected': '' }}>{{$assign_m->member->name}}</option>
+								@endforeach
+							</select>
 							
 							@error('lawyer_names')
 								<span class="invalid-feedback text-danger" role="alert">
@@ -112,10 +108,9 @@
 					<div class="row form-group">
 						<div class="col-md-12" style="margin-top: 10px;">
 							<input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-							<input type="hidden" name="cust_id" value="{{ $select->cust_id }}">
-							<input type="hidden" name="case_id" value="{{ $select->case_id }}">
+							<input type="hidden" name="cust_id" value="{{ $case->cust_id }}">
+							<input type="hidden" name="case_id" value="{{ $case->case_id }}">
 							<input type="hidden" name="page_name" value="{{$page_name}}">
-							
 							<button type="submit" class="btn btn-primary btn-md">Submit</button>
 						</div>
 					</div>
@@ -127,6 +122,7 @@
 </section>
 <script>
 	$(document).ready(function(){
+		$('#select2').select2();
 		$(function () {
 			$("#datepicker, #regdatepicker").datepicker({ 
 				singleDatePicker: true,
@@ -134,36 +130,7 @@
 			});
 		});
 
-	var i=1;
-	$('#add').click(function(){
-		
-		
-
-		$('#dynamic_field').append('<tr id="row'+i+'"><td class="pb-0 pl-0 border-0"><input type="text" name="lawyer_names[]" placeholder="Enter Lawyer Name" class="form-control name_list" required /></td><td class="pb-0 pl-0 border-0"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
-
-		i++;
-	});
-
-	$(document).on('click', '.btn_remove', function(){
-		var button_id = $(this).attr("id");
-		//alert(button_id); 
-		$('#row'+button_id+'').remove();
-	});
 	
-	$('#submit').click(function(){		
-		$.ajax({
-			url:"name.php",
-			method:"POST",
-			data:$('#add_name').serialize(),
-			success:function(data)
-			{
-				alert(data);
-				$('#add_name')[0].reset();
-			} 
-		});
-	});  
-	
-
 	var i=1;
 	$('#add_again').click(function(){
 		

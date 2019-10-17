@@ -2,14 +2,29 @@
 @section('content')
 <section class="content">
   <div class="row">
-    <div class="col-md-12 m-auto" >
-      <div class="box box-primary ">
-        <div class="box-header with-border"> 	 
-            <h4 class="">
-                Runnig Cases (0)
-              <a href="{{route('case_mast.create', ['cust_id'=>",case_diary"])}}" class="btn btn-md btn-primary pull-right">Add New Case</a>
-
-            </h4>
+    <div class="col-md-12 m-auto"  >
+      <div class="box box-primary " >
+        <div class="box-header with-border"> 	
+          <div class="row">
+            <div class="col-md-4">
+               <h4 id="case_status_label"></h4>
+            </div>
+            <div class="col-md-6">
+              <div class="row ">
+                <div class="col-md-4 pull-right form-group">
+                  <select class="form-control" name="case_status">
+                   @foreach($case_status as $case_statu)
+                      <option value="{{$case_statu->case_status_id}}" {{$case_statu->case_status_id == 'cr' ? 'selected' : ''}}>{{$case_statu->case_status_desc}}</option>
+                   @endforeach 
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <a href="{{route('case_mast.create', ['cust_id'=>",case_diary"])}}" class="btn btn-md btn-primary ">Add New Case</a>
+            </div>
+          </div> 
+            
             @if($message = Session::get('success'))
               <div class="alert bg-success">
                   {{$message}}
@@ -17,7 +32,7 @@
             @endif   
         </div>
         <div class="box-body table-responsive" id="table_div">
-              @include('case.case_diary.case_table')
+   
         </div>
         </div>
       </div>
@@ -111,8 +126,19 @@
 
 <script>
 	$(document).ready(function (){
-    
+      var case_status =  $('select[name="case_status"] option:selected').val();
+      var case_status_text =  $('select[name="case_status"] option:selected').text();
+      
+      if(case_status !=''){
+        var cust_id ='';
+        case_table(case_status,case_status_text,cust_id);
+        $('select[name="case_status"]').on('change',function(){
+          var case_status = $(this).val();
+          var case_status_text = $('select[name="case_status"] option:selected').text();
 
+          case_table(case_status,case_status_text,cust_id);
+        });
+      }
     // $('#selectClient').select2();
 
     //   $(function() {

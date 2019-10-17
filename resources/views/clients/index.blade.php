@@ -32,8 +32,7 @@
 							<th>GST</th> -->
 							<th>Address</th>
 							<th>Type</th>
-							<th>Edit</th>
-							<th>View</th>
+							<th>Action</th>
 
 						</tr>
 					</thead>
@@ -86,15 +85,22 @@
 								
 								<form action="{{route('clients.destroy', ['cust_id' =>$client->cust_id])}}" method="POST" id="delform_{{$client->cust_id}}">
 									@method('DELETE')
-									<span><a href="{{route('clients.edit', $client->cust_id)}}" class="btn btn-sm btn-success"><i class="fa fa-edit text-white"></i></a></span>
-									<a href="javascript:$('#delform_{{$client->cust_id}}').submit();"  onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger"><i class="fa fa-trash text-white" ></i></a>
+
+									<span>
+										<a href="{{route('clients.edit', $client->cust_id)}}" ><i class=" btn fa fa-edit text-green" style="font-size: 16px;"></i></a></span>
+									<span>
+										<a href="javascript:$('#delform_{{$client->cust_id}}').submit();"  onclick="return confirm('Are you sure?')" ><i class="btn fa fa-trash text-red" style="font-size: 16px;" ></i></a>
+									</span>
+									<span>
+										<a href="{{route('clients.show', $client->cust_id )}}" ><i class="btn fa fa-eye text-primary" style="font-size: 16px;"></i></a>
+										
+									</span>
 
 									@csrf
 
 								</form>
 
-							</td>
-							<td><a href="{{route('clients.show', $client->cust_id )}}" class="btn btn-sm btn-success">View</a></td>
+						</td>
 						
 
 						</tr>
@@ -111,6 +117,7 @@
 <script>
 	$(document).ready(function(){
 		$('#ClientsTable').DataTable();
+		
 	});
 </script>
 @endsection

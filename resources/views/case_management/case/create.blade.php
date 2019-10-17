@@ -1,11 +1,7 @@
 @extends('lawfirm.layouts.main')
 @section('content')
 <section class="content">
-	<style type="text/css">
-		.select2-container--default .select2-selection--multiple .select2-selection__choice{
-			background-color: #247ae4;
-		}
-	</style>
+  
 <div class="row">
 	<div class="col-md-12">
 		<div class="box box-primary">
@@ -14,7 +10,7 @@
 					@if($page_name == 'clients')
 						<a href="{{route('clients.show',$cust_id)}}" class="btn btn-sm btn-info pull-right">Back</a>
 					@else
-						<a href="{{route('case_diary.index',['caseBtn' =>'cg'])}}" class="btn btn-sm btn-info pull-right">Back</a>
+						<a href="{{route('case_mast.index',['caseBtn' =>'cg'])}}" class="btn btn-sm btn-info pull-right">Back</a>
 					@endif
 
 				</h3>
@@ -312,10 +308,26 @@
 							
 						</div>
 					</div>
+					<div class="row form-group">
+						<div class="col-md-12" style="margin-top: 10px;">
+							<label for="team_id">Team Member </label><span class="text-muted">(Case assign to team member)</span>
+							<select class="form-control" name="team_id[]" multiple="multiple" id="select2">
+								<option value="{{Auth::user()->id}}" {{ (collect(old('team_id'))->contains(Auth::user()->id)) ? 'selected':'selected' }}  >{{Auth::user()->name}}</option>
+								@foreach($members as $member)
+									<option value="{{$member->id}}" {{ (collect(old('team_id'))->contains($member->id)) ? 'selected':'' }}>{{$member->name}}</option>
+								@endforeach
+							</select>
+							@error('team_id')
+								<span class="invalid-feedback text-danger" role="alert">
+								<strong>{{ "Team member field is required" }}</strong>
+								</span>
+							@enderror
+
+						</div>
+					</div>
 					
 					<div class="row form-group">				
-						<div class="col-md-12" style="margin-top:10px;">
-													
+						<div class="col-md-12" style="margin-top:10px;">					
 							<input type="hidden" name="page_name" value="{{$page_name}}" >
 							<button type="submit" class="btn btn-primary btn-md">Submit</button>
 						</div>
@@ -333,7 +345,8 @@ $(document).ready(function(){
 	// 	$("#regdatepicker").datepicker({ 				
 	// 	//	endDate: new Date(),
 	// 	});
-	// });		
+	// });	
+	$('#select2').select2();	
 	$(function () {
 		$("#datepicker,#affidavit_date,#regdatepicker").datepicker();
 	});

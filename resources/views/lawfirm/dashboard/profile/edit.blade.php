@@ -13,38 +13,6 @@
 			<div class="box-body">
 				<form action="{{ route('lawfirm.update', $user->id)}}" method="post"  role="form" enctype="multipart/form-data" >
 				@method('PATCH')
-				@role('lawyer')
-				<div class="row form-group" > 
-					
-					@if($user->user_flag!='P' && $user->user_flag!='cl' && $user->user_flag!='S' )
-						<div class="col-md-4 ">
-						   <label class="radio-inline"> <input type="radio" name="user_flag" value="il" id="individual" {{ $user->user_flag=='il' ? 'checked' : '' }} {{old('user_flag')=='il' ? 'checked' : ''}}> Individual</label>
-							<label class="radio-inline"><input type="radio" name="user_flag" value="cl" id="unlawcomp" {{ $user->user_flag=='cl' ? 'checked' : '' }} {{old('user_flag')=='cl' ? 'checked' : ''}}> Under law company </label>
-					
-							
-							@error('user_flag')
-			                    <span class="invalid-feedback text-danger" role="alert">
-			                       <strong>{{ $message }}</strong>
-			                    </span>
-			                 @enderror
-						</div>
-					@endif
-					<div class="col-md-6" id="comp_select" style="display:none;">   
-						<select name="parent_id" style="width: 60%;">
-							<option value="0">Select Law Company</option>
-							@foreach($companies as $company)
-								<option value="{{$company->parent_id}}" {{ $user->parent_id==$company->parent_id ? 'selected' : ''  }} {{old('parent_id')==$company->parent_id ? 'selected' : ''}}> {{$company->comp_name}}</option>
-							@endforeach
-
-						</select>
-						@error('parent_id')
-		                    <span class="invalid-feedback text-danger" role="alert">
-		                       <strong>{{ $message }}</strong>
-		                    </span>
-		                 @enderror
-					</div>
-				</div>
-				@endrole
 				<div class="row form-group">
 					<div class="col-md-12" style="margin-top:10px;"> 
 						<label for="username">User Name  <span class="text-danger">*</span></label> 

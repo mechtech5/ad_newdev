@@ -33,7 +33,7 @@ class CaseDocController extends Controller
 		$case_detail = CaseMast::where('case_id',Request()->case_id)->first();
 
 		$doc_types=DocTypeMast::all();
-		return view('case.case_doc.create', compact('case_detail','doc_types','page_name'));
+		return view('case_management.case_doc.create', compact('case_detail','doc_types','page_name'));
 	}
 
 	public function store(Request $request){
@@ -65,6 +65,13 @@ class CaseDocController extends Controller
 		else{
 			return redirect()->route('case_mast.show', $data['case_id'].',case_diary')->with('success', 'Case Document Inserted Successfully');
 		}
+	}
+	public function show($id){
+		$id = explode(',', $id);
+		$case_id = $id[0];
+		$page_name = $id[1];
+		$case_docs = CaseDoc::where('case_id',$case_id)->get();
+		return view('case_management.case_doc.show',compact('case_docs','page_name','case_id'));
 	}
 
 	public function fileDownload(){

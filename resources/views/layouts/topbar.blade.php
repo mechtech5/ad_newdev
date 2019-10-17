@@ -54,14 +54,14 @@
                 <a href="{{route('/')}}"  class="nav-link p-4">WHY ADLAW</a>
             </li>
             <li class="nav-item {{Request()->segment(1) == 'lawyer_lawfirm' ? 'active_class' : '' }}">
-                <a class="nav-link p-4 " href="{{url('lawyer_lawfirm')}}">FOR LAWYERS/LAWFIRMS </a>
+                <a class="nav-link p-4 " href="{{url('lawyer_lawfirm')}}">LAWYERS/LAW FIRMS </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link p-4" href="">FOR USERS</a>
+                <a class="nav-link p-4" href="">USERS/GUEST</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link p-4" href="">FOR STUDENTS</a>
+                <a class="nav-link p-4" href="">LAW SCHOOLS</a>
             </li>
             <li class="nav-item {{Request()->segment(1) == 'contact' ? 'active_class' : '' }}">
                 <a href="{{route('contact.index')}}" class="nav-link p-4">CONTACT US</a>

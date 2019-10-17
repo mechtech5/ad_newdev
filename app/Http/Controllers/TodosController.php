@@ -27,7 +27,7 @@ class TodosController extends Controller
                             ->whereNotIn('cust_id',$client_ids)
                             ->get();
                       
-        $members = User::where('parent_id',Auth::user()->id)->where('user_flag', '!=','S')->where('status','A')->get();
+        $members = User::where('parent_id',Auth::user()->id)->where('user_flag', '=','A')->where('status','A')->get();
     	return view('todos.create',compact('members','cases'));
     }
     public function store(Request $request){

@@ -10,7 +10,7 @@
     							<span> 
     								<img class="media-object" src="images/lawyers.png" alt="Image"> </span> 
     								<span class="media-body text-dark pl-2">
-    									<h4 class="media-heading font-weight-bold">For Lawyers / LawFirms</h4>
+    									<h4 class="media-heading font-weight-bold">For Lawyers / Law Firms</h4>
     									<p class="text-capitalize font-weight-normal">Feature for lawyers / Lawfirms</p>
     								</span>  
     							</a> 
@@ -23,8 +23,8 @@
                                         <img class="media-object" src="images/lawyers.png" alt="Image"> 
     								</span> 
     								<span class="media-body text-dark pl-2">
-    									<h4 class="media-heading font-weight-bold">For Users</h4>
-    									<p class="text-capitalize font-weight-normal">Feature for Users</p>
+    									<h4 class="media-heading font-weight-bold">Users / Guest </h4>
+    									<p class="text-capitalize font-weight-normal">Feature Users / Guest</p>
     								</span> 
     							</a> 
     						</div>
@@ -36,8 +36,8 @@
                                         <img class="media-object" src="images/lawyers.png" alt="Image"> 
     								</span> 
     								<span class="media-body text-dark pl-2">
-    									<h4 class="media-heading font-weight-bold">For Students</h4>
-    									<p class="text-capitalize font-weight-normal">Feature for Students</p>
+    									<h4 class="media-heading font-weight-bold">Law Schools</h4>
+    									<p class="text-capitalize font-weight-normal">Feature for Law schools</p>
     								</span> 
     							</a> 
     						</div>

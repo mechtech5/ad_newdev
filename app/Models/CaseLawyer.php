@@ -14,4 +14,8 @@ class CaseLawyer extends Model
     protected $primaryKey = 'case_id';
 
  	public $incrementing =false;
+
+ 	public function member(){
+ 		return $this->belongsTo('App\User','user_id1');
+ 	}
 }

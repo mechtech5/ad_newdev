@@ -13,28 +13,27 @@ use App\Models\Customer;
 use App\Models\CaseMast;
 use App\Models\CaseNotes;
 use App\Models\CaseDetail;
-
+use App\Models\CaseLawyer;
 class CaseHearingController extends Controller
 {
 	public function __construct(){
 		$this->middleware('auth');
 	}
-
-
 	public function create(){
-		$id=Request()->case_id;
-		$id = explode(',', $id);
+		$id = explode(',', request()->case_id);
 		$case_id = $id[0];
 		$page_name = $id[1];
-
-		$select = CaseMast::where('case_id',$case_id)->first();
-		return view('case.case_detail.create',compact('select','page_name'));
+		$case = CaseMast::where('case_id',$case_id)->first();
+		$assign_mem = CaseLawyer::with('member')->where('deallocate_date',null)->where('case_id',$id)->get();
+	
+		return view('case_management.case_hearing.create',compact('case','page_name','assign_mem'));
 	}
 
 	public function store(Request $request){
+	
 
 		$data = $this->validation($request);
-		//dd($data);
+		dd($data);
 		$all_lawyer[]= request()->lawyer_names;
 		$count = 0;
 		foreach ($all_lawyer as $type) {
@@ -65,8 +64,12 @@ class CaseHearingController extends Controller
 	}
 
 	public function show($id){
-		$case_detail= CaseDetail::all()->where('case_id',$id);  
-		return view('case.case_hearing_list',compact('case_detail'));
+		$id = explode(',', $id);
+		$case_id = $id[0];
+		$page_name = $id[1];
+
+		$case_hearings = CaseDetail::where('case_id',$case_id)->get();
+		return view('case_management.case_hearing.show',compact('case_hearings','page_name','case_id'));
 	}
 
 	public function edit($id){
@@ -82,7 +85,7 @@ class CaseHearingController extends Controller
 		$judge=$edit_detail->judges_name;
 		$jug_name=explode(";",$judge);
 
-		return view('case.case_detail.edit',compact('edit_detail','sep_name','jug_name','page_name'));
+		return view('case_management.case_hearing.edit',compact('edit_detail','sep_name','jug_name','page_name'));
 
 	}  
 

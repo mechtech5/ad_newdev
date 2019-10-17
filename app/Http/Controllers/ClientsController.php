@@ -12,7 +12,8 @@ use App\Models\State;
 use App\Models\City;
 use App\Models\Customer;
 use App\Models\CaseMast;
-
+use App\Helpers\Helpers;
+use App\Models\CaseStatusMast;
 class ClientsController extends Controller
 {
       /**
@@ -28,8 +29,11 @@ class ClientsController extends Controller
 
     public function index()
     {
-             
-      $clients = Customer::where('user_id',Auth::user()->id)->where('status_id','A')->paginate(10);
+      $client_ids = Helpers::deletedClients();       
+      $clients = Customer::where('user_id',Auth::user()->id)
+                          ->whereNotIn('cust_id',$client_ids)
+                          ->where('status_id','A')
+                          ->paginate(10);
 
       return  view('clients.index',compact('clients'));
       
@@ -89,12 +93,9 @@ class ClientsController extends Controller
     public function show($id)
     {
      
-     $clientDetail = Customer::where('cust_id',$id)->first();
-     $caseDetails =CaseMast::with('casetype')                               
-                              ->join('case_status_mast', 'case_status_mast.case_status_id', '=', 'case_mast.case_status')
-                              ->where('cust_id',$id)->get();
-
-      return  view('clients.show',compact('clientDetail','caseDetails'));
+      $client = Customer::where('cust_id',$id)->first();
+      $case_status = CaseStatusMast::all();
+      return  view('clients.show',compact('client','case_status'));
 
     }
 

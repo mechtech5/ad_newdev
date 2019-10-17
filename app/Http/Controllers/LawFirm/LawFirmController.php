@@ -107,17 +107,6 @@ class LawFirmController extends Controller
 			$data['dob'] 	 	 		 = $verify['dob'];
 			$data['estd_year'] 	 		 = $verify['estd_year'];
 			$data['tot_user_count'] 	 = $verify['tot_user_count'];
-
-			if($request->user_flag == 'cl'){
-				$verify = $request->validate([
-          			'parent_id'   => 'required|not_in:0'
-				]);
-				$data['user_flag'] = 'P';
-            	$data['parent_id'] = $verify['parent_id'];
-			}
-			else if($request->user_flag == 'il'){
-				$data['user_flag'] = $request->user_flag;
-			}
 		}
 		elseif($user->user_catg_id == '3'){
 			$verify = $request->validate([

@@ -24,7 +24,7 @@ class TeamManagement extends Controller
     public function index()
     {
         $id = Auth::user()->id;
-        $members = User::with(['state','city','country'])->where('parent_id',$id)->where('user_flag', '!=','S')->get();
+        $members = User::with(['state','city','country'])->where('parent_id',$id)->get();
        
         return view('teams.index',compact('members'));
     }
@@ -54,10 +54,6 @@ class TeamManagement extends Controller
         $data =  $request->validate([
             'name'          => 'required|string|max:255',
             'email'         => 'required|email|max:255|unique:users',
-            'country_code'  => 'nullable',
-            'state_code'    => 'nullable',
-            'city_code'     => 'nullable',
-            'zip_code'      => 'nullable|min:6|max:6|regex:/^[0-9]+$/',
             'mobile'        => 'required|min:10|max:11|regex:/^[0-9]+$/',
         ]);
        
@@ -106,10 +102,6 @@ class TeamManagement extends Controller
         $data =  $request->validate([
             'name'          => 'required|string|max:255',
             'email'         => 'required|email|max:255|unique:users,email,'.$id,
-            'country_code'  => 'nullable',
-            'state_code'    => 'nullable',
-            'city_code'     => 'nullable',
-            'zip_code'      => 'nullable|min:6|max:6|regex:/^[0-9]+$/',
             'mobile'        => 'required|min:10|max:11|regex:/^[0-9]+$/',
         ]);
 
@@ -133,10 +125,10 @@ class TeamManagement extends Controller
      */
     public function destroy($id)
     {
-        VerifyUser::where('user_id',$id)->delete();
-        RoleUser::where('user_id',$id)->delete();
-        User::find($id)->delete();
-        return redirect()->back()->with('success','Team member deleted successfully');
+        // VerifyUser::where('user_id',$id)->delete();
+        // RoleUser::where('user_id',$id)->delete();
+        // User::find($id)->delete();
+        // return redirect()->back()->with('success','Team member deleted successfully');
     }
 
     public function login_history(){
@@ -160,11 +152,9 @@ class TeamManagement extends Controller
         $data['parent_id'] = Auth::user()->id;
 
         if(Auth::user()->user_catg_id == '4'){
-            $data['user_flag'] = 'ct';
             $data['user_catg_id'] =  '6';
         }
         else{
-            $data['user_flag'] = 'cl';   
             $data['user_flag'] = '2';   
         }
 
@@ -179,27 +169,27 @@ class TeamManagement extends Controller
         Mail::to($user->email)->send(new UserMail($user));
     }
 
-    public function approve_decline_member(Request $request){
-        $btnType = $request->btnType;
-        $member_id = $request->member_id;
+    // public function approve_decline_member(Request $request){
+    //     $btnType = $request->btnType;
+    //     $member_id = $request->member_id;
 
-        $member = User::find($member_id);
+    //     $member = User::find($member_id);
 
-        if($btnType=='approveBtn'){
-            if(Auth::user()->user_catg_id == '4'){
-                $member['user_flag'] ='ct';
-            }
-            else{
-               $member['user_flag'] ='cl'; 
-            }
-        }
-        else{
-            $member['user_flag'] ='S';
-        }
+    //     if($btnType=='approveBtn'){
+    //         if(Auth::user()->user_catg_id == '4'){
+    //             $member['user_flag'] ='ct';
+    //         }
+    //         else{
+    //            $member['user_flag'] ='cl'; 
+    //         }
+    //     }
+    //     else{
+    //         $member['user_flag'] ='S';
+    //     }
 
-        $member->update($member->toArray());
+    //     $member->update($member->toArray());
 
-        return "Team member approved successfully";
+    //     return "Team member approved successfully";
 
-    }
+    // }
 }

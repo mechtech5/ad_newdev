@@ -1,4 +1,4 @@
-@extends(Auth::user()->user_catg_id==2 ? 'lawyer.main' : 'lawcompany.main')
+@extends('lawfirm.layouts.main')
 @section('content')
 <section class="content">
 <div class="row">
@@ -6,13 +6,7 @@
 		<div class="box box-primary">
 			<div class="box-header with-border" >
 				<h3 style="margin-top: 10px;">Edit Case Notes 
-				
-					@if($page_name == 'clients')
-						<a href="{{route('case_mast.show', $case_notes->case_id.',clients')}}" class="btn btn-sm btn-info pull-right">Back</a>
-					@else
-						<a href="{{route('case_mast.show', $case_notes->case_id.',case_diary')}}" class="btn btn-sm btn-info pull-right">Back</a>
-					@endif
-
+					<a href="{{route('case_mast.show', $case_notes->case_id.','.$page_name)}}" class="btn btn-sm btn-info pull-right">Back</a>
 				</h3>
 			</div>		
 			<div class="box-body">

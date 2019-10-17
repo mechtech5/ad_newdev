@@ -23,56 +23,6 @@ class CaseDiaryController extends Controller
     $this->middleware('auth');
     
   }
-  
-  public function index(){
-    $caseBtn = Request()->caseBtn;
-
-    $client_ids = Helpers::deletedClients();
-    $id =Auth::user()->id;
-    $cases = CaseMast::with('casetype','client')
-                        ->where('case_mast.user_id',$id)
-                        ->where('case_mast.case_status','cr')
-                        ->whereNotIn('cust_id',$client_ids)
-                        ->get();
-
-    // $winCases = CaseMast::with('casetype','client')
-    //                       ->where('case_mast.user_id',$id)
-    //                       ->where('case_mast.case_status','cw')
-    //                       ->whereNotIn('cust_id',$client_ids)
-    //                       ->get();
-
-    // $lostCases = CaseMast::with('casetype','client')
-    //                       ->where('case_mast.user_id',$id)
-    //                       ->where('case_mast.case_status','cl')
-    //                       ->whereNotIn('cust_id',$client_ids)
-    //                       ->get();
-
-    // $allcase = CaseMast::with('casetype','client')->where('case_mast.user_id',$id)->whereNotIn('cust_id',$client_ids)->get();
-
-    $courts = CourtMast::all();
-    // $clients = Customer::where('user_id',Auth::user()->id)->where('status_id','A')->get();
-    // $caseTypes = CaseType::all();
-    // $categories = CatgMast::all();
-   return view('case.case_diary.index',compact('cases','caseBtn'));
-  }
-
-  public function show($id){
-    $id = explode(',', $id);
-    $case_id = $id[0];
-    $caseBtn = $id[1];
-
-
-    $case_detail= CaseMast::with('casetype','client')
-                          ->where('case_id', $case_id)
-                          ->first();
-    $case_notes = CaseNotes::where('case_id', $case_id)->get();
-    $case_hearings = CaseDetail::where('case_id',$case_id)->get();
-    $case_docs = CaseDoc::where('case_id',$case_id)->get();
-     
-    return view('case.case_diary.show', compact('case_detail','case_notes','case_hearings','case_docs','caseBtn')); 
-
-
-  }
 
   public function filter(Request $request){
 
