@@ -90,10 +90,10 @@ Route::group(['middleware' => ['role:admin']], function() {
 	Route::get('/contact_details','Admin\AdminController@contact_details')->name('admin.contact_details');
 
 // Start Master module
-	Route::resource('/master/country','Admin\Master\CountryController');
-	Route::resource('/master/city','Admin\Master\CityController');
+	Route::resource('/master/location/country','Admin\Master\CountryController');
+	Route::resource('/master/location/city','Admin\Master\CityController');
 	Route::post('/master/city/cityfilter','Admin\Master\CityController@cityfilter')->name('master.cityfilter');
-	Route::resource('/master/state','Admin\Master\StateController');
+	Route::resource('/master/location/state','Admin\Master\StateController');
 	Route::post('/master/state/countryFilter','Admin\Master\StateController@countryFilter')->name('master.countryFilter');
 	Route::resource('/master/slots','Admin\Master\SlotsController');	
 
@@ -146,6 +146,8 @@ Route::group(['middleware' => ['role:lawyer|lawcompany']], function() {
 	Route::get('/bookingCancelled/{id}','BookingController@bookingCancelled')->name('bookingCancelled');
 
 	Route::resource('/calendar', 'CalendarController');
+	Route::get('/case_member', 'CalendarController@case_member')->name('case_member');
+
 });
 /* ------------------Lawyer-------------------Lawcompany------------- */
 
@@ -161,6 +163,7 @@ Route::group(['middleware' => ['role:lawyer']],function(){
 Route::group(['middleware' => ['role:lawcompany']], function() {
 	Route::resource('/todos', 'TodosController');
 	Route::post('/todos/todoTableChange', 'TodosController@todoTableChange')->name('todos.tablechange');
+	Route::get('/todos/form/create', 'TodosController@create_form')->name('todos.create_form');
 	Route::resource('/case_allocation', 'CaseManagement\CaseAllocationController');
 	Route::get('case_allocation/{id}','CaseManagement\CaseAllocationController@create');
 	Route::post('/allocate_lawyer','CaseManagement\CaseAllocationController@allocate_lawyer')->name('allocate_lawyer');

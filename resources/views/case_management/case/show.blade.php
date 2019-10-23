@@ -9,18 +9,24 @@
 					<button class="btn btn-md " id="hearing_detl">Case Hearings Details</button>
 					<button class="btn btn-md " id="doc_detl">Case Documents Details</button>
 					<button class="btn btn-md " id="note_detl">Case Notes Details</button>
-					<a href="{{route('case_mast.index',['caseBtn'=>'cr'])}}" class="btn btn-md btn-info mt-1 pull-right" >Back</a>
+					@if($page_name == 'clients')
+						<a href="{{route('clients.show',$case->cust_id)}}" class="btn btn-md btn-info pull-right">Back</a>
+					@else
+						<a href="{{route('case_mast.index',['caseBtn' =>'cr'])}}" class="btn btn-md btn-info pull-right">Back</a>
+					@endif
 				
+				
+			</div>
+			<div class="box-body" >
 				@if($message = Session::get('success'))
 					<div class="alert bg-success">
 						{{$message}}
 					</div>
 				@endif
+				<div id="mainBody">
+					@include('case_management.case.case_details')
+				</div>
 			</div>
-			<div class="box-body" id="mainBody">
-				@include('case_management.case.case_details')
-			</div>
-
 		</div>
 	</div>
 </div>

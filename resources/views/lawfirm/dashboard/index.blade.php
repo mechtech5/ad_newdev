@@ -13,14 +13,14 @@
             <div class="icon">
               <i class="fa fa-briefcase"></i>
             </div>
-            <a href="" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{('case_mast.index')}}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <div class="col-md-4 ">
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3>0</h3>
+              <h3>{{count($user->clients)}}</h3>
 
               <h4>Total Clients</h4>
               </br></br>
@@ -29,7 +29,7 @@
             <div class="icon">
               <i class="fa fa-users"></i>
             </div>
-            <a href="" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{route('clients.index')}}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -37,7 +37,7 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3>0</h3>
+              <h3>{{count($user->messages)}}</h3>
 
               <h4>Message</h4></br></br>
             </div>
@@ -84,9 +84,9 @@
   
           <div class="small-box" style="background-color: #df6c6f; color:white;">
             <div class="inner">
-              <h3>0</h3>
+              <h3>{{count($user->members)}} </h3>
               <h4>Team Member</h4>
-              <span>Approved Request : 0 | Pending Request : 0 | Cancelled Request : 0</span>
+              </br></br>
             </div>
             <div class="icon">
               <i class="fa fa-users"></i>
@@ -103,7 +103,7 @@
             <h3>0</h3>
 
             <h4>To-dos</h4>
-            <span>Pending : 0 | Upcoming: 0 | Complete: 0</span>
+            <span>Pending : 0 | Complete: 0</span>
           </br></br>
           </div>
           <div class="icon">
@@ -112,11 +112,11 @@
           <a href="" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
       </div>
-     {{--  <div class="col-md-4 ">
+      {{-- <div class="col-md-4 ">
       <!-- small box -->
         <div class="small-box" style="background-color: #5da3d4; color: white">
           <div class="inner">
-            <h3></h3>
+            <h3>0</h3>
 
             <h4>Invoices</h4>
             <span>Dialy : 0 | Saint: 0 | Paid: 0 | Partially Paid: 0 | Draft & Partially Paid : 0 |</span>
@@ -133,7 +133,7 @@
             <div class="box box-primary " style="height: 300px;">
             <div class="box-header">
               <i class="fa fa-list"></i>
-              <h3 class="box-title">Upcoming To-Dos</h3>
+              <h3 class="box-title">Pending To-Dos</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body" style="height: 200px;">
@@ -210,11 +210,41 @@
               <h3 class="box-title">Recent Activity</h3>
             </div>
             <div class="box-body" style="height: 200px;">
-                
+                 
+              <ul class="todo-list">
+                <li>
+                  <label>September 17, 2019</label>
+                  <br>
+                  <span>Original Suit 1231 / 2019 - case</span>
+                 
+                  <!-- todo text -->
+                  <span class="text">Design a nice theme</span>
+                  <!-- Emphasis label -->
+                  <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
+                  <!-- General tools such as edit or delete-->
+                  <div class="tools">
+                    <i class="fa fa-edit"></i>
+                    <i class="fa fa-trash-o"></i>
+                  </div>
+                </li>
+               
+              </ul>
             </div>
             <div class="box-footer clearfix no-border">
               <button type="button" class="btn btn-default pull-right">More info <i class="fa fa-arrow-circle-right"></i></button>
                
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box box-primary">
+            <div class="box-header">
+              <h4 class="box-title">Calendar</h4>
+            </div>
+            <div class="box-body">
+              <div id="calendar"></div>
             </div>
           </div>
         </div>
@@ -381,6 +411,38 @@
 		
 
 	</section>
+  <script>
+    $(document).ready(function() {
+      $('#calendar').fullCalendar({        
+        header: {
+        right: 'prev today next ',
+        center: 'title',
+        left: 'month,agendaDay'
+        },
+        defaultView: 'month',
+        height: 'auto',
+        navLinks: true,
+        editable: false,
+        eventLimit: true,
+        selectable : true,
+        events: [
+         
+            { 
+              id: '1',
+              title: 'name',
+              description: 'Hello to all',
+              color: 'orange',
+              url : '',
+              start: '2019-10-21',
+              end: '2019-10-21',
+              
+            },
+        
+      ],
+
+      });
+    });
+  </script>
 @endsection
 
 

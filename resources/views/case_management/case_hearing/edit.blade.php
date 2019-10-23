@@ -1,35 +1,32 @@
 @extends('lawfirm.layouts.main')
 @section('content')
 <section class="content">
+
 <div class="row">
-	<div class="col-md-12">
+	<div class="col-md-12 ">
 		<div class="box box-primary">
 			<div class="box-header with-border" >
-				<h3 style="margin-top: 10px;">Edit Case Hearing
-					<a href="{{route('case_mast.show', $edit_detail->case_id.','.$page_name)}}" class="btn btn-md btn-info pull-right">Back</a>
-				</h3>
+				<h3 style="margin-top: 10px;">Edit Case Hearing 
+					<a href="{{route('case_mast.show', $case_hearing->case_id.','.$page_name)}}" class="btn btn-md btn-info pull-right">Back</a>		
+				</h3> 
 			</div>
 			<div class="box-body">
-				<form action="{{route('case_hearing.update',$edit_detail->case_tran_id)}}" method="post">
-					@csrf
-					@method('PATCH')
+				<form action="{{route('case_hearing.update',$case_hearing->case_tran_id)}}" method="post">
+				@csrf
+				@method('PATCH')
 					<div class="row form-group ">
 						<div class="col-md-6">
 							<label for="hearing_date">Hearing Date <span class="text-danger" >*</span></label>
-							<input type="text" value="{{ $edit_detail->hearing_date }}" class="form-control " name="hearing_date" required autocomplete="case_reg_date" autofocus  id="regdatepicker" data-date-format="yyyy-mm-dd" >
+							<input type="text" value="{{old('hearing_date') ?? $case_hearing->hearing_date}}" class="form-control " name="hearing_date" required autocomplete="case_reg_date" autofocus  id="regdatepicker" data-date-format="yyyy-mm-dd" placeholder="{{date('Y-m-d') }}" readonly>
 							@error('hearing_date')
 								<span class="invalid-feedback text-danger" role="alert">
 								<strong>{{ $message }}</strong>
 								</span>
 							@enderror
 						</div>
-
 						<div class="col-md-6">
 							<label for="start_time">Start Time <span class="text-danger" >*</span></label>
-
-							<input type='text' class="form-control" name= "start_time" id='datetimepicker3'value="{{$edit_detail->start_time}}" />
-							
-
+							<input type='text' class="form-control" name= "start_time" id='datetimepicker3' value="{{$case_hearing->start_time }}" />
 							@error('start_time')
 								<span class="invalid-feedback text-danger" role="alert">
 								<strong>{{ $message }}</strong>
@@ -37,211 +34,173 @@
 							@enderror
 						</div>
 					</div>
-					<div class="row form-group ">
+					{{-- <div class="row form-group">
 						<div class="col-md-6">
-							<label for="case_reg_date">Next Hearing Date <span class="text-danger" >*</span></label>
-							<input type="text" value="{{ $edit_detail->next_hearing_date }}" class="form-control " name="next_hearing_date" required autocomplete="next_hearing_date" autofocus  id="regdatepicker" data-date-format="yyyy-mm-dd" >
-							@error('next_hearing_date')
-								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ $message }}</strong>
-								</span>
-							@enderror
+							<label>Case Charge Type <span class="text-dagner">*</span></label>
+							<select name='case_charges_type' class="form-control">
+								<option value="0">select</option>
+								<option value="1" {{ old('case_charges_type') == '1' ? 'selected' : ''}} >Cash</option>
+								<option value="2" {{ old('case_charges_type') == '2' ? 'selected' : ''}}>Chaque</option>
+							</select>
 						</div>
-
-
-						<div class="col-md-6">
+						<div class="col-md-6" style="margin-top:10px;">
 							<label for="case_charged">Case Charged</label>
-							<input type="text" name="case_charged" class="form-control" placeholder="Enter Cash Charges Name" value="{{ $edit_detail->case_charged }}" >
+							<input type="text" name="case_charged" class="form-control" placeholder="Enter Cash Charges Name" value="{{ old('case_charged')}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" >
 							@error('case_charged')
 								<span class="invalid-feedback text-danger" role="alert">
 								<strong>{{ $message }}</strong>
 								</span>
 							@enderror
+						</div>		
+					</div> --}}
+				
+					<div class="row form-group">
+						<div class="col-md-6" style="margin-top:10px;" >
+							<label for="lawyer_names">Lawyer Names <span class="text-danger" >*</span></label><span class="text-muted"> (Who attend)</span>
+							<select name="lawyer_names[]" class="form-control" multiple="multiple" id="select2">
+								@foreach($assign_mem as $assign_m)
+									<option value="{{$assign_m->user_id1}}"
+									@if(count(collect(old('lawyer_names'))) == '0') 
+										@foreach($lawyer_ids as $lawyer_id)
+											{{$lawyer_id == $assign_m->user_id1 ? 'selected' : ''}} 
+										@endforeach
+									@else
+									{{ (collect(old('lawyer_names'))->contains($assign_m->user_id1)) ? 'selected': '' }}
+									@endif
+									>{{$assign_m->member->name}}</option>
+								@endforeach
+							</select>
+							
+							@error('lawyer_names')
+								<span class="invalid-feedback text-danger" role="alert">
+								<strong>{{ $message }}</strong>
+								</span>
+							@enderror
+						</div>
+
+						<div class="col-md-6" style="margin-top:10px;" >
+							<label for="judges_name">Judge Names <span class="text-danger" >*</span></label>
+							<table id='dynamic_field2' class='table'>
+
+							</table>
+
+							<button type="button" name="add" id="add_again" class="btn btn-success btn-sm">Add More</button>
+							
+							@error('judges_name')
+								<span class="invalid-feedback text-danger" role="alert">
+								<strong>{{ $message }}</strong>
+								</span>
+							@enderror
+							
 						</div>
 					</div>
-					<div class="row form-group ">
+					<div class="row form-group">
 						<div class="col-md-12">
-							<label for="case_charges_type">Case Charge Type <span class="text-danger" >*</span></label>
-							<select name='case_charges_type' class="form-control">
-								<option value="1" {{$edit_detail->case_charges_type==1 ? 'selected' : "" }}>Cash</option>
-								<option value="2" {{$edit_detail->case_charges_type == 2 ? 'selected' : "" }}>Cheque</option>
-							</select>
-							@error('case_charges_type')
+							<label for="hearing_notes">Hearing Description <span class="text-danger">*</span></label>
+							<textarea name="hearing_notes" rows="3" cols="50" class="form-control" id="tinymce">{{old('hearing_notes') ?? $case_hearing->hearing_notes}}</textarea>
+							@error('hearing_notes')
 								<span class="invalid-feedback text-danger" role="alert">
 								<strong>{{ $message }}</strong>
 								</span>
 							@enderror
-						</div>							
+						</div>
 					</div>
-					<div class="row form-group ">
-						<div class="col-md-6" id=''>
-							@php $num=0; @endphp
-							<label for="lawyer_names">Lawyer Names <span class="text-danger" >*</span></label>
-							<table id='dynamic_field' class="table">
-								@foreach($sep_name as $same)
-							
-									<tr id='{{"row".++$num}}'>
-										<td class="pl-0 pb-0 border-0">
-
-											<input type="text" name="lawyer_names[]"  class="form-control" placeholder="Enter Lawyer Names" value="{{ $same }}"  required>
-
-										</td>
-										<td class="pl-0 pb-0 border-0">
-											<button type="button" name="remove" id="{{$num}}_btn" class="btn btn-danger btn_remove" onclick="delete_hearing('{{$num}}')"><i class="fa fa-times"></i></button>
-										</td>
-									</tr>
-
-		                        @endforeach
-		                    </table>
-		                    <button type="button" name="add" id="add" class="btn btn-primary btn-sm">Add lawyer</button>
-                            @error('lawyer_names')							
-								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ $message }}</strong>
-								</span>
-							@enderror
-							
-                  		</div>
-
-                        @php $no=0; @endphp
-                        <div class="col-md-6" >
-							<label for="judges_name">Judge Names <span class="text-danger" >*</span></label>
-							<table id='dynamic_field2' class="table">
-                     		 	@foreach($jug_name as $all_jug)
-									<tr id='{{"roww".++$no}}'>
-										<td class="pb-0 pl-0 border-0"> 
-
-											<input type="text" name="judges_name[]"  class="form-control" placeholder="Enter judge Names" value="{{ $all_jug }}" required>
-
-										</td>
-										<td class="pl-0 pb-0 border-0">
-											<button type="button" name="remove" id="{{$no}}_btn" class="btn btn-danger btn_removes" onclick="delete_jug('{{$no}}')"><i class="fa fa-times"></i></button>
-										</td>
-									</tr>
-		                        @endforeach 
-		                    </table>
-
-			                <button type="button" name="add" id="add_again" class="btn btn-success btn-sm">Add judge</button>
-                       		@error('judges_name')
-								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ $message }}</strong>
-								</span>
-							@enderror
-                        
-			             </div>
-					</div>
-					<div class="row form-group ">
-						<div class="col-md-12">
-							<input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-							<input type="hidden" name="case_id"  value="{{$edit_detail->case_id}}">
-							<input type="hidden" name="cust_id" value="{{ $edit_detail->cust_id }}">
+					<div class="row form-group">
+						<div class="col-md-12" style="margin-top: 10px;">
+							<input type="hidden" name="case_id" value="{{ $case_hearing->case_id }}">
+							<input type="hidden" name="cust_id" value="{{ $case_hearing->cust_id }}">
+							<input type="hidden" name="user_id" value="{{Auth::user()->id }}">
 							<input type="hidden" name="page_name" value="{{$page_name}}">
 							<button type="submit" class="btn btn-primary btn-md">Submit</button>
 						</div>
 					</div>
 				</form>						
-			</div>
+			</div>		
 		</div>
 	</div>
 </div>
 </section>
 <script>
 	$(document).ready(function(){
-		$(function () {
-			$("#datepicker, #regdatepicker").datepicker({ 
-				singleDatePicker: true,
-				showDropdowns: true,
-			});
-		});
-	});
-</script>
 
-<script>
-$(document).ready(function(){
-	var i=1;
-	$('#add').click(function(){
-		//alert("fdsf");
-		
-
-		$('#dynamic_field').append('<tr id="row'+i+'"><td class="pl-0 pb-0 border-0"><input type="text" name="lawyer_names[]" placeholder="Enter Lawyer Name" class="form-control name_list" required /></td><td class="pl-0 pb-0 border-0"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="fa fa-times"></i></button></td></tr>');
-
-		i++;
+	tinymce.init({
+		selector: 'textarea#tinymce',
+		menubar: false,
+		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |  forecolor backcolor ",
 	});
 
-	$(document).on('click', '.btn_remove', function(){
-		var button_id = $(this).attr("id");
-		//alert(button_id); 
-		$('#row'+button_id+'').remove();
-	});
-	
-	$('#submit').click(function(){		
-		$.ajax({
-			url:"name.php",
-			method:"POST",
-			data:$('#add_name').serialize(),
-			success:function(data)
-			{
-				alert(data);
-				$('#add_name')[0].reset();
-			} 
-		});
-	});  
-	
-
-	var i=1;
-	$('#add_again').click(function(){
-		//alert("fdsf");
-		
-
-		$('#dynamic_field2').append('<tr id="row'+i+'"><td class="pl-0 pb-0 border-0"><input type="text" name="judges_name[]" placeholder="Enter judge Name" class="form-control name_list" required /></td><td class="pl-0 pb-0 border-0"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="fa fa-times"></i></button></td></tr>');
-
-		i++;
-	});
-
-	$(document).on('click', '.btn_remove', function(){
-		var button_id = $(this).attr("id");
-		//alert(button_id); 
-		$('#row'+button_id+'').remove();
-	});
-	
-	$('#submit').click(function(){		
-		$.ajax({
-			url:"name.php",
-			method:"POST",
-			data:$('#add_name').serialize(),
-			success:function(data)
-			{
-				alert(data);
-				$('#add_name')[0].reset();
-			} 
-		});
-	});  
-	
-
-	$(function(){
-		$('#datetimepicker3').datetimepicker({
-		    format: 'HH:mm:ss'
+	$('#select2').select2();
+	$(function () {
+		$("#datepicker, #regdatepicker").datepicker({ 
+			singleDatePicker: true,
+			showDropdowns: true,
 		});
 	});
 
+	
+  var judges_name = "{{ count(collect(old('judges_name'))) !='0' ? count(collect(old('judges_name'))) : count($judges_name) }}";
+
+ if(judges_name != '0' ){
+ 	var j=0;
+ 	@php 
+ 		$i =0;
+ 		$old_jug_names = count(collect(old('judges_name')));
+ 		if($c !='0'){
+ 			$count =$old_jug_names ;
+ 		}
+ 		else{
+ 			$count = count($judges_name);
+ 		}
+
+ 	@endphp
+	$('#dynamic_field2').append('<tr id="row'+j+'"><td style="padding:8px"><input type="text" name="judges_name[]" value="{{old('judges_name.'.$i) ?? $judges_name[$i]}}" placeholder="Enter Judge Name" class="form-control name_list" required /></td></tr>');
+	j++;
+	@php 
+ 		$i++;
+
+
+ 	@endphp
+
+ 	 <?php while($i < $count) {  ?>
+ 	// for(j =j ; j < judges_name ; j++){
+ 		$('#dynamic_field2').append('<tr id="row'+"{{$i}}"+'"><td style="padding:8px"><input type="text" name="judges_name[]" placeholder="Enter Judge Name" value="{{old('judges_name.'.$i) ?? $judges_name[$i] }}" class="form-control name_list" required /></td><td style="padding:8px"><button type="button" name="remove" id="'+"{{$i}}"+'" class="btn btn-sm btn-danger btn_remove"><i class="fa fa-close"></i></button></td></tr>');
+	 	@php 
+	 		$i++;
+	 	@endphp
+ 	// }
+ 	<?php  } ?>
+ 	j = "{{$i}}" ;
+ }
+ else{
+	var j=0;
+	$('#dynamic_field2').append('<tr id="row'+j+'"><td style="padding:8px"><input type="text" name="judges_name[]" placeholder="Enter Judge Name" class="form-control name_list" required /></td></tr>');
+	j++;
+ }
+
+$('#add_again').click(function(){
+	$('#dynamic_field2').append('<tr id="row'+j+'"><td style="padding:8px"><input type="text" name="judges_name[]" placeholder="Enter Judge Name" class="form-control name_list" required /></td><td class="padding:8px"><button type="button" name="remove" id="'+j+'" class="btn btn-sm btn-danger btn_remove"><i class="fa fa-close"></i></button></td></tr>');
+
+	j++;
 });
 
+	$(document).on('click', '.btn_remove', function(){
+		var button_id = $(this).attr("id");
+		//alert(button_id); 
+		$('#row'+button_id+'').remove();
+	});
+	
+	
+	$(function(){
+	    $('#datetimepicker3').datetimepicker({
+	        format: 'HH:mm:ss',
+	        
+
+	    });
+	});
+
+	
+});
 </script>
-<script>
-
-	function delete_hearing(value){
-		var x = value;
-        //alert(x);
-        $('#row'+x+'').remove();
-
-	}
-	function delete_jug(values){
-		var y= values;
-		//alert(y);
-		 $('#roww'+y+'').remove();
-
-
-	}
-	</script>
 
 
 @endsection

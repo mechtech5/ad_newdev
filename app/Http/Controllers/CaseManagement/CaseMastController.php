@@ -29,21 +29,8 @@ class CaseMastController extends Controller
 		$this->middleware('auth');
 	}
 	public function index(){
-		$caseBtn = Request()->caseBtn;
-
-		$client_ids = Helpers::deletedClients();
-		$id =Auth::user()->id;
-		$cases = CaseMast::with('casetype','client','court')
-					->with(['members' => function($query){
-						$query->where('deallocate_date',null)->with('member');
-					}])
-			        ->where('case_mast.user_id',$id)
-			        ->where('case_mast.case_status','cr')
-			        ->whereNotIn('cust_id',$client_ids)
-			        ->get();
-	
 		$case_status = CaseStatusMast::all();
-		return view('case_management.case.index',compact('cases','caseBtn','case_status'));
+		return view('case_management.case.index',compact('case_status'));
 	}
 
 	public function create(){       
@@ -58,8 +45,6 @@ class CaseMastController extends Controller
 		$clients = Customer::where('user_id',Auth::user()->id)->whereNotIn('cust_id',$deleted_clients)->where('status_id','A')->get();  
 
 		$case_status = CaseStatusMast::all();
-
-
 	 	$members = User::where('parent_id',Auth::user()->id)->where('status','A')->get();
 	 	
 		return view('case_management.case.create', compact('cust_id','case_types','courts','page_name','clients','categories','states','case_status','members'));
@@ -334,20 +319,20 @@ class CaseMastController extends Controller
 		$cust_id = request()->cust_id;
 		$client_ids = Helpers::deletedClients();
 		$id =Auth::user()->id;
-		if($cust_id == ''){
-			$cases = CaseMast::with('casetype','client','court')
-			->where('case_mast.user_id',$id)
-			->where('case_mast.case_status',$case_status)
-			->whereNotIn('cust_id',$client_ids)
-			->get();
+		if($cust_id == ''){		
+			$cases = CaseLawyer::with(['member','case' => function($query)use($case_status,$cust_id){
+				$query->with(['client','court','casetype'])->where('case_mast.case_status',$case_status);
+			}])->where('user_id1',$id)->where('deallocate_date',null)->get();
+			$page_name = 'case_diary';
+				
 		}
 		else{
-			$cases = CaseMast::with('casetype','client','court')
-			->where('case_mast.case_status',$case_status)
-			->where('cust_id',$cust_id)
-			->get();
+			$cases = CaseLawyer::with(['member','case' => function($query)use($case_status,$cust_id){
+				$query->with(['client','court','casetype'])->where('cust_id',$cust_id)->where('case_mast.case_status',$case_status);;
+			}])->where('user_id1',$id)->where('deallocate_date',null)->get();
+			$page_name = 'clients';
 		}
-		return view('case_management.case.case_table',compact('cases','case_status','cust_id'));
+		return view('case_management.case.case_table',compact('cases','case_status','page_name'));
 	}
 	public function case_details($case_id){
 	

@@ -32,25 +32,16 @@
 							{{'Customer'}}
 						@endif
 					</td>
-					<td class="d-flex">
-					<span>
-						
-						<a href="{{route('case_notes.edit', ['notes_id'=> $case_note->case_notes_id.','.$page_name])}}" class="btn btn-sm btn-success"><i class="fa fa-edit text-white"></i>
-						</a>
-					
-					</span>
-						&nbsp;
-					<span class="ml-2">
-
+					<td >						
 					<form action="{{route('case_notes.destroy', ['notes_id' =>$case_note->case_notes_id])}}" method="POST" id="delform_{{$case_note->case_notes_id}}">
 					@method('DELETE')
+						<a href="{{route('case_notes.edit', ['notes_id'=> $case_note->case_notes_id.','.$page_name])}}" ><i class="btn btn-sm text-success fa fa-edit"></i>
+						</a>
 
-					<a href="javascript:$('#delform_{{$case_note->case_notes_id}}').submit();"  class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')" ><i class="fa fa-trash text-white" ></i></a>
+						<a href="javascript:$('#delform_{{$case_note->case_notes_id}}').submit();" onclick="return confirm('Are you sure?')" ><i class="btn btn-sm text-danger fa fa-trash" ></i></a>
 
 					@csrf
-				</form>
-
-						</span>
+					</form>
 					</td>
 				</tr>	
 				@endforeach	

@@ -25,34 +25,35 @@
 					@endif
 					<div class="row">
 						<div class=" col-md-6 col-sm-6">
-							<h5><b>Name :</b> {{ $client->cust_name }}</h5>
-							<h5><b>Gender :</b>
+							<h4><b>Name :</b> {{ $client->cust_name }}</h4>
+							@if($client->cust_type_id == '1')<h4><b>Gender :</b>
 									@if($client->gender=='m')
 										{{'Male'}}
 									@elseif($client->gender=='f')
 										{{'Female'}}
 									@elseif($client->gender=='t')
-										{{'Other'}}
-									@else
-										
+										{{'Other'}}									
 									@endif
-							</h5>
-							<h5><b>Date of birth :</b> <?php echo date('d-m-Y', strtotime($client->dob)); ?></h5>
-							<h5><b>Mobile Number :</b>								
+							</h4>
+							<h4><b>Date of birth :</b> <?php echo date('d-m-Y', strtotime($client->dob)); ?></h4>
+							@else
+								<h4><b>Company Name:</b> {{$client->company_name}}</h4>
+							@endif
+							<h4><b>Mobile Number :</b>								
 									<span>{{$client->mobile1}}</span>
 									<span>{{$client->mobile2}}</span>
-							</h5>
-							<h5><b>Email :</b> {{$client->email}}</h5>
-							<h5><b>Registration Date :</b> {{ date('d-m-Y', strtotime($client->regsdate))}}</h5>
+							</h4>
+							<h4><b>Email :</b> {{$client->email}}</h4>
+							<h4><b>Registration Date :</b> {{ date('d-m-Y', strtotime($client->regsdate))}}</h4>
 							
 						</div>
 						<div class="col-md-6 col-sm-6">
-							<h5><b>Fax Number :</b> {{ $client->fax }}</h5>
-							<h5><b>Tele Number :</b> {{ $client->tele }}</h5>
-							<h5><b>PAN Number :</b> {{ $client->panno }}</h5>
-							<h5><b>GST Number :</b> {{ $client->gstno }}</h5>
-							<h5><b>Aadhar Number :</b> {{ $client->adharno }}</h5>
-							<h5><b>Adddress :</b> {{ $client->custaddr }}</h5>
+						
+							<h4><b>Tele Number :</b> {{ $client->tele }}</h4>
+							<h4><b>PAN Number :</b> {{ $client->panno }}</h4>
+							<h4><b>GST Number :</b> {{ $client->gstno }}</h4>
+							<h4><b>Aadhar Number :</b> {{ $client->adharno }}</h4>
+							<h4><b>Adddress :</b> {{ $client->custaddr }}</h4>
 						</div>
 					</div>
 				</div>

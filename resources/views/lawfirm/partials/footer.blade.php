@@ -71,6 +71,7 @@
 
     <script src="{{asset('js/all_category.js')}}"></script>
     <script type="text/javascript">
+        
         tinymce.init({
 
             selector: "textarea.tinymce",

@@ -308,33 +308,21 @@
 			});
 		});
 
+	$('#state').on('change',function(e){
+		e.preventDefault();
+		var state_code = $(this).val();
+		var city_code = "";
+		state(state_code, city_code);
+	});
+	   
+	var state_code = $('#state').val();  
+	var city_code = "{{old('city_code')}}";
 
+	if(state_code !=''){
+		state(state_code, city_code);
+	}
 
-	$('#state').on('change',function(){
-
-	    var state_code = $(this).val();    
-	    if(state_code){
-	        $.ajax({
-	           type:"GET",
-	           url:"{{route('city')}}?state_code="+state_code,
-	           success:function(res){ 
-	           //alert(res);              
-	            if(res){
-	                $("#city").empty();
-	                $.each(res,function(key,value){
-	                    $("#city").append('<option value="'+value.city_code+'">'+value.city_name+'</option>');
-	                });
-	           
-	            }else{
-	               $("#city").empty();
-	            }
-	           }
-	        });
-	    }else{
-	        $("#city").empty();
-	    }
-        
-    });
+	
 	$('#cust_type').on('change',function(){
 		var cust_type = $('#cust_type').val();
 		if(cust_type==1){
@@ -363,32 +351,7 @@
 			$('#dob').hide();
 			$('#gender').hide();
 		}
-	
-var oldCity_code = "{{old('city_code')}}";
 
-var stateCode = $('#state').val();
-
-	if(stateCode!=0){
-			$.ajax({
-					type:"GET",
-					 url:"{{route('cityDropDown')}}?state_code="+stateCode,
-					success:function(res){    
-
-						if(res){     
-							$("#city").empty();
-							$("#city").append('<option value="0">Select City</option>');
-							
-							$.each(res.cities,function(index, cityObj){
-									console.log(cityObj);
-							$("#city").append('<option value="' + cityObj.city_code + '" ' + (cityObj.city_code === res.cityCode ? 'selected="selected"' : '' )+ ' ' + (cityObj.city_code == oldCity_code ? 'selected="selected"' : '' )+ '>'+cityObj.city_name+'</option>');
-							});	
-							}
-							else{
-								$("#city").empty();
-							}
-					}
-				});
-	}
 
 });
 </script>

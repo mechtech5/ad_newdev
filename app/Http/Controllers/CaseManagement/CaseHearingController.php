@@ -23,44 +23,53 @@ class CaseHearingController extends Controller
 		$id = explode(',', request()->case_id);
 		$case_id = $id[0];
 		$page_name = $id[1];
-		$case = CaseMast::where('case_id',$case_id)->first();
+		$case = CaseMast::find($case_id);
+
 		$assign_mem = CaseLawyer::with('member')->where('deallocate_date',null)->where('case_id',$id)->get();
 	
 		return view('case_management.case_hearing.create',compact('case','page_name','assign_mem'));
 	}
 
 	public function store(Request $request){
-	
-
 		$data = $this->validation($request);
-		dd($data);
-		$all_lawyer[]= request()->lawyer_names;
-		$count = 0;
-		foreach ($all_lawyer as $type) {
-		$count+= count($type);
-		$lawyer_team=implode(';',$type);
+		$data['lawyer_names'] = json_encode($data['lawyer_names']);
+		$data['judges_name'] = json_encode($data['judges_name']);
 
-		}
-		$judges_name[]= request()->judges_name;
-		$count = 0;
+		
+		$prev_hearing = CaseDetail::where('case_id',$data['case_id'])->get();
 
-		foreach ($judges_name as $types) {
-		$count+= count($types);
-		$judge_team=implode(';',$types);
+		if(count($prev_hearing) !=0){
+			$end_array = $prev_hearing[sizeof($prev_hearing) - 1];
+			$end_date = $end_array->hearing_date;
+			$end_seq_no = $end_array->seq_no +1;
+			
+			
+			$data['seq_no'] = $end_seq_no;
 
-		}
-		$data['lawyer_names']=$lawyer_team;
-		$data['judges_name']=$judge_team;
+			if($end_date > $data['hearing_date']){
+				$request->validate([
+					'hearing_date' => 'after:'.$end_date,
+				],
+				[
+					'hearing_date.after' => 'hearing date must be unique case last hearing date: '.$end_date,
+				]);
+			}
 
-		$cust_id=request()->case_id;
-
-		CaseDetail::insert($data);
-		if($request->page_name == 'clients'){
-			return redirect()->route('case_mast.show', $data['case_id'].',clients')->with('success', 'Case Hearing Inserted Successfully');
 		}
 		else{
-			return redirect()->route('case_mast.show', $data['case_id'].',case_diary')->with('success', 'Case Hearing Inserted Successfully');
+			$data['seq_no'] = '1';
 		}
+		$case =CaseMast::find($data['case_id']); 
+		$data['cust_id'] = $case->cust_id;
+		
+		CaseDetail::create($data);
+		if($request->page_name == 'calendar'){
+			return redirect()->back()->with('success', 'Case Hearing Inserted Successfully');
+		}
+		else{
+			return redirect()->route('case_mast.show', $data['case_id'].','.$request->page_name)->with('success', 'Case Hearing Inserted Successfully');
+		}
+		
 	}
 
 	public function show($id){
@@ -69,6 +78,7 @@ class CaseHearingController extends Controller
 		$page_name = $id[1];
 
 		$case_hearings = CaseDetail::where('case_id',$case_id)->get();
+
 		return view('case_management.case_hearing.show',compact('case_hearings','page_name','case_id'));
 	}
 
@@ -78,42 +88,47 @@ class CaseHearingController extends Controller
 		$case_tran_id = $id[0];
 		$page_name = $id[1];
 
-		$edit_detail=CaseDetail::where('case_tran_id',$case_tran_id)->first();
-		$names=$edit_detail->lawyer_names;
-		$sep_name=explode(";",$names);
+		$case_hearing = CaseDetail::find($case_tran_id);
 
-		$judge=$edit_detail->judges_name;
-		$jug_name=explode(";",$judge);
+		$lawyer_ids = json_decode($case_hearing->lawyer_names);
 
-		return view('case_management.case_hearing.edit',compact('edit_detail','sep_name','jug_name','page_name'));
+		$judges_name = json_decode($case_hearing->judges_name);
+
+
+		$assign_mem = CaseLawyer::with('member')->where('deallocate_date',null)->where('case_id',$case_hearing->case_id)->get();
+
+		return view('case_management.case_hearing.edit',compact('case_hearing','assign_mem','page_name','lawyer_ids','judges_name'));
 
 	}  
 
 	public function update(Request $request ,$id){
+		
 		$data = $this->validation($request);
-		$lawyer[]=request()->lawyer_names;
-		foreach($lawyer as $total){
-		$count= count($total);
-		$lawyer_total=implode(';',$total);
+		$data['lawyer_names'] = json_encode($data['lawyer_names']);
+		$data['judges_name'] = json_encode($data['judges_name']);
 
+		$case_hearing = CaseDetail::find($id);
+		// return $case_hearing->hearing_date;
+		if($case_hearing->hearing_date != $data['hearing_date'] ){
+			$prev_hearing = CaseDetail::where('case_id',$data['case_id'])->get();
+			if(count($prev_hearing) !=0){
+				$end_array = $prev_hearing[sizeof($prev_hearing) - 1];
+				$end_date = $end_array->hearing_date;
+				if($end_date > $data['hearing_date']){
+					$request->validate([
+						'hearing_date' => 'after:'.$end_date,
+					],
+					[
+						'hearing_date.after' => 'hearing date must be unique case last hearing date: '.$end_date,
+					]);
+				}
+			}
 		}
-		$judge[]=request()->judges_name;
-		foreach($judge as $j_total){
-		$j_count= count($j_total);
-		$judge_total=implode(';',$j_total);
-
-		}
-
-		$data['lawyer_names']=$lawyer_total;
-		$data['judges_name']=$judge_total;
-
+		
 		CaseDetail::where('case_tran_id',$id)->update($data);
-		if($request->page_name == 'clients'){ 
-			return redirect()->route('case_mast.show', $request->case_id.',clients')->with('success', 'Case Hearing Updated Successfully'); 
-		}
-		else{
-			return redirect()->route('case_mast.show', $request->case_id.',case_diary')->with('success', 'Case Hearing Updated Successfully'); 
-		}
+		
+		return redirect()->route('case_mast.show', $request->case_id.','.$request->page_name)->with('success', 'Case Hearing Updated Successfully'); 
+		
 
 	}
 	public function destroy($id){
@@ -129,16 +144,22 @@ class CaseHearingController extends Controller
 		$data= $request->validate([
 			'case_id'          => 'required',
 			'user_id'          => 'required',
-			'cust_id'          => 'required',
-			'hearing_date'     => 'required|date_format:Y-m-d',
+			'hearing_date'     => 'required|date_format:Y-m-d|after_or_equal:today',
 			'start_time'       => 'required',
 			'lawyer_names'     => 'required',
 			'judges_name'      => 'required',
-			'next_hearing_date'=> 'required|date_format:Y-m-d',
-			'case_charged'     => 'nullable|numeric',
-			'case_charges_type'=> 'required|not_in:0'
-
+			'hearing_notes'    => 'required',
 		]);
 		return $data;
+	}
+	public function next_hear_date_update($case_hearing,$data){
+		$next_he_date = $case_hearing->next_hearing_date;
+		return $next_he_date;
+		if($case_hearing->next_hearing_date != $data['hearing_date'] ){
+				$next_h_date['next_hearing_date'] = $data['hearing_date']; 
+
+			 CaseDetail::where('case_tran_id',$case_hearing->case_tran_id)->where('next_hearing_date',$case_hearing->next_hearing_date)->update($next_h_date);
+
+			}
 	}
 }

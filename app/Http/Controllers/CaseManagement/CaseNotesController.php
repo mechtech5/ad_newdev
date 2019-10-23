@@ -22,16 +22,11 @@ class CaseNotesController extends Controller
 
 	public function store(Request $request){
 		$data = $this->validation($request);
-
 		$data['case_note_date'] = date('Y-m-d');
-		CaseNotes::insert($data);
-
-		if($request->page_name == 'clients'){
-			return redirect()->route('case_mast.show', $data['case_id'].',clients')->with('success', 'Case Notes Inserted Successfully');
-		}
-		else{
-			return redirect()->route('case_mast.show', $data['case_id'].',case_diary')->with('success', 'Case Notes Inserted Successfully');
-		}
+		CaseNotes::create($data);
+	
+		return redirect()->route('case_mast.show', $data['case_id'].','.$request->page_name)->with('success', 'Case Notes Inserted Successfully');
+		
 	}
 	public function show($id){
 		$id = explode(',', $id);
@@ -54,13 +49,9 @@ class CaseNotesController extends Controller
 		$data = $this->validation($request);
 		CaseNotes::where('case_notes_id',$notes_id)->update($data);
 
-		if($request->page_name == 'clients'){ 
-			return redirect()->route('case_mast.show', $request->case_id.',clients')->with('success', 'Case Notes Updated Successfully'); 
-		}
-		else{
-			return redirect()->route('case_mast.show', $request->case_id.',case_diary')->with('success', 'Case Notes Updated Successfully'); 
-		}
-
+		
+		return redirect()->route('case_mast.show', $request->case_id.','.$request->page_name)->with('success', 'Case Notes Updated Successfully'); 
+	
 	}
 
 	public function destroy($notes_id){

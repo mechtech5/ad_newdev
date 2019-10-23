@@ -10,7 +10,7 @@
 					@if($page_name == 'clients')
 						<a href="{{route('clients.show',$case->cust_id)}}" class="btn btn-sm btn-info pull-right">Back</a>
 					@else
-						<a href="{{route('case_mast.index',['caseBtn' =>'cg'])}}" class="btn btn-sm btn-info pull-right">Back</a>
+						<a href="{{route('case_mast.index',['caseBtn' =>'cr'])}}" class="btn btn-sm btn-info pull-right">Back</a>
 					@endif
 
 				</h3>

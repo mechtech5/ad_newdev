@@ -23,25 +23,25 @@ use App\Models\CourtType;
 use App\Models\CatgMast;
 use App\Models\Booking;
 use App\Models\MessageTalk;
+use App\Helpers\Helpers;
 class LawFirmController extends Controller
 {
 	public function index(){
 
 		$id = Auth::user()->id;
+		$del_client = Helpers::deletedClients();
+		$user = User::with(['clients' => function($query)use($del_client){
+				$query->whereNotIn('cust_id',$del_client);
+		}, 'messages' => function($query){
+			$query->where('status',0);
+		},'members' => function($query){
+			$query->where('status','!=','S');
+		}])->find($id);
+	
+		
+		$allcases = CaseMast::with('casetype')->where('case_mast.user_id',$id)->whereNotIn('cust_id',$del_client)->get();
 
-		$client_datas  = Customer::onlyTrashed()->where('user_id',$id)->get();
-		$client_ids = array();
-
-		foreach($client_datas as $client_data){
-			$client_ids[] = $client_data->cust_id;
-		}
-
-
-		$total_clients = Customer::where('user_id',$id)->whereNotIn('cust_id',$client_ids)->get();
-
-		$allcases = CaseMast::with('casetype')->where('case_mast.user_id',$id)->whereNotIn('cust_id',$client_ids)->get();
-
-		$onCases = CaseMast::with('casetype','client')->where('case_mast.user_id',$id)->where('case_mast.case_status','cg')->whereNotIn('cust_id',$client_ids)->get();
+		$onCases = CaseMast::with('casetype','client')->where('case_mast.user_id',$id)->where('case_mast.case_status','cg')->whereNotIn('cust_id',$del_client)->get();
 
 		$message = MessageTalk::where('recv_id',$id)->where('status',0)->get(); 
 
@@ -58,12 +58,9 @@ class LawFirmController extends Controller
 						->where('user_status',0)
 						->get();
 
-		$landmarkcase = UserJugments::find($id);
-		$practicing_courts = Court::with('court_catg')->where('user_id',$id)->get();
+	
 
-		$spec = Specialization::where('user_id',$id)->get();
-
-		return view('lawfirm.dashboard.index',compact('total_clients','allcases','onCases','message','unbookings','booked','cancelled','landmarkcase','practicing_courts','spec'));
+		return view('lawfirm.dashboard.index',compact('user','allcases','onCases','message','unbookings','booked','cancelled'));
 
 	}
 	public function show($id){

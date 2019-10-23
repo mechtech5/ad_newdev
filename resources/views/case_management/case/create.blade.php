@@ -10,7 +10,7 @@
 					@if($page_name == 'clients')
 						<a href="{{route('clients.show',$cust_id)}}" class="btn btn-sm btn-info pull-right">Back</a>
 					@else
-						<a href="{{route('case_mast.index',['caseBtn' =>'cg'])}}" class="btn btn-sm btn-info pull-right">Back</a>
+						<a href="{{route('case_mast.index',['caseBtn' =>'cr'])}}" class="btn btn-sm btn-info pull-right">Back</a>
 					@endif
 
 				</h3>
@@ -312,7 +312,7 @@
 						<div class="col-md-12" style="margin-top: 10px;">
 							<label for="team_id">Team Member </label><span class="text-muted">(Case assign to team member)</span>
 							<select class="form-control" name="team_id[]" multiple="multiple" id="select2">
-								<option value="{{Auth::user()->id}}" {{ (collect(old('team_id'))->contains(Auth::user()->id)) ? 'selected':'selected' }}  >{{Auth::user()->name}}</option>
+								<option value="{{Auth::user()->id}}" {{ (collect(old('team_id'))->contains(Auth::user()->id)) ? 'selected':'selected' }} >{{Auth::user()->name}}</option>
 								@foreach($members as $member)
 									<option value="{{$member->id}}" {{ (collect(old('team_id'))->contains($member->id)) ? 'selected':'' }}>{{$member->name}}</option>
 								@endforeach
@@ -346,7 +346,9 @@ $(document).ready(function(){
 	// 	//	endDate: new Date(),
 	// 	});
 	// });	
-	$('#select2').select2();	
+	$('#select2').select2({
+		allowClear: true,
+	});	
 	$(function () {
 		$("#datepicker,#affidavit_date,#regdatepicker").datepicker();
 	});

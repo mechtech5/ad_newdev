@@ -50,7 +50,7 @@ class CaseDocController extends Controller
 		$file = $request->file('doc_name');
 		$filename =  time().'_'.$file->getClientOriginalName();
 		$path = $file->storeAs('public/document', $filename);
-		$url = Storage::url('app/public/document/'.$filename);
+		$url = Storage::url('/document/'.$filename);
 		// $size = Storage::size('public/document', $filename);
 		$data['doc_name'] = $filename;	
 		$data['doc_url'] = $url;
@@ -59,12 +59,8 @@ class CaseDocController extends Controller
 
 		CaseDoc::insert($data);
 
-		if($request->page_name == 'clients'){
-			return redirect()->route('case_mast.show', $data['case_id'].',clients')->with('success', 'Case Document Inserted Successfully');
-		}
-		else{
-			return redirect()->route('case_mast.show', $data['case_id'].',case_diary')->with('success', 'Case Document Inserted Successfully');
-		}
+		
+		return redirect()->route('case_mast.show', $data['case_id'].','.$request->page_name)->with('success', 'Case Document Inserted Successfully');
 	}
 	public function show($id){
 		$id = explode(',', $id);

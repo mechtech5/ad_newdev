@@ -25,14 +25,17 @@
 	@include('calendar.calendar_modal')
 </section>
  <script>
+ @if($message = Session::get('success'))
+ 	alert("{{$message}}");
+ @endif
 	$(document).ready(function() {
 	// page is now ready, initialize the calendar...
 	$('#calendar').fullCalendar({
 
 		header: {
-		left: 'prev today next ',
+		right: 'prev today next ',
 		center: 'title',
-		right: 'month,agendaWeek,agendaDay,listWeek'
+		left: 'month,agendaWeek,agendaDay,listWeek'
 		},
 		height: 600,
 		navLinks: true,
@@ -100,6 +103,7 @@
 			// alert(end_date);
 	        $('.start_date').val(start_date);
 			$('.end_date').val(end_date);
+			// $('#regdatepicker').val(start_date);
 			$('#calendar_modal').modal('show');
 	         
 	    }

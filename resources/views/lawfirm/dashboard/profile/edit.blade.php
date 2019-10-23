@@ -119,7 +119,7 @@
 						<select name="state_code" class="form-control" id="state">
 							<option value="0">Select state</option>
 							@foreach($states as $state)
-								<option value="{{ $state->state_code }}" {{$state->state_code == Auth::user()->state_code ? 'selected' : ''}} {{ old('state_code')== $state->state_code ? 'selected' : ''}}>{{ $state->state_name}}</option>
+								<option value="{{ $state->state_code }}" {{$state->state_code == $user->state_code ? 'selected' : ''}} {{ old('state_code')== $state->state_code ? 'selected' : ''}}>{{ $state->state_name}}</option>
 							@endforeach
 						</select>
 						@error('state_code')
@@ -297,98 +297,41 @@
 
 <script type="text/javascript">
 
-	$(document).ready(function(){
-		
-	
-		$(function () {
-			$("#datepicker").datepicker({ 
-				singleDatePicker: true,
-				showDropdowns: true,
-			});
+$(document).ready(function(){
+			
+	$(function () {
+		$("#datepicker").datepicker({ 
+			singleDatePicker: true,
+			showDropdowns: true,
 		});
+	});
 
+	$('#state').on('change',function(e){
+		e.preventDefault();
+		var state_code = $(this).val();
+		var city_code = "";
+		state(state_code, city_code);
+	});
+	   
+	var state_code =("{{old('state_code')}}" == '' ? "{{$user->state_code}}" : "{{old('state_code')}}" );  
+	var city_code = ("{{old('city_code')}}" == '' ? "{{$user->city_code}}" : "{{old('city_code')}}" );
 
-
-		$('#individual').on('change', function(){
-			$('#comp_select').hide();
-		});
-		$('#unlawcomp').on('change', function(){
-
-			$('#comp_select').show();	
-		});
-
-		var user_flag = $("input[name='user_flag']:checked").val();
-		if(user_flag=='cl'){
-			$('#comp_select').show();
-		}
-$('#state').on('change',function(){
-    var state_code = $(this).val();    
-    if(state_code){
-        $.ajax({
-           type:"GET",
-           url:"{{route('city')}}?state_code="+state_code,
-           success:function(res){               
-            if(res){
-                $("#city").empty();
-                $.each(res,function(key,value){
-                    $("#city").append('<option value="'+value.city_code+'">'+value.city_name+'</option>');
-                });
-           
-            }else{
-               $("#city").empty();
-            }
-           }
-        });
-    }else{
-        $("#city").empty();
-    }
-        
-   });
-
-var oldCity_code = "{{old('city_code')}}";
-
-var stateCode = $('#state').val();
-	
-	if(stateCode!=0){
-			$.ajax({
-
-				
-					type:"GET",
-					 url:"{{route('cityDropDown')}}?state_code="+stateCode,
-					success:function(res){    
-
-						if(res){     
-							$("#city").empty();
-							$("#city").append('<option value="0">Select City</option>');
-							
-							$.each(res.cities,function(index, cityObj){
-
-							$("#city").append('<option value="' + cityObj.city_code + '" ' + (cityObj.city_code === res.cityCode ? 'selected="selected"' : '' )+ ' ' + (cityObj.city_code == oldCity_code ? 'selected="selected"' : '' )+ '>'+cityObj.city_name+'</option>');
-							});	
-							}
-							else{
-								$("#city").empty();
-							}
-					}
-				});
+	if(state_code !=''){
+		state(state_code, city_code);
 	}
 
 
-tinymce.init({
- /* replace textarea having class .tinymce with tinymce editor */
+	tinymce.init({
 		selector: "textarea.tinymce",
-		// theme: "modern",
-		// skin: "lightgray",
 		plugins: [
 		"advlist autolink link image lists charmap print preview hr anchor pagebreak",
 		
 		"   directionality emoticons template paste textcolor"
 		],
 		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |  forecolor backcolor ",
-
 		height: 300,
-  });
- 
+	});
+	 
 
 });
 

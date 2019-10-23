@@ -111,9 +111,9 @@ class ClientsController extends Controller
         $status_types    = Status::get();
         $cust_types = DB::table('cust_type_mast')->get();
         $states     = State::where('country_code',102)->get();
-        $clients = Customer::where('cust_id', $id)->first();
+        $client = Customer::where('cust_id', $id)->first();
 
-        return view('clients.edit',compact('status_types','cust_types','states', 'clients'));
+        return view('clients.edit',compact('status_types','cust_types','states', 'client'));
 
     }
 

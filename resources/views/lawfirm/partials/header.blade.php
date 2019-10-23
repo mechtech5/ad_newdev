@@ -41,7 +41,8 @@
   <style type="text/css">
    .select2-container--default .select2-selection--multiple .select2-selection__choice {
       background-color: #247ae4;
-    } 
+    }
+    .select2-selection__choice__remove,.select2-selection__clear{display:none !important;} 
 </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -288,6 +289,12 @@
             </a>
           </li>
        
+          <li class="{{Request()->segment(1) == 'case_diary' ? 'active' : '' }} {{$page_name == 'case_diary' ? 'active' : '' }} nav-item">
+            <a class="nav-link" href="{{route('case_mast.index')}}">
+              <i class="fa fa-book"></i>
+              <span >Case Diary</span>             
+            </a>
+          </li>
           <li class="{{Request()->segment(1) == 'appointment' ? 'active' : '' }} nav-item">
             <a class="nav-link" href="{{route('appointment.index')}}">
               <i class="fa fa-calendar"></i>
@@ -295,25 +302,7 @@
             </a>
           </li>
            
-            
-         {{--  <li class="treeview">
-          <a href="#">
-            <i class="fa fa-envelope"></i>
-            <span>Mailbox</span>
-             @if(count($msg) !=0) 
-                <span class="pull-right-container">
-                  <span class="label bg-red pull-right">{{count($msg)}}</span>
-                </span>
-              @endif
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> Inbox</a></li>
-            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Sent</a></li>
-        
-          </ul>
-        </li>
- --}}
-
+      
 
 
            <li class="{{Request()->segment(1) == 'booking' ? 'active' : '' }} nav-item">
@@ -341,17 +330,6 @@
           </li>
 
 
-          <li class="{{Request()->segment(1) == 'case_diary' ? 'active' : '' }} {{$page_name == 'case_diary' ? 'active' : '' }} nav-item">
-            <a class="nav-link" href="{{route('case_mast.index',['caseBtn' =>'cr'])}}">
-              <i class="fa fa-book"></i>
-              <span >Case Diary</span>
-
-            {{--   <span class="pull-right-container">
-                <span class="label bg-red pull-right">Beta Release</span>
-              </span> --}}
-             
-            </a>
-          </li>
           {{-- @if(Auth::user()->user_catg_id == '3') --}}
           <li class="{{Request()->segment(1) == 'calendar' ? 'active' : ''}} nav-item">
               <a class="nav-link" href="{{route('calendar.index')}}">

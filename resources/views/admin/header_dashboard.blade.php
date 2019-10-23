@@ -238,7 +238,7 @@
               <span class="menu-title"> Contact Us</span>
             </a>
           </li>
-          <li class="treeview {{Request()->segment(2) == 'master' ? 'menu-open' : ''}}">
+          <li class="treeview {{Request()->segment(1) == 'master' ? 'active' : '' }}">
             <a href="">
               <i class="fa fa-table"></i> <span>Master</span>
               <span class="pull-right-container">
@@ -246,7 +246,7 @@
               </span>
             </a>
             <ul class="treeview-menu">
-                <li class="treeview">
+                <li class="treeview {{Request()->segment(2) == 'location' ? 'active' : '' }}">
                   <a href="">
                     <i class="fa fa-map-marker"></i> <span>Location</span>
                     <span class="pull-right-container">
@@ -254,14 +254,14 @@
                     </span>
                   </a>
                   <ul class="treeview-menu">
-                    <li><a href="{{route('country.index')}}"><i class="fa fa-circle-o"></i> Country</a></li>
-                    <li><a href="{{route('state.index')}}"><i class="fa fa-circle-o"></i> State</a></li>
-                    <li><a href="{{route('city.index')}}"><i class="fa fa-circle-o"></i> City</a></li>
+                    <li  class="{{Request()->segment(3) == 'country' ? 'active' : '' }}"><a href="{{route('country.index')}}"><i class="fa fa-circle-o"></i> Country</a></li>
+                    <li  class="{{Request()->segment(3) == 'state' ? 'active' : '' }}"><a href="{{route('state.index')}}"><i class="fa fa-circle-o"></i> State</a></li>
+                    <li  class="{{Request()->segment(3) == 'city' ? 'active' : '' }}"><a href="{{route('city.index')}}"><i class="fa fa-circle-o"></i> City</a></li>
                   </ul>
                 </li>
-                <li ><a href="{{route('slots.index')}}"><i class="fa fa-clock-o"></i> Slots</a></li>
+                <li class="{{Request()->segment(2) == 'slots' ? 'active' : '' }} nav-item" ><a href="{{route('slots.index')}}"><i class="fa fa-clock-o"></i> Slots</a></li>
 
-                 <li class="treeview">
+                 <li class="treeview {{Request()->segment(2) == 'specialization' ? 'active' : '' }}">
                   <a href="">
                     <i class="fa fa-gavel"></i> <span>Specialization</span>
                     <span class="pull-right-container">
@@ -269,12 +269,12 @@
                     </span>
                   </a>
                   <ul class="treeview-menu"> 
-                    <li><a href="{{route('spec_category.index')}}"><i class="fa fa-circle-o"></i> Category</a></li>
-                    <li><a href="{{route('spec_subcategory.index')}}"><i class="fa fa-circle-o"></i> Subcategory</a></li>
+                    <li class="{{Request()->segment(3) == 'spec_category' ? 'active' : '' }}"><a href="{{route('spec_category.index')}}"><i class="fa fa-circle-o"></i> Category</a></li>
+                    <li class="{{Request()->segment(3) == 'spec_subcategory' ? 'active' : '' }}"><a href="{{route('spec_subcategory.index')}}"><i class="fa fa-circle-o"></i> Subcategory</a></li>
                   </ul>
                 </li>
 
-                <li class="treeview">
+                <li class="treeview {{Request()->segment(2) == 'qualification' ? 'active' : '' }}">
                   <a href="">
                     <i class="fa fa-graduation-cap"></i> <span>Qualification</span>
                     <span class="pull-right-container">
@@ -282,12 +282,12 @@
                     </span>
                   </a>
                   <ul class="treeview-menu"> 
-                    <li><a href="{{route('qual_category.index')}}"><i class="fa fa-circle-o"></i> Category</a></li>
-                    <li><a href="{{route('qual_subcategory.index')}}"><i class="fa fa-circle-o"></i> Subcategory</a></li>
+                    <li class="{{Request()->segment(3) == 'qual_category' ? 'active' : '' }}"><a href="{{route('qual_category.index')}}"><i class="fa fa-circle-o"></i> Category</a></li>
+                    <li class="{{Request()->segment(3) == 'qual_subcategory' ? 'active' : '' }}"><a href="{{route('qual_subcategory.index')}}"><i class="fa fa-circle-o"></i> Subcategory</a></li>
                   </ul>
                 </li>
-                <li ><a href="{{route('case_type.index')}}"><i class="fa fa-book"></i> Case Type</a></li>
-                <li class="treeview">
+                <li class="{{Request()->segment(2) == 'case_type' ? 'active' : '' }}"><a href="{{route('case_type.index')}}"><i class="fa fa-book"></i> Case Type</a></li>
+                <li class="treeview {{Request()->segment(2) == 'court' ? 'active' : '' }}">
                   <a href="">
                     <i class="fa fa-university"></i> <span>Court</span>
                     <span class="pull-right-container">
@@ -295,8 +295,8 @@
                     </span>
                   </a>
                   <ul class="treeview-menu"> 
-                    <li><a href="{{route('court_category.index')}}"><i class="fa fa-circle-o"></i> Category</a></li>
-                    <li><a href="{{route('court_subcategory.index')}}"><i class="fa fa-circle-o"></i> Subcategory</a></li>
+                    <li class="{{Request()->segment(3) == 'court_category' ? 'active' : '' }}"><a href="{{route('court_category.index')}}"><i class="fa fa-circle-o"></i> Category</a></li>
+                    <li class="{{Request()->segment(3) == 'court_subcategory' ? 'active' : '' }}"><a href="{{route('court_subcategory.index')}}"><i class="fa fa-circle-o"></i> Subcategory</a></li>
                   </ul>
                 </li>
                 <li ><a href="{{route('user.index')}}"><i class="fa fa-user"></i> User</a></li>               

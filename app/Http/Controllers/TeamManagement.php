@@ -24,7 +24,7 @@ class TeamManagement extends Controller
     public function index()
     {
         $id = Auth::user()->id;
-        $members = User::with(['state','city','country'])->where('parent_id',$id)->get();
+        $members = User::with(['state','city','country'])->where('parent_id',$id)->where('status','!=','S')->get();
        
         return view('teams.index',compact('members'));
     }

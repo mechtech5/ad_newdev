@@ -91,5 +91,14 @@ class User extends Authenticatable
     public function user_courts(){
         return $this->hasMany('App\Models\Court','user_id');
     }
+    public function clients(){
+        return $this->hasMany('App\Models\Customer','user_id');
+    }
+    public function messages(){
+        return $this->hasMany('App\Models\MessageTalk','recv_id');
+    }
+    public function members(){
+        return $this->hasMany('App\User','parent_id');
+    }
 
 }

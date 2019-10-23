@@ -8,7 +8,7 @@ class CaseDetail extends Model
 {
    	use SoftDeletes;
     protected $table='case_detl';
+    protected $primaryKey = 'case_tran_id';
     protected $guarded = [];
-    public $timestamps = false;
     protected $dates = ['deleted_at'];
 }

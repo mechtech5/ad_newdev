@@ -33,22 +33,17 @@
 							{{'Case Ref'}}
 						@endif
 						</td>
-					<td class="d-flex">
-					<span>
-						<a href="{{asset($case_doc->doc_url)}}" class="btn btn-sm btn-success"><i class="fa fa-eye"></i>
-						</a>
-					</span>
-					<span class="ml-2"> 
-						<a href="{{route('fileDownload',['doc_id' =>$case_doc->doc_id])}}" class="btn btn-sm btn-info"><i class="fa fa-download"></i></a>
-					</span>
-			<span class="ml-2">
-				<form action="{{route('case_doc.destroy',['doc_id'=>$case_doc->doc_id])}}" method="POST" id="delform_{{$case_doc->doc_id}}">
-					@csrf
-					@method('DELETE')
+					<td >					
+					<form action="{{route('case_doc.destroy',['doc_id'=>$case_doc->doc_id])}}" method="POST" id="delform_{{$case_doc->doc_id}}">
+						@method('DELETE')
+							<a href="{{asset($case_doc->doc_url)}}" ><i class="btn btn-sm text-success fa fa-eye"></i>
+							</a>
+							<a href="{{route('fileDownload',['doc_id' =>$case_doc->doc_id])}}"><i class="btn btn-sm text-info fa fa-download"></i></a>
 
-				<a href="javascript:$('#delform_{{$case_doc->doc_id}}').submit();" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')" ><i class="fa fa-trash" ></i></a>
-			</form>
-				</span>
+							<a href="javascript:$('#delform_{{$case_doc->doc_id}}').submit();" onclick="return confirm('Are you sure?')" ><i class="fa fa-trash btn btn-sm text-danger" ></i></a>
+						@csrf
+					</form>
+		
 					</td>
 
 				</tr>							

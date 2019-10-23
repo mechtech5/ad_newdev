@@ -54,10 +54,6 @@ class UserController extends Controller
             'user_catg_id'  => 'required|not_in:0',
             'name'          => 'required|string|max:255',
             'email'         => 'required|email|max:255|unique:users',
-            'country_code'  => 'nullable',
-            'state_code'    => 'nullable',
-            'city_code'     => 'nullable',
-            'zip_code'      => 'nullable|min:6|max:6|regex:/^[0-9]+$/',
             'mobile'        => 'nullable|min:10|max:11|regex:/^[0-9]+$/',
 
         ]);

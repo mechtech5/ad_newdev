@@ -8,17 +8,102 @@
 			<div class="modal-body">
 				<div class="row">
         			<div class="col-md-12 text-center">
-        				<h4> <b>Type:</b> &nbsp; <span> <input type="radio" name="divtype" value="1" > Hearing Date</span>
-							<span> <input type="radio" name="divtype" value="0" checked> To-do</span> 
+        				<h4> <b>Type:</b> &nbsp; <span> <input type="radio" name="divtype" value="1" checked> Hearing Date</span>
+						<span> <input type="radio" name="divtype" value="0" > To-do</span> 
 
         				</h4>
         			</div> 
         		</div>
-				<div class="row" id="hearingDiv" style="display: none">
-					<div class=""></div>
+				<div class="row" id="hearingDiv">
+					<div class="col-md-12">
+						<form action="{{route('case_hearing.store')}}" method="post">
+						@csrf
+						<div class="row form-group">
+							<div class="col-md-12">
+								<label for="case_id">Belongs To:</label>
+								<select class="form-control" name="case_id" id="case" >
+									<option value="null">Select Case</option>
+									@foreach($cases as $case)
+										<option value="{{$case->case_id}}" {{old('case_id') == $case->case_id ? 'selected' : ''}}>{{$case->case_title}}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-12">
+								<label for="hearing_date">Hearing Date <span class="text-danger">*</span></label>
+								<input type="text" value="{{old('hearing_date')}}" class="form-control " name="hearing_date" required autocomplete="case_reg_date" autofocus  id="regdatepicker" data-date-format="yyyy-mm-dd" placeholder="{{date('Y-m-d')}}" readonly="true">
+								@error('hearing_date')
+									<span class="invalid-feedback text-danger" role="alert">
+									<strong>{{ $message }}</strong>
+									</span>
+								@enderror
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-12">
+								<label for="start_time">Start Time</label>
+								<input type='text' class="form-control" name= "start_time" id='datetimepicker3' value="{{old('start_time')}}"  placeholder="{{date('G:i:s')}}"  />
+								@error('start_time')
+									<span class="invalid-feedback text-danger" role="alert">
+									<strong>{{ $message }}</strong>
+									</span>
+								@enderror
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-12">
+								<label for="lawyer_names">Lawyer Names <span class="text-danger" >*</span></label><span class="text-muted"> (Who attend)</span>
+							<select name="lawyer_names[]" class="form-control members" multiple="multiple" id="select2" style="width: 100%" >
+								
+							</select>
+							
+							@error('lawyer_names')
+								<span class="invalid-feedback text-danger" role="alert">
+								<strong>{{ $message }}</strong>
+								</span>
+							@enderror
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-12">
+								<label for="judges_name">Judge Names <span class="text-danger" >*</span></label>
+								<table id='dynamic_field2' class='table'>
+
+								</table>
+
+								<button type="button" name="add" id="add_again" class="btn btn-success btn-sm">Add More</button>
+								
+								@error('judges_name')
+									<span class="invalid-feedback text-danger" role="alert">
+									<strong>{{ $message }}</strong>
+									</span>
+								@enderror
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-12">
+								<label for="hearing_notes">Hearing Description <span class="text-danger">*</span></label>
+								<textarea name="hearing_notes" rows="3" cols="50" class="form-control" id="tinymce">{{old('hearing_notes')}}</textarea>
+								@error('hearing_notes')
+									<span class="invalid-feedback text-danger" role="alert">
+									<strong>{{ $message }}</strong>
+									</span>
+								@enderror
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-12" style="margin-top: 10px;">
+								<input type="hidden" name="user_id" value="{{Auth::user()->id }}">
+								<input type="hidden" name="page_name" value="calendar">
+								<button type="submit" class="btn btn-primary btn-md">Submit</button>
+							</div>
+						</div>
+						</form>
+					</div>
 				</div>
 
-				<div class="row " id="todoDiv">
+				<div class="row " id="todoDiv" style="display: none">
 					<div class="col-md-12">
 					<form action="{{route('todos.store')}}" method="POST">
 						<div class="row form-group">
@@ -65,7 +150,6 @@
 								<label for="team_id">Assign To Team Members</label>
 								<br>
 								<select name="team_id[]" class="form-control" id="select2" multiple="multiple"  style="width: 100%" required>	
-									<option value="">Select Team Members</option>	
 									<option value="1" {{Auth::user()->id == 1 ? 'selected' : '' }}>Member 1 </option>
 									<option value="2" {{Auth::user()->id == 2 ? 'selected' : '' }}>Member 2 {{Auth::user()->name}}</option>
 								</select>							
@@ -91,20 +175,102 @@
 	</div>
 </div>
 <script >
-	$(document).ready(function(){
-		$('#select2').select2();
-		$(".start_date,.end_date").datepicker({
-			startDate : new Date(),
-			format : 'yyyy-mm-dd',
-			todayHighlight : true,
-			setDate : new Date(),
-			autoclose :true,
-		});
 
-		$('input[name="divtype"]').on('change',function(){
-			var type = $(this).val();
-
-		})
+$(document).ready(function(){
+	$('input[name="divtype"]').on('change',function(){
+		var type = $(this).val();
+		if(type == '1'){
+			$('#hearingDiv').show();
+			$('#todoDiv').hide();
+		}else{
+			$('#todoDiv').show();
+			$('#hearingDiv').hide();
+		}
 
 	});
+
+	$('#select2').select2();
+	
+	$(".start_date,.end_date,#regdatepicker").datepicker({
+		startDate : new Date(),
+		format : 'yyyy-mm-dd',
+		todayHighlight : true,
+		setDate : new Date(),
+		autoclose :true,
+	});
+	tinymce.init({
+		selector: 'textarea#tinymce',
+		menubar: false,
+		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |  forecolor backcolor ",
+	});
+	var judges_name = "{{ count(collect(old('judges_name'))) }}";
+	if(judges_name != '0' ){
+		var j=0;
+		@php 
+			$i =0;
+			$count = count(collect(old('judges_name')));
+		@endphp
+		$('#dynamic_field2').append('<tr id="row'+j+'"><td style="padding:8px"><input type="text" name="judges_name[]" value="{{old('judges_name.'.$i)}}" placeholder="Enter Judge Name" class="form-control name_list" required /></td></tr>');
+		j++;
+		@php 
+			$i++;
+ 			while($i < $count) { 
+ 		@endphp	
+			$('#dynamic_field2').append('<tr id="row'+"{{$i}}"+'"><td style="padding:8px"><input type="text" name="judges_name[]" placeholder="Enter Judge Name" value="{{old('judges_name.'.$i)}}" class="form-control name_list" required /></td><td style="padding:8px"><button type="button" name="remove" id="'+"{{$i}}"+'" class="btn btn-sm btn-danger btn_remove"><i class="fa fa-close"></i></button></td></tr>');
+	 	@php 
+	 		$i++;
+	 	  }
+	 	@endphp
+		j = "{{$i}}" ;
+	}
+	else{
+	var j=0;
+		$('#dynamic_field2').append('<tr id="row'+j+'"><td style="padding:8px"><input type="text" name="judges_name[]" placeholder="Enter Judge Name" class="form-control name_list" required /></td></tr>');
+		j++;
+	}	
+	$('#add_again').click(function(){
+		$('#dynamic_field2').append('<tr id="row'+j+'"><td style="padding:8px"><input type="text" name="judges_name[]" placeholder="Enter Judge Name" class="form-control name_list" required /></td><td class="padding:8px"><button type="button" name="remove" id="'+j+'" class="btn btn-sm btn-danger btn_remove"><i class="fa fa-close"></i></button></td></tr>');
+
+		j++;
+	});
+	$(document).on('click', '.btn_remove', function(){
+		var button_id = $(this).attr("id");
+		//alert(button_id); 
+		$('#row'+button_id+'').remove();
+	});
+
+	$('#case').on('change',function(e){
+		e.preventDefault();
+		var case_id = $(this).val();
+		members(case_id);
+	});
+	var case_id = "{{old('case_id')}}";
+	if(case_id != null){
+		members(case_id);		
+	}
+	function members(case_id){
+		var auth_id = "{{Auth::user()->id}}"; 
+		$.ajax({
+			type:'GET',
+			url : "{{route('case_member')}}?case_id="+case_id,
+			success:function(res){
+				if(res){
+					$('.members').empty();
+					$.each(res,function(key,value){
+						$('.members').append('<option value="'+value.user_id1+'" '+(auth_id == value.user_id1 ? 'selected' : '') +' >'+value.member.name+'</option>');
+					});
+				}else{
+					$('.members').empty();
+				}
+			}
+		});
+	}
+
+
+
+	$('#datetimepicker3').datetimepicker({
+	    format: 'HH:mm:ss',
+
+	});
+});
 </script>

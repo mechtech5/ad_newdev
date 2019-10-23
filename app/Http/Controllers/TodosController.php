@@ -22,13 +22,13 @@ class TodosController extends Controller
         $client_ids = Helpers::deletedClients();
         $id =Auth::user()->id;
         $cases = CaseMast::with('casetype','client')
-                            ->where('case_mast.user_id',$id)
-                            ->where('case_mast.case_status','cg')
-                            ->whereNotIn('cust_id',$client_ids)
-                            ->get();
-                      
-        $members = User::where('parent_id',Auth::user()->id)->where('user_flag', '=','A')->where('status','A')->get();
-    	return view('todos.create',compact('members','cases'));
+                        ->where('case_mast.user_id',$id)
+                        ->where('case_mast.case_status','cr')
+                        ->whereNotIn('cust_id',$client_ids)
+                        ->get();
+
+        $members = User::where('parent_id',$id)->where('status','A')->get();
+    	return view('todos.create',compact('cases','members'));
     }
     public function store(Request $request){
     	$data =  $request->validate([
@@ -88,4 +88,16 @@ class TodosController extends Controller
     
     	return view('todos.todo_table',compact('todos'));
     }
+    // public function create_form(){
+    //     $client_ids = Helpers::deletedClients();
+    //     $id =Auth::user()->id;
+    //     $cases = CaseMast::with('casetype','client')
+    //                         ->where('case_mast.user_id',$id)
+    //                         ->where('case_mast.case_status','cg')
+    //                         ->whereNotIn('cust_id',$client_ids)
+    //                         ->get();
+
+    //     $members = User::where('parent_id',$id)->where('status','A')->get();
+    //     return view('forms.todo.create',compact('members','cases'));
+    // }
 }

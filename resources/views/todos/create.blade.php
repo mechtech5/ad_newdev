@@ -62,8 +62,7 @@
 							<div class="col-md-6">
 								<label for="team_id">Assign To Team Members</label>
 								<select name="team_id[]" class="form-control" id="select2" multiple="multiple" required>	
-									<option value="">Select Team Members</option>	
-									<option value="{{Auth::user()->id}}" selected="">{{Auth::user()->name}}</option>
+									<option value="{{Auth::user()->id}}" selected="" disabled="true">{{Auth::user()->name}}</option>
 									@foreach($members as $member)
 										<option value="{{$member->id}}">{{$member->name}}</option>
 									@endforeach
