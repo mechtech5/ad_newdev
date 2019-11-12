@@ -22,6 +22,8 @@ use App\Models\CourtMast;
 use App\Models\CourtType;
 use App\Models\CatgMast;
 use App\Models\Booking;
+use App\Models\Todo;
+use App\Models\CaseDetail;
 use App\Models\MessageTalk;
 use App\Helpers\Helpers;
 class LawFirmController extends Controller
@@ -58,9 +60,16 @@ class LawFirmController extends Controller
 						->where('user_status',0)
 						->get();
 
-	
+		$cases = CaseMast::with('casetype','client')
+                        ->where('case_mast.user_id',$id)
+                        ->where('case_mast.case_status','cr')
+                        ->whereNotIn('cust_id',$del_client)
+                        ->get();
+                        				
+		$hearings = CaseDetail::with(['case','client'])->where('hearing_date','>=', date('Y-m-d') )->where('user_id',$id)->get();
+		$todos = Todo::where('status','P')->where('user_id',$id)->get();
 
-		return view('lawfirm.dashboard.index',compact('user','allcases','onCases','message','unbookings','booked','cancelled'));
+		return view('lawfirm.dashboard.index',compact('user','allcases','onCases','message','unbookings','booked','cancelled','hearings','todos','cases'));
 
 	}
 	public function show($id){

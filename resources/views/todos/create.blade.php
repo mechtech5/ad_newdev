@@ -51,27 +51,25 @@
 						</div>
 						<div class="row form-group">
 							<div class="col-md-6">
-								<label for="case_id">Relate To</label>
-								<select name="case_id" class="form-control">
-									<option value="null">Select Case</option>
+								<label for="case_id1">Relate To</label>
+								<select name="case_id1" class="form-control" id="caseTodo">
+									<option value="0">Select Case</option>
 									@foreach($cases as $case)
-										<option value="{{$case->case_id}}">{{$case->case_title}}</option>
+										<option value="{{$case->case_id}}" {{old('case_id1') ==$case->case_id ? 'selected' : '' }}>{{$case->case_title}}</option>
 									@endforeach
 								</select>
 							</div>
 							<div class="col-md-6">
-								<label for="team_id">Assign To Team Members</label>
-								<select name="team_id[]" class="form-control" id="select2" multiple="multiple" required>	
-									<option value="{{Auth::user()->id}}" selected="" disabled="true">{{Auth::user()->name}}</option>
-									@foreach($members as $member)
-										<option value="{{$member->id}}">{{$member->name}}</option>
-									@endforeach
+								<label for="users_id">Assign To Team Members</label>
+								<select name="users_id[]" class="form-control select2 members_todo" multiple="multiple"  style="width: 100%" required>	
+									
 								</select>							
 							</div>
 						</div>
 						<div class="row form-group">
 							<div class="col-md-12">
 								<input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+								<input type="hidden" name="page_name" value="todo">
 								<button type="submit" class="btn btn-sm btn-success">Submit</button>
 							</div>
 						</div>
@@ -84,7 +82,7 @@
 </section>
 <script>
 	$(document).ready(function(){
-		$('#select2').select2();
+		$('.select2').select2();
 		$(".start_date,.end_date").datepicker({
 			startDate : new Date(),
 			format : 'yyyy-mm-dd',
@@ -92,7 +90,16 @@
 			setDate : new Date(),
 			autoclose :true,
 		});
+		var auth_id = "{{Auth::user()->id}}";
+		var auth_name = "{{Auth::user()->name}}";
+		var case_id1="{{old('case_id1') != '' ? old('case_id1') : '0' }}";
+		case_members(case_id1,auth_id,auth_name);
 
+		$('#caseTodo').on('change',function(e){
+			e.preventDefault();
+			var case_id1 = $(this).val();
+			case_members(case_id1,auth_id,auth_name);
+		});
 
 	});
 </script>

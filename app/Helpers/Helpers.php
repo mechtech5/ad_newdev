@@ -80,5 +80,17 @@ class Helpers
 			        }]);
 		return $query;
 	}
+
+	public function last_id($old_data){
+		if(count($old_data) !=0){
+            foreach ($old_data as $value) {
+                $last_id = $value->id + 1;
+            }
+        }
+        else{
+            $last_id = '1';
+        }
+		return $last_id;
+	}
 	
 }

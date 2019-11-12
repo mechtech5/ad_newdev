@@ -139,12 +139,10 @@ class QualificationController extends Controller
             'pass_division.*'    => 'The selected passing division is invalid.'
         ]);
     }
-    public function qualCategory(){
-
+    public function qualCategory(){       
         $course_catg = QualMast::where('qual_catg_code',request()->qual_catg_code)
         ->get();
         return response()->json($course_catg);
-
     }
 
 

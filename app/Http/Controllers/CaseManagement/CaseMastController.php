@@ -21,6 +21,8 @@ use App\Models\CaseStatusMast;
 use App\Models\SubCatgMast;
 use App\Models\CourtType;
 use App\Models\CaseLawyer;
+use App\Models\Team;
+use App\Models\UserTeam;
 use App\Helpers\Helpers;
 
 class CaseMastController extends Controller
@@ -45,37 +47,35 @@ class CaseMastController extends Controller
 		$clients = Customer::where('user_id',Auth::user()->id)->whereNotIn('cust_id',$deleted_clients)->where('status_id','A')->get();  
 
 		$case_status = CaseStatusMast::all();
-	 	$members = User::where('parent_id',Auth::user()->id)->where('status','A')->get();
-	 	
-		return view('case_management.case.create', compact('cust_id','case_types','courts','page_name','clients','categories','states','case_status','members'));
+		$teams = Team::where('user_id', Auth::user()->id)->get();
+		return view('case_management.case.create', compact('cust_id','case_types','courts','page_name','clients','categories','states','case_status','teams'));
 	}
 
 
 	public function store(Request $request){
 
-
 		$id ="";
 		$data = $this->validate_data($request,$id);
+		$data['team_id'] = $request->team_id;
 
 		$verify = $request->validate([
-			'team_id' => 'required|not_in:""',			
+			'users_id' => 'required|not_in:""',					
 		]);
 
 		$case = CaseMast::create($data);
-		
 
 		foreach ($verify as $value) {
 			foreach($value as $val){
 				$data = [
 					'case_id' => $case->case_id,
 					'user_id' => Auth::user()->id,
-					'user_id1'=>$val,
+					'user_id1' => $val,
 					'allocate_date' => date('Y-m-d'),
 				];
 				CaseLawyer::create($data);
 			}
 		}
-
+ 
 		$page_name = $request->page_name;
 		if($page_name == 'clients'){
 			return redirect()->route('clients.show',$data['cust_id'])->with('success','Client case inserted successfully');
@@ -120,18 +120,28 @@ class CaseMastController extends Controller
 		$case_status = CaseStatusMast::all();
 
 		$case = CaseMast::find($case_id);
-		$members = User::where('parent_id',Auth::user()->id)->where('status','A')->get();
+		$teams = Team::where('user_id', Auth::user()->id)->get();
+
 		$assign_mem = CaseLawyer::where('deallocate_date',null)->where('case_id',$id)->get();
-		return view('case_management.case.edit',compact('case_types','courts','page_name','clients','categories','states','case_status','case','members','assign_mem'));
+
+		if($case->team_id == 0){
+            $members = User::where('parent_id',Auth::user()->id)->where('status','!=','S')->get();
+        }
+        else{
+            $members = UserTeam::with('users')->where('team_id',$case->team_id)->get();
+        }
+        // return $members;
+
+		return view('case_management.case.edit',compact('case_types','courts','page_name','clients','categories','states','case_status','case','teams','assign_mem','members'));
 	}
 
 
 	public function update(Request $request, $id){
 
 		$data = $this->validate_data($request,$id);
-		
+		$data['team_id'] = $request->team_id;
 		$verify = $request->validate([
-			'team_id' => 'required|not_in:""',			
+			'users_id' => 'required|not_in:""',			
 		]);
 		// return $verify;
 
@@ -198,7 +208,6 @@ class CaseMastController extends Controller
 			'case_status'       => 'required|not_in:0',
 			'cust_id'           => 'required|not_in:0',
 			'case_description'  => 'required|string',
-
 		]);      
 	
 

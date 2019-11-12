@@ -3,7 +3,7 @@
 
   <footer class="main-footer">
    
-    <strong>Copyright &copy; 2018 <a href="">ADLAW</a>.</strong> All rights
+    <strong>Copyright &copy; 2019 <a href="">ADLAW</a>.</strong> All rights
     reserved.
   </footer>
 
@@ -46,14 +46,14 @@
 
 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.0/moment.min.js"></script>
-        <script src="{{asset('js/bootstrap-datetimepicker.min.js')}}"></script>
+  <script src="{{asset('js/bootstrap-datetimepicker.min.js')}}"></script>
 
-        <script src="{{asset('js/parts-selector.js')}}"></script>
+  <script src="{{asset('js/parts-selector.js')}}"></script>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.js"></script>
 
@@ -62,8 +62,15 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script src="{{asset('adlaw_files/js/demo.js')}}"></script>
-<script type="text/javascript">
-  
+<script src="{{asset('js/all_category.js')}}"></script>
+<script >
+  $(document).ready(function(){
+    $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+  });
 </script>
 </body>
 </html>

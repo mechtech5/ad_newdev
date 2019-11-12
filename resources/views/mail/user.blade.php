@@ -21,9 +21,9 @@
 							<div class="col-md-12">
 								@if($user['parent_id'] == null)
 									<p> Adlaw have created your account please verfiy your account. your username and password is below here</p>
-								@elseif($user['user_flag'] == 'ct')
+								@elseif($user['user_catg_id'] == '6')
 									<p> Adlaw Law College have created your account please verfiy your account. your username and password is below here</p>
-								@elseif($user['user_flag'] == 'cl')
+								@elseif($user['user_catg_id'] == '2')
 									<p> Adlaw Law Company have created your account please verfiy your account. your username and password is below here</p>
 								@endif
 

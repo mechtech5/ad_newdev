@@ -11,10 +11,8 @@
 						<div class="col-md-12 text-center">
 							<label><i class="fa fa-square" style="color: #ff4566; height: 25px;width: 20px;"></i> Member To-dos</label>
 							<label><i class="fa fa-square" style="color: #fda503; height: 25px;width: 20px;"></i> Everyone To-dos</label>
-							<label><i class="fa fa-square" style="color: purple; height: 25px;width: 20px;"></i> Hearing Date</label>
 							<label><i class="fa fa-square" style="color: #8259ff; height: 25px;width: 20px;"></i> Hearing Morning Session</label>
 							<label><i class="fa fa-square" style="color: #0cab0a; height: 25px;width: 20px;"></i> Hearing Evening Session</label>
-							
 						</div>
 					</div>
 				</div>
@@ -31,7 +29,6 @@
 	$(document).ready(function() {
 	// page is now ready, initialize the calendar...
 	$('#calendar').fullCalendar({
-
 		header: {
 		right: 'prev today next ',
 		center: 'title',
@@ -45,7 +42,29 @@
 
 		events: [
 
-		@foreach($todos as $todo)
+			@foreach($hearings as $hearing)
+				{
+					id: '{{$hearing->case_tran_id}}',
+					title:'{{$hearing->case->case_title}}',
+					description: 'Hearing Date: {{date('d-m-Y', strtotime( $hearing->hearing_date))}} <br> Client Name: {{$hearing->client->cust_name}}<br> Start Time: {{$hearing->start_time}} <br> Lawyer Name: <?php $law_data = json_decode($hearing->lawyer_names) ; 	
+						foreach ($law_data as $value) {
+						 	$user = \App\User::find($value);
+						 	echo $user->name .', ';
+						} 
+					?> <br> Judges Name: <?php 
+						$law_data = json_decode($hearing->judges_name) ;
+						foreach ($law_data as $value) {
+						 	echo $value .', ';
+						} 
+					?>',
+					color:'{{date('G',strtotime($hearing->start_time)) > '12' ? '#0cab0a' : '#8259ff' }}',
+					url: '{{route('case_mast.show',$hearing->case_id.',case_diary')}}',
+					start: '{{$hearing->hearing_date}}',
+					end: '{{$hearing->hearing_date}}',
+			
+				},
+			@endforeach
+			@foreach($todos as $todo)
 			{	
 				id: '{{$todo->id}}',
 				title: '{{$todo->title}}',
@@ -56,7 +75,7 @@
 				end: '{{$todo->end_date}}',
 				
 			},
-		@endforeach
+			@endforeach
 		],
 		// eventRender: function(event, element) { 
   //           element.find('.fc-title').append("" + event.description); 
@@ -78,23 +97,8 @@
 		     $(this).css('z-index', 8);
 		     $('.tooltipevent').remove();
 		},
-  //       eventMouseover: function(event, jsEvent, view) {
-        	
-		// 	    $('.fc-event-inner').append('<div id=\"'+event.id+'\" class=\"hover-end\">'+event.description+'</div>');
-		// },
+  
 
-		// eventMouseout: function(event, jsEvent, view) {
-
-		//     $('#'+event.id).remove();
-		// },
-		// dayClick: function(info) {
-		// 		var date =  info.date;
-		// 		alert(date);
-		// 		// $('.start_date').val(date);
-		// 		// $('.end_date').val(date);
-		// 		// $('#calendar_modal').modal('show');
-
-		// },
 		select: function(start, end, jsEvent, view) {
          	
 			var start_date = moment(start).format('YYYY-MM-DD');
@@ -103,70 +107,15 @@
 			// alert(end_date);
 	        $('.start_date').val(start_date);
 			$('.end_date').val(end_date);
-			// $('#regdatepicker').val(start_date);
+			$('.h_date').val(start_date);
 			$('#calendar_modal').modal('show');
 	         
 	    }
 
-				
-		// customButtons: {
-		//   addEventButton: {
-		//     text: 'Add new event',
-		//     click: function () {
-		//       var dateStr = prompt('Enter date in YYYY-MM-DD format');
-		//       var date = moment(dateStr);
-
-		//       if (date.isValid()) {
-		//         $('#calendar').fullCalendar('renderEvent', {
-		//           title: 'Dynamic event',
-		//           start: date,
-		//           allDay: true
-		//         });
-		//       } else {
-		//         alert('Invalid Date');
-		//       }
-
-		//     }
-		//   }
-		// },
-		// dayClick: function (date, jsEvent, view) {
-		//   var date = moment(date);
-
-		//   if (date.isValid()) {
-		//     $('#calendar').fullCalendar('renderEvent', {
-		//       title: 'Dynamic event from date click',
-		//       start: date,
-		//       allDay: true
-		//     });
-		//   } else {
-		//     alert('Invalid');
-		//   }
-		// },
+	
 		});
 
-		 //  document.addEventListener('DOMContentLoaded', function() {
-		 //    var calendarEl = document.getElementById('calendar');
-
-		 //    var calendar = new FullCalendar.Calendar(calendarEl, {
-		 //       plugins: [ 'dayGrid', 'timeGrid', 'list' ], 
-		 //       header: { center: 'dayGridMonth,timeGridWeek,listWeek' },
-		 //       height:600,
-		 //      events: [
-				  //   {
-				  //     title: 'My Event',
-				  //     start: '2019-10-18',
-				  //     url: 'http://google.com/'
-				  //   }
-				  //   // other events here
-				  // ],
-		 //    });
-		 //    // calendar.setOption('height', 600);
-		 //    // calendar.setOption('contentHeight', 600);
-
-
-
-		 //    calendar.render();
-		  // });
+	
 	});
   </script>
 @endsection

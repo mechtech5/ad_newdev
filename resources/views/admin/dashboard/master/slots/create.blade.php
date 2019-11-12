@@ -5,7 +5,7 @@
 			<div class="col-md-12">
 				<div class="box box-primary">
 					<div class="box-header with-border">
-						<h3 class="">Edit Slots Time <a href="{{route('slots.index')}}" class="btn btn-sm btn-primary pull-right">Back</a></h3>
+						<h3 class="">Create Slots Time <a href="{{route('slots.index')}}" class="btn btn-sm btn-primary pull-right">Back</a></h3>
 					</div>
 					<div class="box-body">
 						<form action="{{route('slots.store')}}" method="post" >

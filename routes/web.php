@@ -61,16 +61,18 @@ Route::view('/court','pages.court');
 Route::view('/faq','pages.faq');
 Route::view('/lawyer_lawfirm','pages.subpages.lawyer_features');
 
+// Route::resource('/admin/users', 'Admin\UsersController');
+// Route::get('/admin/send-credentials/{id}','UsersController@sendCredentials');
 
 
 /*End Pages View */
 
 
 /* -----------------Find Lawyer-------------------------------- */
-	Route::get('lawyer_profile/{lawyer_id}', 'FindlawyerController@show')->name('find_lawyer.show');
-	Route::get('find_lawyer/specialist', 'FindlawyerController@find_lawyer_specialist')->name('find_lawyer.specialist');
-	Route::get('/search','FindlawyerController@index')->name('find_lawyer.index');
-	Route::post('lawyer/review','FindlawyerController@writeReview')->name('find_lawyer.writeReview');
+Route::get('lawyer_profile/{lawyer_id}', 'FindlawyerController@show')->name('find_lawyer.show');
+Route::get('find_lawyer/specialist', 'FindlawyerController@find_lawyer_specialist')->name('find_lawyer.specialist');
+Route::get('/search','FindlawyerController@index')->name('find_lawyer.index');
+Route::post('lawyer/review','FindlawyerController@writeReview')->name('find_lawyer.writeReview');
 /* -----------------Find Lawyer------------------------------------- */
 
 
@@ -91,11 +93,18 @@ Route::group(['middleware' => ['role:admin']], function() {
 
 // Start Master module
 	Route::resource('/master/location/country','Admin\Master\CountryController');
+
 	Route::resource('/master/location/city','Admin\Master\CityController');
 	Route::post('/master/city/cityfilter','Admin\Master\CityController@cityfilter')->name('master.cityfilter');
 	Route::resource('/master/location/state','Admin\Master\StateController');
 	Route::post('/master/state/countryFilter','Admin\Master\StateController@countryFilter')->name('master.countryFilter');
 	Route::resource('/master/slots','Admin\Master\SlotsController');	
+	Route::resource('/master/payment_mode','Admin\Master\PaymentModeController');	
+	Route::resource('/master/religion','Admin\Master\ReligionController');	
+	Route::resource('/master/relation','Admin\Master\RelationController');	
+	Route::resource('/master/reservation','Admin\Master\ReservationClassController');	
+	Route::resource('/master/nationality','Admin\Master\NationalityController');	
+	Route::resource('/master/currency','Admin\Master\CurrencyController');	
 
 	Route::resource('/master/specialization/spec_category','Admin\Master\SpecCategoryController');
 	Route::resource('/master/specialization/spec_subcategory','Admin\Master\SpecSubCategoryController');
@@ -108,7 +117,7 @@ Route::group(['middleware' => ['role:admin']], function() {
 	Route::resource('/master/court/court_subcategory','Admin\Master\CourtSubCategoryController');	
 	Route::resource('/master/case_type','Admin\Master\CaseTypeController');
 	Route::post('/master/case_type/courtFilter','Admin\Master\CaseTypeController@courtFilter')->name('courtFilter');
-	Route::resource('/master/user','Admin\Master\UserController');
+	// Route::resource('/master/user','Admin\Master\UserController');
 // End Master
 
 });
@@ -148,6 +157,11 @@ Route::group(['middleware' => ['role:lawyer|lawcompany']], function() {
 	Route::resource('/calendar', 'CalendarController');
 	Route::get('/case_member', 'CalendarController@case_member')->name('case_member');
 
+
+	Route::resource('/todos', 'TodosController');
+	Route::post('/todos/todoTableChange', 'TodosController@todoTableChange')->name('todos.tablechange');
+	Route::get('/todos/form/create', 'TodosController@create_form')->name('todos.create_form');
+
 });
 /* ------------------Lawyer-------------------Lawcompany------------- */
 
@@ -159,16 +173,6 @@ Route::group(['middleware' => ['role:lawyer']],function(){
 });
 /* ----------------------Lawyer-------------------------------- */
 
-/* ------------------------Lawcomapny------------------------------ */
-Route::group(['middleware' => ['role:lawcompany']], function() {
-	Route::resource('/todos', 'TodosController');
-	Route::post('/todos/todoTableChange', 'TodosController@todoTableChange')->name('todos.tablechange');
-	Route::get('/todos/form/create', 'TodosController@create_form')->name('todos.create_form');
-	Route::resource('/case_allocation', 'CaseManagement\CaseAllocationController');
-	Route::get('case_allocation/{id}','CaseManagement\CaseAllocationController@create');
-	Route::post('/allocate_lawyer','CaseManagement\CaseAllocationController@allocate_lawyer')->name('allocate_lawyer');
-});
-/* -------------------------Lawcompany----------------------------- */
 
 /* --------------Lawyer--------Lawcompany-----------Guest---------- */
 Route::group(['middleware' => ['role:lawyer|lawcompany|guest']], function(){
@@ -183,6 +187,8 @@ Route::group(['middleware' => ['role:lawyer|lawcompany|guest']], function(){
 /* --------------Lawcollege--------Teacher-----------Student---------- */
 Route::group(['middleware' => ['role:lawcollege|teacher|student']], function() {
 	Route::resource('/lawschools', 'LawSchools\LawSchoolsController');
+	Route::resource('/student', 'Student\StudentDashboardController');
+	Route::resource('/student_detail', 'Student\StudentDetailController');
 });
 /* --------------Lawcollege--------Teacher-----------Student---------- */
 
@@ -192,14 +198,6 @@ Route::group(['middleware' => ['role:lawcollege']], function() {
 });
 /* -----------------------Lawcollege------------------------------- */
 
-/* -----------Lawcollege--------------------Lawcompany--------------- */
-Route::group(['middleware' => ['role:lawcollege|lawcompany']], function() {
-	Route::resource('/teams', 'TeamManagement');
-	Route::post('/login_history', 'TeamManagement@login_history')->name('login_history');
-	Route::post('/member_cases', 'TeamManagement@member_cases')->name('member_cases');
-	Route::post('/approve_decline_member', 'TeamManagement@approve_decline_member')->name('approve_decline_member');
-});
-/* ----------Lawcollege-----------------------Lawcompany------------- */
 
 /* -----------------------Teacher------------------------------- */
 Route::group(['middleware' => ['role:teacher']], function() {
@@ -213,17 +211,27 @@ Route::group(['middleware' => ['role:teacher']], function() {
 /* -------------------------Teacher----------------------------- */
 
 /* ----------------Lawyer---------------Teacher--------------- */
-Route::group(['middleware' => ['role:lawyer|teacher']], function() {   
+Route::group(['middleware' => ['role:lawyer|teacher|lawcollege']], function() {   
 	Route::resource('/qualification','QualificationController');
 	Route::get('/qual_category','QualificationController@qualCategory')->name('qual.category');
+
 });
 /* ----------------Lawyer---------------Teacher--------------- */
 
-//Start Customer Controller
 Route::group(['middleware' => ['role:guest']], function() {
 
 	Route::get('/customer', 'CustomerController@index')->name('customer');
 	Route::patch('/updateProfile/{id}', 'CustomerController@updateProfile')->name('customer.update');
 	Route::get('/appointmentShow', 'BookingController@appointment_show')->name('customer.appointment');
 });
-//End Customer Controller
+
+Route::group(['middleware' => ['role:lawyer|lawcompany|lawcollege|admin']], function() {
+	Route::resource('/teams','Teams\TeamController');
+
+	Route::get('/team_users','Teams\TeamController@team_users');
+
+	Route::resource('/users','Teams\UsersController');
+	Route::post('/login_history', 'Teams\UsersController@login_history')->name('login_history');
+	Route::post('/member_cases', 'Teams\UsersController@member_cases')->name('member_cases');
+
+});

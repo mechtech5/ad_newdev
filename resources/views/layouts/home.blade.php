@@ -8,10 +8,10 @@
     					<div class="col-sm-4 col-xs-12  border-right find"> 
     						<a href="{{url('/lawyer_lawfirm')}}" class="media text-left non-underline-link" style="text-decoration: none"> 
     							<span> 
-    								<img class="media-object" src="images/lawyers.png" alt="Image"> </span> 
+    								<img class="media-object" src="images/lawyers-law firm1.png" alt="Image"> </span> 
     								<span class="media-body text-dark pl-2">
-    									<h4 class="media-heading font-weight-bold">For Lawyers / Law Firms</h4>
-    									<p class="text-capitalize font-weight-normal">Feature for lawyers / Lawfirms</p>
+    									<h4 class="media-heading font-weight-bold">Lawyers / Law Firms</h4>
+    									<p class="text-capitalize font-weight-normal">Feature  lawyers / Lawfirms</p>
     								</span>  
     							</a> 
     						</div>
@@ -20,7 +20,7 @@
     							<a href=""  class="media text-left" style="text-decoration: none"> 
     								<span> 
     									{{-- <img class="media-object" src="images/law_company.png" alt="Image">  --}}
-                                        <img class="media-object" src="images/lawyers.png" alt="Image"> 
+                                        <img class="media-object" src="images/Guest1.png" alt="Image"> 
     								</span> 
     								<span class="media-body text-dark pl-2">
     									<h4 class="media-heading font-weight-bold">Users / Guest </h4>
@@ -33,11 +33,11 @@
     							<a href=""  class="media text-left" style="text-decoration: none"> 
     								<span>   
     									{{-- <img class="media-object" src="images/law_collage.png" alt="Image">  --}}
-                                        <img class="media-object" src="images/lawyers.png" alt="Image"> 
+                                        <img class="media-object" src="images/Law-School1.png" alt="Image"> 
     								</span> 
     								<span class="media-body text-dark pl-2">
     									<h4 class="media-heading font-weight-bold">Law Schools</h4>
-    									<p class="text-capitalize font-weight-normal">Feature for Law schools</p>
+    									<p class="text-capitalize font-weight-normal">Feature  Law schools</p>
     								</span> 
     							</a> 
     						</div>

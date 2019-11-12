@@ -31,11 +31,14 @@
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
   <script src="{{asset('tinymce/tinymce.min.js')}}"></script>
-   <link rel="stylesheet" type="text/css" href="{{asset('css/dashboard/dashboard.css')}}"> 
-
-    
-
-
+  <link rel="stylesheet" type="text/css" href="{{asset('css/dashboard/dashboard.css')}}"> 
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
+ <style type="text/css">
+   .select2-container--default .select2-selection--multiple .select2-selection__choice {
+      background-color: #247ae4;
+    }
+    .select2-selection__choice__remove,.select2-selection__clear{display:none !important;} 
+</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -228,7 +231,7 @@
          <li class="{{Request()->segment(1) == 'course' ? 'active' : '' }} nav-item">
           <a class="nav-link" href="{{route('course.index')}}">
             <i class="fa fa-gavel"></i>
-            <span> Courses</span>
+            <span>Courses</span>
           </a>
         </li>   
         
@@ -243,6 +246,29 @@
               @endif
           </a>
         </li>
+        <li class="treeview {{Request()->segment(1) == 'student' ? 'active' : '' }} {{Request()->segment(1) == 'student_detail' ? 'active' : '' }} ">
+          <a class="nav-link" href="">
+            <i class="fa fa-graduation-cap"></i>
+            <span>Student</span> <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+
+            <ul class="treeview-menu">
+              <li class="nav-item {{Request()->segment(1) == 'student' ? 'active' : ''}}">
+                <a href="{{route('student.index')}}" ><i class="fa fa-circle-o"></i>Student Dashboard</a>
+              </li>
+              <li class="nav-item {{Request()->segment(1) == 'student_detail' ? 'active' : ''}}">
+                <a href="{{route('student_detail.index')}}" ><i class="fa fa-circle-o"></i>Student Details</a>
+              </li>
+              <li class="nav-item {{Request()->segment(1) == 'manage_student' ? 'active' : ''}}">
+                <a href="" ><i class="fa fa-circle-o"></i>Manage Student</a>
+              </li>
+              <li class="nav-item {{Request()->segment(1) == 'upload_student' ? 'active' : ''}}">
+                <a href="" ><i class="fa fa-circle-o"></i>Upload Student</a>
+              </li>
+            </ul>
+          </li>
         @endrole
         @role('teacher')         
           <li class="{{Request()->segment(1) == 'qualification' ? 'active' : '' }} nav-item">
@@ -281,9 +307,9 @@
 
       <ol class="breadcrumb">
         <li><a href=""><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active text-capitalize">{{(__('Lawcollege'))}}</li>
-        @if(Request()->segment(2) != '')
-        <li class="active text-capitalize">{{Request()->segment(2)}}</li>
+        <li class="active text-capitalize">{{(__('Lawschools'))}}</li>
+        @if(Request()->segment(1) != '')
+         <li class="active text-capitalize">{{Request()->segment(1)}}</li>
         @endif
       </ol>
     </section>

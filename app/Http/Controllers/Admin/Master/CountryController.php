@@ -5,35 +5,25 @@ namespace App\Http\Controllers\Admin\Master;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Country;
+use App\Models\Nationality;
+use App\Models\Currency;
 class CountryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function index()
     {
-        $countries = Country::all();
+        $countries = Country::with('nationality','currency')->get();
         return view('admin.dashboard.master.location.country.index',compact('countries'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  
     public function create()
     {
-        return view('admin.dashboard.master.location.country.create');
+        $nationalities = Nationality::all();
+        $currencies = Currency::all();
+        return view('admin.dashboard.master.location.country.create',compact('currencies','nationalities'));
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function store(Request $request)
     {
         $data = $this->validation($request);
@@ -52,36 +42,16 @@ class CountryController extends Controller
         return redirect()->route('country.index')->with('success','Country Name Inserted Successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function edit($id)
     {
-        $country = Country::find($id);        
-        return view('admin.dashboard.master.location.country.edit',compact('country'));
+        $country = Country::find($id);   
+        $nationalities = Nationality::all();
+        $currencies = Currency::all();     
+        return view('admin.dashboard.master.location.country.edit',compact('country','currencies','nationalities'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function update(Request $request, $id)
     {
         $data = $this->validation($request);
@@ -90,12 +60,7 @@ class CountryController extends Controller
         return redirect()->route('country.index')->with('success','Country Name Updated Successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy($id)
     {
         $country = Country::find($id)->delete();
@@ -108,6 +73,8 @@ class CountryController extends Controller
              'phone_code'   => 'nullable|string|max:10|min:1|regex:/^[0-9]+$/',
              'iso2'         => 'nullable|string|max:2|min:2',
              'iso3'         => 'nullable|string|max:3|min:3',
+             'nationality_id'  => 'nullable',
+             'currency_code'=> 'nullable'
         ]);
     }
 }

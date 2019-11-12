@@ -145,7 +145,7 @@
  	@php 
  		$i =0;
  		$old_jug_names = count(collect(old('judges_name')));
- 		if($c !='0'){
+ 		if($old_jug_names !='0'){
  			$count =$old_jug_names ;
  		}
  		else{

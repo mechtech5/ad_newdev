@@ -251,3 +251,105 @@ function case_table(case_status,case_status_text,cust_id){
 		}
 	})
 }
+function hearing_members(case_id,auth_id){
+	$.ajax({
+		type:'GET',
+		url : "/case_member?case_id="+case_id,
+		success:function(res){
+			if(res){
+				$('.hearing_members').empty();
+				$.each(res,function(key,value){
+					$('.hearing_members').append('<option value="'+value.user_id1+'" '+(auth_id == value.user_id1 ? 'selected' : '') +' >'+value.member.name+'</option>');
+				});
+			}else{
+				$('.hearing_members').empty();
+			}
+		}
+	});
+}
+function team_users(team_id,auth_id,auth_name){
+	$.ajax({
+		type:'GET',
+		url: '/team_users?team_id='+team_id,
+		success:function(res){
+			if(team_id ==0){
+				if(res){
+					$('.team_users').empty();
+					$('.team_users').append('<option value="'+auth_id+'" selected>'+auth_name+'</option>');
+					$.each(res,function(key,value){
+						$('.team_users').append('<option value="'+value.id+'">'+value.name+'</option>');
+					});
+				}else{
+					$('.team_users').empty();
+				}
+			}else{				
+				if(res){
+					$('.team_users').empty();				
+					$.each(res,function(key,value){
+						$('.team_users').append('<option value="'+value.user_id+'" '+(auth_id == value.user_id ? 'selected' : '') +' >'+value.users.name+'</option>');
+					});
+				}else{
+					$('.team_users').empty();
+				}
+			}
+		}
+	});
+}
+
+
+function case_members(case_id1,auth_id,auth_name){
+	case_id =case_id1;
+	$.ajax({
+		type:'GET',
+		url : "/case_member?case_id="+case_id,
+		success:function(res){
+			console.log(res);
+			if(case_id ==0){
+				if(res){
+					$('.members_todo').empty();
+					$('.members_todo').append('<option value="'+auth_id+'" selected>'+auth_name+'</option>')
+					$.each(res,function(key,value){
+						$('.members_todo').append('<option value="'+value.id+'" '+ (auth_id == value.id ? 'selected' : '') +' >'+value.name+'</option>');
+					});
+				}else{
+					$('.members_todo').empty();
+				}
+			}else{				
+				if(res){
+					$('.members_todo').empty();
+				
+					$.each(res,function(key,value){
+						$('.members_todo').append('<option value="'+value.user_id1+'" '+(auth_id == value.user_id1 ? 'selected' : '') +' >'+value.member.name+'</option>');
+					});
+				}else{
+					$('.members_todo').empty();
+				}
+			}
+		}
+	})
+}
+function qual_course(qual_catg_code){
+	console.log(qual_catg_code);
+	if(qual_catg_code!=''){
+		$.ajax({
+			type:'GET',
+			url:'/qual_category?qual_catg_code='+qual_catg_code,
+			success:function(res){
+				console.log(res);
+				if(res){
+					  $("#qual_course").empty();
+					$('#qual_course').append('<option value="0">Select Course</option>');
+					$.each(res, function(key,value){
+						$("#qual_course").append('<option value="'+value.qual_code+'">'+value.qual_desc+'</option>');
+					});
+				}
+				else{
+					$('#qual_course').empty();
+				}
+			}
+		});
+	}
+	else{
+		$('#qual_course').empty();
+	}
+}

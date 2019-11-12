@@ -51,7 +51,27 @@
 									@enderror
 								</div>
 							</div>
-							<div class="row">
+							<div class="row form-group">
+								<div class="col-md-6">
+									<label>Nationality</label>
+									<select name="nationality_id" class="form-control">
+										<option value="0">Select Nationality</option>
+										@foreach($nationalities as $nationality)
+											<option value="{{$nationality->id}}">{{$nationality->name}}</option>
+										@endforeach
+									</select>
+								</div>
+								<div class="col-md-6">
+									<label>Currency</label>
+									<select name="currency_code" class="form-control">
+										<option value="0">Select Nationality</option>
+										@foreach($currencies as $currency)
+											<option value="{{$currency->currency_code}}">{{$currency->currency_name}}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+							<div class="row form-group">
 								<div class="col-md-12">
 								<input type="submit" value="Submit" class="btn btn-sm btn-primary">
 								</div>

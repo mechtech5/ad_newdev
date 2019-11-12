@@ -20,7 +20,7 @@
 						@csrf
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="case_id">Belongs To:</label>
+								<label for="case_id">Belongs To: <span class="text-danger">*</span></label>
 								<select class="form-control" name="case_id" id="case" >
 									<option value="null">Select Case</option>
 									@foreach($cases as $case)
@@ -31,8 +31,8 @@
 						</div>
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="hearing_date">Hearing Date <span class="text-danger">*</span></label>
-								<input type="text" value="{{old('hearing_date')}}" class="form-control " name="hearing_date" required autocomplete="case_reg_date" autofocus  id="regdatepicker" data-date-format="yyyy-mm-dd" placeholder="{{date('Y-m-d')}}" readonly="true">
+								<label for="hearing_date">Hearing Date: <span class="text-danger">*</span></label>
+								<input type="text" value="{{old('hearing_date')}}" class="form-control h_date" name="hearing_date" required >
 								@error('hearing_date')
 									<span class="invalid-feedback text-danger" role="alert">
 									<strong>{{ $message }}</strong>
@@ -42,7 +42,7 @@
 						</div>
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="start_time">Start Time</label>
+								<label for="start_time">Start Time: <span class="text-danger">*</span></label>
 								<input type='text' class="form-control" name= "start_time" id='datetimepicker3' value="{{old('start_time')}}"  placeholder="{{date('G:i:s')}}"  />
 								@error('start_time')
 									<span class="invalid-feedback text-danger" role="alert">
@@ -53,8 +53,8 @@
 						</div>
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="lawyer_names">Lawyer Names <span class="text-danger" >*</span></label><span class="text-muted"> (Who attend)</span>
-							<select name="lawyer_names[]" class="form-control members" multiple="multiple" id="select2" style="width: 100%" >
+								<label for="lawyer_names">Lawyer Names: <span class="text-danger" >*</span></label><span class="text-muted"> (Who attend)</span>
+							<select name="lawyer_names[]" class="form-control hearing_members select2" multiple="multiple " style="width: 100%" >
 								
 							</select>
 							
@@ -67,7 +67,7 @@
 						</div>
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="judges_name">Judge Names <span class="text-danger" >*</span></label>
+								<label for="judges_name">Judge Names: <span class="text-danger" >*</span></label>
 								<table id='dynamic_field2' class='table'>
 
 								</table>
@@ -83,7 +83,7 @@
 						</div>
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="hearing_notes">Hearing Description <span class="text-danger">*</span></label>
+								<label for="hearing_notes">Hearing Description: <span class="text-danger">*</span></label>
 								<textarea name="hearing_notes" rows="3" cols="50" class="form-control" id="tinymce">{{old('hearing_notes')}}</textarea>
 								@error('hearing_notes')
 									<span class="invalid-feedback text-danger" role="alert">
@@ -108,13 +108,13 @@
 					<form action="{{route('todos.store')}}" method="POST">
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="title">Title <span class="text-danger font-weight-bold">*</span></label></label>
+								<label for="title">Title: <span class="text-danger font-weight-bold">*</span></label></label>
 								<input type="text" name="title" class="form-control" required>
 							</div>
 						</div>
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="description">Description <span class="text-danger font-weight-bold">*</span></label></label>
+								<label for="description">Description: <span class="text-danger font-weight-bold">*</span></label></label>
 								<textarea type="text" name="description" class="form-control" rows="5" required=""></textarea> 
 							</div>
 						</div>
@@ -126,32 +126,32 @@
 						</div> --}}
 						<div class="row form-group">
 							<div class="col-md-6">
-								<label for="start_date">Start Date <span class="text-danger font-weight-bold">*</span></label>
+								<label for="start_date">Start Date: <span class="text-danger font-weight-bold">*</span></label>
 								<input type="text" name="start_date" class="form-control start_date" date-format="yyyy-mm-dd" value="">
 							</div>
 							<div class="col-md-6">
-								<label for="end_date">End Date <span class="text-danger font-weight-bold">*</span></label></label>
+								<label for="end_date">End Date: <span class="text-danger font-weight-bold">*</span></label></label>
 								<input type="text" name="end_date" class="form-control end_date"  date-format="yyyy-mm-dd" value="">
 							</div>
 						</div>
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="case_id">Relate To</label>
-								<select name="case_id" class="form-control">
-									<option value="null">Select Case</option>
-									<option value="1">Case 1</option>
-									<option value="2">Case 2</option>
+								<label for="case_id1">Relate To: </label>
+								<select class="form-control" name="case_id1" id="caseTodo" >
+									<option value="0">Select Case</option>
+									@foreach($cases as $case)
+										<option value="{{$case->case_id}}" {{old('case_id1') == $case->case_id ? 'selected' : ''}}>{{$case->case_title}}</option>
+									@endforeach
 								</select>
 							</div>
 							
 						</div>
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="team_id">Assign To Team Members</label>
+								<label for="team_id">Assign To Team Members <span class="text-danger font-weight-bold">*</span></label>
 								<br>
-								<select name="team_id[]" class="form-control" id="select2" multiple="multiple"  style="width: 100%" required>	
-									<option value="1" {{Auth::user()->id == 1 ? 'selected' : '' }}>Member 1 </option>
-									<option value="2" {{Auth::user()->id == 2 ? 'selected' : '' }}>Member 2 {{Auth::user()->name}}</option>
+								<select name="team_id[]" class="form-control select2 members_todo" multiple="multiple"  style="width: 100%" required>	
+									
 								</select>							
 							</div>
 						</div>
@@ -189,9 +189,9 @@ $(document).ready(function(){
 
 	});
 
-	$('#select2').select2();
+	$('.select2').select2();
 	
-	$(".start_date,.end_date,#regdatepicker").datepicker({
+	$(".start_date,.end_date,.h_date").datepicker({
 		startDate : new Date(),
 		format : 'yyyy-mm-dd',
 		todayHighlight : true,
@@ -238,35 +238,27 @@ $(document).ready(function(){
 		//alert(button_id); 
 		$('#row'+button_id+'').remove();
 	});
+	var auth_id = "{{Auth::user()->id}}"; 
+	var case_id = "{{old('case_id')}}";
+	if(case_id != null){
+		hearing_members(case_id,auth_id);		
+	}
 
 	$('#case').on('change',function(e){
 		e.preventDefault();
 		var case_id = $(this).val();
-		members(case_id);
+		hearing_members(case_id,auth_id);
 	});
-	var case_id = "{{old('case_id')}}";
-	if(case_id != null){
-		members(case_id);		
-	}
-	function members(case_id){
-		var auth_id = "{{Auth::user()->id}}"; 
-		$.ajax({
-			type:'GET',
-			url : "{{route('case_member')}}?case_id="+case_id,
-			success:function(res){
-				if(res){
-					$('.members').empty();
-					$.each(res,function(key,value){
-						$('.members').append('<option value="'+value.user_id1+'" '+(auth_id == value.user_id1 ? 'selected' : '') +' >'+value.member.name+'</option>');
-					});
-				}else{
-					$('.members').empty();
-				}
-			}
-		});
-	}
 
+	var auth_name = "{{Auth::user()->name}}";
+	var case_id1="{{old('case_id1') != '' ? old('case_id1') : '0' }}";
+	todos_members(case_id1,auth_id,auth_name);
 
+	$('#caseTodo').on('change',function(e){
+		e.preventDefault();
+		var case_id1 = $(this).val();
+		todos_members(case_id1,auth_id,auth_name);
+	});
 
 	$('#datetimepicker3').datetimepicker({
 	    format: 'HH:mm:ss',

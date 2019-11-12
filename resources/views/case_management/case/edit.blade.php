@@ -303,38 +303,45 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						<div class="col-md-12" style="margin-top: 10px;">
-							<label for="team_id">Team Member </label><span class="text-muted">(Case assign to team member)</span>
-							<select class="form-control" name="team_id[]" multiple="multiple" id="select2">
-								<option value="{{Auth::user()->id}}" {{ (collect(old('team_id'))->contains(Auth::user()->id)) ? 'selected':'selected' }}  >{{Auth::user()->name}}</option>
-								@foreach($members as $member)
-									
-									<option value="{{$member->id}}" 
-										@if(count(collect(old('team_id'))) == '0')
-											@foreach($assign_mem as $assign_m) 
-												
-													{{$assign_m->user_id1 == $member->id ? 'selected' : ''}}
-											
-											@endforeach
-
-										@else
-											{{ (collect(old('team_id'))->contains($member->id)) ? 'selected': '' }}
-										@endif
-									>{{$member->name}}</option>
-
-									
-								@endforeach
-
+						<div class="col-md-6" style="margin-top: 10px;">
+							<label for="team_id">Team Name </label><span class="text-muted"></span>
+							<select class="form-control" name="team_id" id="team">
+								<option value="0" {{$case->team_id == '0' ? 'selected' : ''}}> ---- All ----</option>	
+								@foreach($teams as $team)
+									<option value="{{$team->id}}" {{old('team_id') == $team->id ? 'selected' : ''}} {{$case->team_id == $team->id ? 'selected' : ''}}>{{$team->name}}</option>
+								@endforeach							
 							</select>
-						
-							@error('team_id')
+ 						</div>
+						<div class="col-md-6" style="margin-top: 10px;">
+							<label for="users_id">User Name <span class="text-danger">*</span> </label> <span class="text-muted">(Case assign to users)</span>
+							<select class="form-control select2 team_users" name="users_id[]" multiple="multiple">
+									@if($case->team_id == 0)
+										<option value="{{Auth::user()->id}}" {{ (collect(old('team_id'))->contains(Auth::user()->id)) ? 'selected':'selected' }}  >{{Auth::user()->name}}</option>
+									@endif
+									@foreach($members as $member)								
+										<option value="{{$case->team_id != '0' ? $member->user_id : $member->id}}" 
+											@if(count(collect(old('team_id'))) == '0')
+												@foreach($assign_mem as $assign_m) 
+														{{$assign_m->user_id1 == ($case->team_id != '0' ? $member->user_id : $member->id) ? 'selected' : ''}}
+												@endforeach
+											@else
+												{{ (collect(old('team_id'))->contains($case->team_id != '0' ? $member->user_id : $member->id)) ? 'selected': '' }}
+											@endif
+										>{{$case->team_id != '0' ? $member->users->name : $member->name}}</option>
+										
+									@endforeach
+								
+							</select>
+							@error('users_id')
 								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ "Team member field is required" }}</strong>
+								<strong>{{ "User field is required" }}</strong>
 								</span>
 							@enderror
 
 						</div>
 					</div>
+
+
 					<div class="row form-group">				
 						<div class="col-md-12" style="margin-top:10px;">
 													
@@ -351,12 +358,10 @@
 </section>
 <script>
 $(document).ready(function(){		
-	// $(function () {
-	// 	$("#regdatepicker").datepicker({ 				
-	// 	//	endDate: new Date(),
-	// 	});
-	// });	
-	$('#select2').select2();		
+	$('.select2').select2({
+		allowClear: true,
+	});	
+		
 	$(function () {
 		$("#datepicker,#affidavit_date,#regdatepicker").datepicker();
 	});
@@ -464,6 +469,13 @@ $(document).ready(function(){
 	}
 
 
+	var auth_id = "{{Auth::user()->id}}";
+	var auth_name = "{{Auth::user()->name}}";	
+
+	$('#team').on('change',function(e){
+		var team_id = $(this).val();
+		team_users(team_id,auth_id,auth_name);	
+	});
 
 
 

@@ -6,17 +6,30 @@ use Illuminate\Http\Request;
 use Auth;
 use App\User;
 use App\Models\Todo;
+use App\Models\Team;
+use App\Models\UserTodo;
 use App\Models\CaseMast;
 use App\Helpers\Helpers;
 class TodosController extends Controller
 {
     public function index(){
         $id =Auth::user()->id;
-    	$todos = Todo::with('user')->where('user_id',$id)->where('team_id',$id)->get();
-    	$todoCategory = '1';
-
-        
-    	return view('todos.index',compact('todos','todoCategory'));
+            $parent_id = Auth::user()->parent_id;
+            if($parent_id ==null){
+                $todos = Todo::with(['users' => function($query){
+                    $query->with('user');
+                }])->where('user_id',$id)->get();
+            }
+            else{
+               $todos = UserTodo::with(['todos' => function($query){
+                    $query->with(['users' => function($query){
+                             $query->with('user');
+                    }]);
+               }])->where('user_id',$id)->get();
+            }
+        	$todoCategory = '1';
+        // return $todos;       
+    	return view('todos.index',compact('todos','todoCategory','parent_id'));
     }
     public function create(){
         $client_ids = Helpers::deletedClients();
@@ -25,40 +38,45 @@ class TodosController extends Controller
                         ->where('case_mast.user_id',$id)
                         ->where('case_mast.case_status','cr')
                         ->whereNotIn('cust_id',$client_ids)
-                        ->get();
-
-        $members = User::where('parent_id',$id)->where('status','A')->get();
-    	return view('todos.create',compact('cases','members'));
+                      ->get();
+    	return view('todos.create',compact('cases'));
     }
     public function store(Request $request){
-    	$data =  $request->validate([
+    	$request->validate([
     		'title' 		=> 'required|max:100',
     		'description' 	=> 'required|max:191',
-    		// 'privacy'		=> 'required',
     		'start_date'	=> 'required',
     		'end_date'		=> 'required',
-    		'case_id'		=> 'required',
-    		'team_id'		=> 'required',
+    		'case_id1'		=> 'required',
     		'user_id'		=> 'required',
     	]);
+        
+		$data = [
+				'title'			=> $request->title,
+				'description'	=> $request->description,
+				'start_date'	=> $request->start_date,
+				'end_date'		=> $request->end_date,
+				'case_id'		=> $request->case_id1 == "0" ? null : $request->case_id1,
+				'user_id'		=> $request->user_id,
+				]; 
 
-    	$count  = count($data['team_id']);
-    	for($i=0; $i< $count ; $i++){
-    		$datas = [
-    					'title'			=> $data['title'],
-    					'description'	=> $data['description'],
-    					// 'privacy'		=> $data['privacy'],
-    					'start_date'	=> $data['start_date'],
-    					'end_date'		=> $data['end_date'],
-    					'case_id'		=> $data['case_id'] == "null" ? null : $data['case_id'],
-    					'user_id'		=> $data['user_id'],
-    					'team_id'		=> $data['team_id'][$i],
+        $verify = $request->validate([
+            'users_id'      => 'required',
+        ]);
+      
+    	$todo = Todo::create($data);
+        $todo->todo_assign()->sync($verify['users_id']);
+        
+        return $todo->id;
 
-    				];    	
-    		Todo::create($datas);
-    	}
-    	return redirect()->back()->with('success','To-dos created successfully');
 
+        if($request->page_name == 'todo'){
+            return redirect()->route('todos.index')->with('success','To-dos created successfully');
+        }
+        else{
+
+    	   return redirect()->back()->with('success','To-dos created successfully');
+        }
     	
     }
     public function show($id){

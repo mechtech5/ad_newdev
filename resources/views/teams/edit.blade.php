@@ -5,46 +5,46 @@
 			<div class="col-md-12">
 				<div class="box box-primary">
 					<div class="box-header with-border">
-						<h3 class="">Edit Team Member <a href="{{route('teams.index')}}" class="btn btn-sm btn-primary pull-right">Back</a></h3>
+						<h3 class="">Edit Team  <a href="{{route('teams.index')}}" class="btn btn-sm btn-primary pull-right">Back</a></h3>
 					</div>
 					<div class="box-body">
-						<form action="{{route('teams.update',$member->id)}}" method="post">
+						<form action="{{route('teams.update',$team->id)}}" method="post">
 							@csrf
 							@method('PATCH')
 							<div class="row form-group">
 								<div class="col-md-6">
-									<label for="name">User Name <span class="text-danger">*</span></label>
-									<input type="text" class="form-control timepicker" name="name" value="{{old('name') ?? $member->name}}">  
+									<label for="name">Team Name <span class="text-danger">*</span></label>
+									<input type="text" class="form-control timepicker" name="name" value="{{old('name') ?? $team->name}}">  
 									@error('name')
 	                                    <span class="text-danger">
 	                                        <strong>{{ $message }}</strong>
 	                                    </span>
-	                                @enderror      
+	                                @enderror  
+	                                @if($message = Session::get('error'))
+										<span class="text-danger">
+											 <strong>{{ $message }}</strong>
+										</span>
+									@endif        
 								</div>	
 								<div class="col-md-6">
-									<label for="email">Email Address <span class="text-danger">*</span></label>
-									<input type="text" name="email" class="form-control" value="{{old('email') ?? $member->email}}">
-									@error('email')
+									<label for="users">members <span class="text-danger">*</span></label>
+									<select name="users[]" class="form-control" multiple="multiple" id="select2">	
+										<option value="{{Auth::user()->id}}" {{ (collect(old('team_id'))->contains(Auth::user()->id)) ? 'selected':'selected' }} >{{Auth::user()->name}}</option>	
+										@foreach($users as $user)		
+											<option value="{{$user->id}}" @foreach ($team->members as $val) {{$val->users->id == $user->id ? 'selected' : ''}} @endforeach>{{$user->name}}</option>
+											
+										@endforeach										
+									</select>
+									@error('users')
 	                                    <span class="text-danger">
 	                                        <strong>{{ $message }}</strong>
 	                                    </span>
-	                                @enderror
+	                                @enderror  
 								</div>
-							</div>	
-							<div class="row form-group">
-								<div class="col-md-6">
-									<label for="mobile">Mobile Number <span class="text-danger">*</span></label>
-									<input type="text" class="form-control timepicker" name="mobile" value="{{old('mobile') ?? $member->mobile}}"> 
-									@error('mobile')
-	                                    <span class="text-danger">
-	                                        <strong>{{ $message }}</strong>
-	                                    </span>
-	                                @enderror     
-								</div>	
 							</div>						
 							<div class="row ">
 								<div class="col-md-12 ">
-									<input type="submit" value="Update" class="btn btn-sm btn-primary">
+									<input type="submit" value="Submit" class="btn btn-sm btn-primary">
 								</div>								
 							</div>
 						</form>
@@ -53,5 +53,9 @@
 			</div>
 		</div>
 	</section>
-	
+	<script >
+		$(document).ready(function(){
+			$('#select2').select2();
+		});
+	</script>
 @endsection

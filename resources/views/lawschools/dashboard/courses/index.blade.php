@@ -5,7 +5,7 @@
 	<div class="col-md-12 col-xs-12 col-sm-12 m-auto">
 		<div class="box box-primary">
 			<div class="box-header with-border" >
-				<h3 style="margin-top: 10px;">Courses  <a href="{{route('course.create')}}" class="btn btn-sm btn-info pull-right">Add Course</a></h3>
+				<h3 style="margin-top: 10px;">Courses  <a href="{{route('course.create')}}" class="btn btn-sm btn-info pull-right" title="add course">Add Course</a></h3>
 			</div>
 			<div class="box-body  table-responsive pt-2 pb-2" >
 				@if($message = Session::get('success'))
@@ -20,7 +20,6 @@
 							<th>Course Name</th>
 							<th>Course Duration</th>
 							<th>Action</th>
-							{{-- <th>View</th> --}}
 						</tr>
 					</thead>
 					<tbody>
@@ -35,20 +34,18 @@
 								<form action="{{route('course.destroy',$cours->id)}}" method="POST" id="delform_{{$cours->id}}">
 									@method('DELETE')
 
-									<a href="{{route('course.edit',$cours->id)}}" class="btn btn-sm bg-green"><i class="fa fa-edit"></i></a>
+									<a href="{{route('course.edit',$cours->id)}}" ><i class="btn text-green fa fa-edit" style="font-size:16px;" title="edit"></i></a>
 
-									<a href="javascript:$('#delform_{{$cours->id}}').submit();" onclick="return confirm('Are you sure?')"  class="btn btn-sm bg-red" ><i class="fa fa-trash" ></i></a>
+									<a href="javascript:$('#delform_{{$cours->id}}').submit();" onclick="return confirm('Are you sure?')"   ><i class="fa fa-trash btn text-red"  style="font-size:16px;" title="delete"></i></a>
 
 
-									<a href="{{route('course.show', $cours->id)}}" class="btn btn-sm btn-primary"><i class="fa fa-eye text-white"></i></a>
+									<a href="{{route('course.show', $cours->id)}}" ><i class="fa fa-eye btn text-primary" style="font-size:16px;" title="view"></i></a>
 									
 									@csrf
 								</form>
 
 								</span>
 							</td>
-							{{-- <td></td> --}}
-
 						</tr>
 						@endforeach
 					</tbody>

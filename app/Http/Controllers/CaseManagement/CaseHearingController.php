@@ -152,14 +152,5 @@ class CaseHearingController extends Controller
 		]);
 		return $data;
 	}
-	public function next_hear_date_update($case_hearing,$data){
-		$next_he_date = $case_hearing->next_hearing_date;
-		return $next_he_date;
-		if($case_hearing->next_hearing_date != $data['hearing_date'] ){
-				$next_h_date['next_hearing_date'] = $data['hearing_date']; 
-
-			 CaseDetail::where('case_tran_id',$case_hearing->case_tran_id)->where('next_hearing_date',$case_hearing->next_hearing_date)->update($next_h_date);
-
-			}
-	}
+	
 }

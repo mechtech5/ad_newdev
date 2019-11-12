@@ -90,9 +90,9 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 @if(Auth::user()->photo !='')
-                    <img src="{{ asset('storage/app/public/profile_photo/'.Auth::user()->photo)}}" class="user-image" alt="User Image" />
+                    <img src="{{ asset('storage/profile_photo/'.Auth::user()->photo)}}" class="user-image" alt="User Image" />
                 @else
-                    <img src="{{asset('storage/app/public/profile_photo/default.png')}}"  class="user-image" alt="User Image" /> 
+                    <img src="{{asset('storage/profile_photo/default.png')}}"  class="user-image" alt="User Image" /> 
                 @endif
               <span class="hidden-xs">{{Auth::user()->name}}</span>
             </a>
@@ -100,9 +100,9 @@
               <!-- User image -->
               <li class="user-header">
                 @if(Auth::user()->photo !='')
-                  <img src="{{ asset('storage/app/public/profile_photo/'.Auth::user()->photo)}}" class="img-circle" alt="User Image" />
+                  <img src="{{ asset('storage/profile_photo/'.Auth::user()->photo)}}" class="img-circle" alt="User Image" />
                 @else
-                  <img src="{{asset('storage/app/public/profile_photo/default.png')}}"  class="img-circle" alt="User Image" /> 
+                  <img src="{{asset('storage/profile_photo/default.png')}}"  class="img-circle" alt="User Image" /> 
                 @endif
 
                 <p>{{Auth::user()->name}}</p>
@@ -153,9 +153,9 @@
       <div class="user-panel">
         <div class="pull-left image">
            @if(Auth::user()->photo !='')
-            <img src="{{ asset('storage/app/public/profile_photo/'.Auth::user()->photo)}}" class="img-circle" alt="User Image" />
+            <img src="{{ asset('storage/profile_photo/'.Auth::user()->photo)}}" class="img-circle" alt="User Image" />
             @else
-            <img src="{{asset('storage/app/public/profile_photo/default.png')}}"  class="img-circle" alt="User Image" /> 
+            <img src="{{asset('storage/profile_photo/default.png')}}"  class="img-circle" alt="User Image" /> 
             @endif
           
         </div>
@@ -260,6 +260,12 @@
                   </ul>
                 </li>
                 <li class="{{Request()->segment(2) == 'slots' ? 'active' : '' }} nav-item" ><a href="{{route('slots.index')}}"><i class="fa fa-clock-o"></i> Slots</a></li>
+                <li class="{{ Request()->segment(2) == 'payment_mode' ? 'active' : '' }} nav-item" ><a href="{{route('payment_mode.index')}}"><i class="fa fa-money"></i> Payment Mode</a></li>
+                <li class="{{ Request()->segment(2) == 'relation' ? 'active' : '' }} nav-item" ><a href="{{route('relation.index')}}"><i class="fa fa-circle-o"></i> Relation</a></li>
+                <li class="{{ Request()->segment(2) == 'religion' ? 'active' : '' }} nav-item" ><a href="{{route('religion.index')}}"><i class="fa fa-circle-o"></i> Religion</a></li>
+                <li class="{{ Request()->segment(2) == 'reservation' ? 'active' : '' }} nav-item" ><a href="{{route('reservation.index')}}"><i class="fa fa-circle-o"></i> Reservation Class</a></li>
+                <li class="{{ Request()->segment(2) == 'nationality' ? 'active' : '' }} nav-item" ><a href="{{route('nationality.index')}}"><i class="fa fa-circle-o"></i> Nationality</a></li>
+                <li class="{{ Request()->segment(2) == 'currency' ? 'active' : '' }} nav-item" ><a href="{{route('currency.index')}}"><i class="fa fa-circle-o"></i> Currency</a></li>
 
                  <li class="treeview {{Request()->segment(2) == 'specialization' ? 'active' : '' }}">
                   <a href="">
@@ -299,7 +305,7 @@
                     <li class="{{Request()->segment(3) == 'court_subcategory' ? 'active' : '' }}"><a href="{{route('court_subcategory.index')}}"><i class="fa fa-circle-o"></i> Subcategory</a></li>
                   </ul>
                 </li>
-                <li ><a href="{{route('user.index')}}"><i class="fa fa-user"></i> User</a></li>               
+                <li ><a href="{{route('users.index')}}"><i class="fa fa-user"></i> User</a></li>               
             </ul>
           </li>
 

@@ -309,20 +309,25 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						<div class="col-md-12" style="margin-top: 10px;">
-							<label for="team_id">Team Member </label><span class="text-muted">(Case assign to team member)</span>
-							<select class="form-control" name="team_id[]" multiple="multiple" id="select2">
-								<option value="{{Auth::user()->id}}" {{ (collect(old('team_id'))->contains(Auth::user()->id)) ? 'selected':'selected' }} >{{Auth::user()->name}}</option>
-								@foreach($members as $member)
-									<option value="{{$member->id}}" {{ (collect(old('team_id'))->contains($member->id)) ? 'selected':'' }}>{{$member->name}}</option>
-								@endforeach
+						<div class="col-md-6" style="margin-top: 10px;">
+							<label for="team_id">Team Name </label><span class="text-muted"></span>
+							<select class="form-control" name="team_id" id="team">
+								<option value="0"> ---- All ----</option>	
+								@foreach($teams as $team)
+									<option value="{{$team->id}}" {{old('team_id') == $team->id ? 'selected' : ''}}>{{$team->name}}</option>
+								@endforeach							
 							</select>
-							@error('team_id')
+ 						</div>
+						<div class="col-md-6" style="margin-top: 10px;">
+							<label for="users_id">User Name <span class="text-danger">*</span> </label> <span class="text-muted">(Case assign to users)</span>
+							<select class="form-control select2 team_users" name="users_id[]" multiple="multiple">
+								
+							</select>
+							@error('users_id')
 								<span class="invalid-feedback text-danger" role="alert">
-								<strong>{{ "Team member field is required" }}</strong>
+								<strong>{{ "User field is required" }}</strong>
 								</span>
 							@enderror
-
 						</div>
 					</div>
 					
@@ -341,12 +346,8 @@
 </section>
 <script>
 $(document).ready(function(){		
-	// $(function () {
-	// 	$("#regdatepicker").datepicker({ 				
-	// 	//	endDate: new Date(),
-	// 	});
-	// });	
-	$('#select2').select2({
+
+	$('.select2').select2({
 		allowClear: true,
 	});	
 	$(function () {
@@ -451,8 +452,17 @@ $(document).ready(function(){
 		});
 	}
 
+	var auth_id = "{{Auth::user()->id}}";
+	var auth_name = "{{Auth::user()->name}}";	
+	var team_id = "{{old('team_id') !='' ? old('team_id') : '0'}}";
 
+	team_users(team_id,auth_id,auth_name);	
 
+	$('#team').on('change',function(e){
+		var team_id = $(this).val();
+		team_users(team_id,auth_id,auth_name);	
+		// alert(team_id);
+	});
 
 
 });

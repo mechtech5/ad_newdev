@@ -256,12 +256,6 @@
               <span >Practicing in courts</span>
             </a>
           </li>  
-           {{--   <li class="{{Request()->segment(1) == 'landmarkcase' ? 'active' : '' }} nav-item">
-            <a class="nav-link" href="{{route('landmarkcase.index')}}">
-              <i class="fa fa-gavel"></i>
-              <span >My Landmark Cases</span>
-            </a>
-          </li>  --}}
 
           @role('lawyer')
           <li class="{{Request()->segment(1) == 'qualification' ? 'active' : '' }} nav-item">
@@ -302,9 +296,7 @@
             </a>
           </li>
            
-      
-
-
+    
            <li class="{{Request()->segment(1) == 'booking' ? 'active' : '' }} nav-item">
             <a class="nav-link" href="{{route('booking.index')}}">
               <i class="fa fa-briefcase"></i>
@@ -328,31 +320,24 @@
 
             </a>
           </li>
+      
+        <li class="{{Request()->segment(1) == 'calendar' ? 'active' : ''}} nav-item">
+            <a class="nav-link" href="{{route('calendar.index')}}">
+            <i class="fa fa-calendar"></i>
+            <span>Calendar</span>
+            </a>
+        </li>
 
+       
+        <li class="{{Request()->segment(1) == 'todos' ? 'active' : ''}} nav-item">
+            <a class="nav-link" href="{{route('todos.index')}}">
+            <i class="fa fa-tasks"></i>
+            <span >Todos</span>
+            </a>
+        </li>
+     
 
-          {{-- @if(Auth::user()->user_catg_id == '3') --}}
-          <li class="{{Request()->segment(1) == 'calendar' ? 'active' : ''}} nav-item">
-              <a class="nav-link" href="{{route('calendar.index')}}">
-              <i class="fa fa-calendar"></i>
-              <span>Calendar</span>
-              </a>
-          </li>
-
-          @role('lawcompany')
-          <li class="{{Request()->segment(1) == 'todos' ? 'active' : ''}} nav-item">
-              <a class="nav-link" href="{{route('todos.index')}}">
-              <i class="fa fa-tasks"></i>
-              <span >Todos</span>
-              </a>
-          </li>
-
-         {{--  <li class="{{Request()->segment(1) == 'case_allocation' ? 'active' : ''}} nav-item">
-              <a class="nav-link" href="{{route('case_allocation.index')}}">
-              <i class="fa fa-exchange"></i>
-              <span > Case Allocation</span>
-              </a>
-          </li> --}}
-
+        @role('lawcompany')
         <li class="{{Request()->segment(1) == 'teams' ? 'active' : '' }} nav-item">
           <a class="nav-link" href="{{route('teams.index')}}">
             <i class="fa fa-users"></i>

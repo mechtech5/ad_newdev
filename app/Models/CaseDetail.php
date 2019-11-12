@@ -11,4 +11,10 @@ class CaseDetail extends Model
     protected $primaryKey = 'case_tran_id';
     protected $guarded = [];
     protected $dates = ['deleted_at'];
+    public function case(){
+    	return $this->belongsTo('App\Models\CaseMast', 'case_id');
+    }
+    public function client(){
+    	return $this->belongsTo('App\Models\Customer', 'cust_id');
+    }
 }
