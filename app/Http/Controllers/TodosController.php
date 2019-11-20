@@ -14,20 +14,13 @@ class TodosController extends Controller
 {
     public function index(){
         $id =Auth::user()->id;
-            $parent_id = Auth::user()->parent_id;
-            if($parent_id ==null){
-                $todos = Todo::with(['users' => function($query){
-                    $query->with('user');
-                }])->where('user_id',$id)->get();
-            }
-            else{
-               $todos = UserTodo::with(['todos' => function($query){
-                    $query->with(['users' => function($query){
-                             $query->with('user');
-                    }]);
-               }])->where('user_id',$id)->get();
-            }
-        	$todoCategory = '1';
+        $todos = UserTodo::with(['todos' => function($query){
+                $query->with(['users' => function($query){
+                         $query->with('user');
+                }]);
+           }])->where('user_id',$id)->get();
+          
+        $todoCategory = '1';
         // return $todos;       
     	return view('todos.index',compact('todos','todoCategory','parent_id'));
     }
@@ -42,13 +35,14 @@ class TodosController extends Controller
     	return view('todos.create',compact('cases'));
     }
     public function store(Request $request){
+     
     	$request->validate([
     		'title' 		=> 'required|max:100',
     		'description' 	=> 'required|max:191',
     		'start_date'	=> 'required',
     		'end_date'		=> 'required',
     		'case_id1'		=> 'required',
-    		'user_id'		=> 'required',
+    		
     	]);
         
 		$data = [
@@ -57,7 +51,7 @@ class TodosController extends Controller
 				'start_date'	=> $request->start_date,
 				'end_date'		=> $request->end_date,
 				'case_id'		=> $request->case_id1 == "0" ? null : $request->case_id1,
-				'user_id'		=> $request->user_id,
+				'user_id'		=> Auth::user()->id,
 				]; 
 
         $verify = $request->validate([
@@ -67,9 +61,7 @@ class TodosController extends Controller
     	$todo = Todo::create($data);
         $todo->todo_assign()->sync($verify['users_id']);
         
-        return $todo->id;
-
-
+ 
         if($request->page_name == 'todo'){
             return redirect()->route('todos.index')->with('success','To-dos created successfully');
         }
@@ -97,8 +89,13 @@ class TodosController extends Controller
     public function todoTableChange(Request $request){
     	$todo = $request->todo;
 
+    	$id =Auth::user()->id;
     	if($todo == '1'){
-    		$todos = Todo::with('user')->where('user_id',Auth::user()->id)->where('team_id',Auth::user()->id)->get();   
+            $todos = UserTodo::with(['todos' => function($query){
+                    $query->with(['users' => function($query){
+                             $query->with('user');
+                    }]);
+               }])->where('user_id',$id)->get();
     	}
     	else{
     		$todos = Todo::with('user')->where('user_id',Auth::user()->id)->where('team_id','!=', Auth::user()->id)->get();

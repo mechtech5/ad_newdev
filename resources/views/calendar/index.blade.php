@@ -108,7 +108,7 @@
 	        $('.start_date').val(start_date);
 			$('.end_date').val(end_date);
 			$('.h_date').val(start_date);
-			$('#calendar_modal').modal('show');
+			$('#calendar_modal').modal({"backdrop": "static"});
 	         
 	    }
 

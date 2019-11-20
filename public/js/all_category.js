@@ -101,6 +101,55 @@ function state(state_code,city_code){
     }
 }
 
+
+
+function state_fetch(country_code,state_id,state_code){
+
+	if(country_code !='0'){
+		$.ajax({
+			type:'GET',
+			url:'/state?country_id='+country_code,
+			success:function(data){
+				if(data){
+					$(state_id).empty();
+					$(state_id).append('<option value="">Select State</option>');	
+					$.each(data,function(i,v){
+						$(state_id).append('<option value="'+v.state_code+'" '+(v.state_code == state_code ? 'selected' : '')+'>'+v.state_name+'</option>');
+					});
+				}
+				else{
+					$(state_id).empty();
+				}
+			}
+		})
+	}
+}
+function city_fetch(state_code,city_code,city_id){
+
+	 if(state_code !='0' || state_code !='' ){
+        $.ajax({
+           type:"GET",
+           url:"/city_fetch?state_code="+state_code,
+           success:function(res){                     
+            if(res){
+                $(city_id).empty();
+                $.each(res,function(key,value){
+                    $(city_id).append('<option value="'+value.city_code+'" '+(value.city_code == city_code ? 'selected="selected"' : '' )+'>'+value.city_name+'</option>');
+                });
+           
+            }else{
+               $(city_id).empty();
+            }
+           }
+        });
+    }else{
+        $(city_id).empty();
+    }
+}
+
+
+
+
 function case_court_select(court_code, court_type, no_catg, cnr){
 	if(court_type =='1'){
 		$('#no_catg_div').show();
@@ -259,7 +308,7 @@ function hearing_members(case_id,auth_id){
 			if(res){
 				$('.hearing_members').empty();
 				$.each(res,function(key,value){
-					$('.hearing_members').append('<option value="'+value.user_id1+'" '+(auth_id == value.user_id1 ? 'selected' : '') +' >'+value.member.name+'</option>');
+					$('.hearing_members').append('<option value="'+value.user_id1+'" '+(auth_id == value.user_id1 ? 'selected' : '') +' '+(auth_id == value.user_id1 ? 'locked="locked"' : '') +'>'+value.member.name+'</option>');
 				});
 			}else{
 				$('.hearing_members').empty();
@@ -275,7 +324,7 @@ function team_users(team_id,auth_id,auth_name){
 			if(team_id ==0){
 				if(res){
 					$('.team_users').empty();
-					$('.team_users').append('<option value="'+auth_id+'" selected>'+auth_name+'</option>');
+					$('.team_users').append('<option value="'+auth_id+'" selected="selected" locked="locked">'+auth_name+'</option>');
 					$.each(res,function(key,value){
 						$('.team_users').append('<option value="'+value.id+'">'+value.name+'</option>');
 					});
@@ -286,7 +335,7 @@ function team_users(team_id,auth_id,auth_name){
 				if(res){
 					$('.team_users').empty();				
 					$.each(res,function(key,value){
-						$('.team_users').append('<option value="'+value.user_id+'" '+(auth_id == value.user_id ? 'selected' : '') +' >'+value.users.name+'</option>');
+						$('.team_users').append('<option value="'+value.user_id+'" '+(auth_id == value.user_id ? 'selected' : '') +'  '+(auth_id == value.user_id ? 'locked="locked"' : '') +'>'+value.users.name+'</option>');
 					});
 				}else{
 					$('.team_users').empty();
@@ -307,7 +356,7 @@ function case_members(case_id1,auth_id,auth_name){
 			if(case_id ==0){
 				if(res){
 					$('.members_todo').empty();
-					$('.members_todo').append('<option value="'+auth_id+'" selected>'+auth_name+'</option>')
+					$('.members_todo').append('<option value="'+auth_id+'" selected="selected" locked="locked">'+auth_name+'</option>')
 					$.each(res,function(key,value){
 						$('.members_todo').append('<option value="'+value.id+'" '+ (auth_id == value.id ? 'selected' : '') +' >'+value.name+'</option>');
 					});
@@ -319,7 +368,7 @@ function case_members(case_id1,auth_id,auth_name){
 					$('.members_todo').empty();
 				
 					$.each(res,function(key,value){
-						$('.members_todo').append('<option value="'+value.user_id1+'" '+(auth_id == value.user_id1 ? 'selected' : '') +' >'+value.member.name+'</option>');
+						$('.members_todo').append('<option value="'+value.user_id1+'" '+(auth_id == value.user_id1 ? 'selected' : '') +' '+(auth_id == value.user_id1 ? 'locked="locked"' : '') +'>'+value.member.name+'</option>');
 					});
 				}else{
 					$('.members_todo').empty();
@@ -329,13 +378,13 @@ function case_members(case_id1,auth_id,auth_name){
 	})
 }
 function qual_course(qual_catg_code){
-	console.log(qual_catg_code);
+	// console.log(qual_catg_code);
 	if(qual_catg_code!=''){
 		$.ajax({
 			type:'GET',
 			url:'/qual_category?qual_catg_code='+qual_catg_code,
 			success:function(res){
-				console.log(res);
+				// console.log(res);
 				if(res){
 					  $("#qual_course").empty();
 					$('#qual_course').append('<option value="0">Select Course</option>');
@@ -351,5 +400,24 @@ function qual_course(qual_catg_code){
 	}
 	else{
 		$('#qual_course').empty();
+	}
+}
+
+function qual_docs(qual_catg_code){
+	if(qual_catg_code!=''){
+		$.ajax({
+			type:'GET',
+			url:'/qual_docs?qual_catg_code='+qual_catg_code,
+			success:function(data){
+				if(data){
+					$('#docs_type').empty();
+					$.each(data,function(i,v){
+						$('#docs_type').append('<tr><td><input type="text" value="'+v.qual_doc_type.name+'" readonly class="form-control"></td><td class="error-di"><input type="file" name="doc_url[]" class="form-control" accept="pdf, image/*"><input type="hidden" name="doc_check[]" value="" class="doc_url"></td><td><input type="hidden" name="qual_doc_type_id[]" value="'+v.qual_doc_type.id+'"></td></tr>');
+					});
+				}else{
+					$('#docs_type').empty();
+				}
+			}	
+		});
 	}
 }

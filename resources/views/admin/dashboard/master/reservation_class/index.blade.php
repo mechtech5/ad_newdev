@@ -5,7 +5,7 @@
 		<div class="col-md-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3>Reservation Class <a href="{{route('reservation.create')}}" class="btn btn-sm btn-primary pull-right">Add Reservation Class</a></h3>
+					<h3>Reservation Class({{count($reservations)}}) <a href="{{route('reservation.create')}}" class="btn btn-sm btn-primary pull-right">Add Reservation Class</a></h3>
 				</div>
 				<div class="box-body">
 					@if($message = Session::get('success'))

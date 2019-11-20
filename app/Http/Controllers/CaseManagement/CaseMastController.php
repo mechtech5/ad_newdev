@@ -32,6 +32,7 @@ class CaseMastController extends Controller
 	}
 	public function index(){
 		$case_status = CaseStatusMast::all();
+	
 		return view('case_management.case.index',compact('case_status'));
 	}
 
@@ -54,6 +55,7 @@ class CaseMastController extends Controller
 
 	public function store(Request $request){
 
+		return $request->all();
 		$id ="";
 		$data = $this->validate_data($request,$id);
 		$data['team_id'] = $request->team_id;
@@ -329,9 +331,12 @@ class CaseMastController extends Controller
 		$client_ids = Helpers::deletedClients();
 		$id =Auth::user()->id;
 		if($cust_id == ''){		
+			
 			$cases = CaseLawyer::with(['member','case' => function($query)use($case_status,$cust_id){
 				$query->with(['client','court','casetype'])->where('case_mast.case_status',$case_status);
 			}])->where('user_id1',$id)->where('deallocate_date',null)->get();
+
+			
 			$page_name = 'case_diary';
 				
 		}
@@ -346,9 +351,7 @@ class CaseMastController extends Controller
 	public function case_details($case_id){
 	
 		$case = CaseMast::with('casetype','client','court','state','city')
-			->with(['members' => function($query){
-				$query->with('member');
-			}])		
+			->with(['members.member'])		
 	       	->where('case_id', $case_id)
 	        ->first();
 	      

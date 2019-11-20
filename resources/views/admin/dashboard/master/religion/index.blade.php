@@ -5,7 +5,7 @@
 		<div class="col-md-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3>Religion <a href="{{route('religion.create')}}" class="btn btn-sm btn-primary pull-right">Add Religion</a></h3>
+					<h3>Religion({{count($religions)}}) <a href="{{route('religion.create')}}" class="btn btn-sm btn-primary pull-right">Add Religion</a></h3>
 				</div>
 				<div class="box-body">
 					@if($message = Session::get('success'))

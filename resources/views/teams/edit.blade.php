@@ -28,8 +28,8 @@
 								</div>	
 								<div class="col-md-6">
 									<label for="users">members <span class="text-danger">*</span></label>
-									<select name="users[]" class="form-control" multiple="multiple" id="select2">	
-										<option value="{{Auth::user()->id}}" {{ (collect(old('team_id'))->contains(Auth::user()->id)) ? 'selected':'selected' }} >{{Auth::user()->name}}</option>	
+									<select name="users[]" class="form-control select2" multiple="multiple" >	
+										<option value="{{Auth::user()->id}}" {{ (collect(old('team_id'))->contains(Auth::user()->id)) ? 'selected':'selected' }} locked="locked" >{{Auth::user()->name}}</option>	
 										@foreach($users as $user)		
 											<option value="{{$user->id}}" @foreach ($team->members as $val) {{$val->users->id == $user->id ? 'selected' : ''}} @endforeach>{{$user->name}}</option>
 											
@@ -55,7 +55,25 @@
 	</section>
 	<script >
 		$(document).ready(function(){
-			$('#select2').select2();
+				$('.select2').select2({
+	tags: true,
+	placeholder: 'Select an option',
+	templateSelection : function (tag, container){
+	
+		var $option = $('.select2 option[value="'+tag.id+'"]');
+	if ($option.attr('locked')){
+	   $(container).addClass('locked-tag');
+	   tag.locked = true; 
+	}
+		return tag.text;
+	},
+})
+.on('select2:unselecting', function(e){
+	
+   if ($(e.params.args.data.element).attr('locked')) {
+       e.preventDefault();
+    }
+ });
 		});
 	</script>
 @endsection

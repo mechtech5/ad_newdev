@@ -13,4 +13,9 @@ class QualCatg extends Model
 	protected $primaryKey = 'qual_catg_code';
 
  	public $incrementing =false;
+
+ 	public function document_mast(){
+        return $this->belongsToMany('App\Models\QualDocMast', 'qual_doc_mast','qual_catg_code','qual_doc_type_id');
+    }
+    
 }

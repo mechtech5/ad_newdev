@@ -1,15 +1,7 @@
 @extends('lawschools.layouts.main')
 @section('content')
 <section class="content">
-<div class="row">
-	<div class="col-md-12 m-auto " >
-		<div class="box box-primary">
-			<div class="box-header with-border">
-				@include('student.header')
-			</div>
-		</div>
-	</div>
-</div>
+@include('student.header')
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-default">

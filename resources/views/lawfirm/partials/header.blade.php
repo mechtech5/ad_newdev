@@ -42,7 +42,14 @@
    .select2-container--default .select2-selection--multiple .select2-selection__choice {
       background-color: #247ae4;
     }
-    .select2-selection__choice__remove,.select2-selection__clear{display:none !important;} 
+    .locked-tag .select2-selection__choice__remove{
+    display: none!important;
+  }
+
+  .select2{
+    width: 100% !important;
+  }
+/*    .select2-selection__choice__remove,.select2-selection__clear{display:none !important;} */
 </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">

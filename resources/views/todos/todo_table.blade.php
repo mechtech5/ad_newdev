@@ -15,20 +15,16 @@
 		@foreach($todos as $todo)
 		<tr>
 			<td>{{++$count}}</td>
-			<td>{{$parent_id == null ? $todo->title : $todo->todos->title}}</td>
-			<td>{{$parent_id == null ? $todo->description : $todo->todos->description}}</td>
-			<td>{{$parent_id == null ? date('d-m-Y', strtotime($todo->start_date)) : date('d-m-Y', strtotime($todo->todos->start_date))}}</td>
-			<td>{{$parent_id == null ? date('d-m-Y', strtotime($todo->end_date)) : date('d-m-Y', strtotime($todo->todos->end_date))}}</td>
+			<td>{{  $todo->todos->title}}</td>
+			<td>{{ $todo->todos->description}}</td>
+			<td>{{ date('d-m-Y', strtotime($todo->todos->start_date))}}</td>
+			<td>{{ date('d-m-Y', strtotime($todo->todos->end_date))}}</td>
 			<td>
-				@if($parent_id == null)
-					@foreach($todo->users as $users)
-						<span>{{$users->user->name . ', '}}</span>
-					@endforeach
-				@else
-					@foreach($todo->todos->users as $users)
-						<span>{{$users->user->name . ', '}}</span>
-					@endforeach
-				@endif
+				
+				@foreach($todo->todos->users as $users)
+					<span>{{$users->user->name . ', '}}</span>
+				@endforeach
+			
 			</td>
 			<td></td>
 		</tr>

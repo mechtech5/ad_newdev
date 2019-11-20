@@ -5,16 +5,17 @@
 			<div class="col-md-12">
 				<div class="box box-primary">
 					<div class="box-header with-border">
-						<h3 class="">Create Nationality Name<a href="{{route('nationality.index')}}" class="btn btn-sm btn-primary pull-right">Back</a></h3>
+						<h3 class="">Edit Profession <a href="{{route('profession.index')}}" class="btn btn-sm btn-primary pull-right">Back</a></h3>
 					</div>
 					<div class="box-body">
-						<form action="{{route('nationality.store')}}" method="post" >
-						@csrf 
+						<form action="{{route('profession.update',['id'=>$profession->id])}}" method="post" >
+							@method('PATCH')
+							@csrf 
 							<div class="row form-group">							
 								<div class="col-md-6">
-									<label for="">Nationality Name <span class="text-danger">*</span>
+									<label for="">Profession Name <span class="text-danger">*</span>
 									</label>
-									<input type="text" class="form-control" name="name" required="" placeholder="Enter Nationality Name" value="{{old('name')}}">
+									<input type="text" class="form-control" name="name" required="" placeholder="Enter Profession Name" value="{{old('name') ?? $profession->name}}"> 
 									@error('name')
 										<span class="text-danger">
 											<strong>{{$message}}</strong>
@@ -33,5 +34,4 @@
 			</div>
 		</div>
 	</section>
-
 @endsection

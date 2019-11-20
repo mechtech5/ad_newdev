@@ -8,6 +8,7 @@ use App\User;
 use App\Models\UserQualification;
 use App\Models\QualCatg;
 use App\Models\QualMast;
+use App\Models\QualDocMast;
 
 class QualificationController extends Controller
 {
@@ -144,6 +145,9 @@ class QualificationController extends Controller
         ->get();
         return response()->json($course_catg);
     }
-
+    public function qual_docs(){
+        $documents = QualDocMast::with('qual_doc_type')->where('qual_catg_code',request()->qual_catg_code)->get();
+        return response()->json($documents);
+    }
 
 }

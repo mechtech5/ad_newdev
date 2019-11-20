@@ -68,7 +68,7 @@
 						</div>
 						<div class="row form-group">
 							<div class="col-md-12">
-								<input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+							
 								<input type="hidden" name="page_name" value="todo">
 								<button type="submit" class="btn btn-sm btn-success">Submit</button>
 							</div>
@@ -82,7 +82,25 @@
 </section>
 <script>
 	$(document).ready(function(){
-		$('.select2').select2();
+		$('.select2').select2({
+	tags: true,
+	placeholder: 'Select an option',
+	templateSelection : function (tag, container){
+		
+		var $option = $('.select2 option[value="'+tag.id+'"]');
+	if ($option.attr('locked')){
+	   $(container).addClass('locked-tag');
+	   tag.locked = true; 
+	}
+		return tag.text;
+	},
+})
+.on('select2:unselecting', function(e){
+	
+   if ($(e.params.args.data.element).attr('locked')) {
+       e.preventDefault();
+    }
+ });
 		$(".start_date,.end_date").datepicker({
 			startDate : new Date(),
 			format : 'yyyy-mm-dd',

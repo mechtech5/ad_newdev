@@ -57,12 +57,12 @@
 					<div class="row form-group">
 						<div class="col-md-6" style="margin-top:10px;" >
 							<label for="lawyer_names">Lawyer Names <span class="text-danger" >*</span></label><span class="text-muted"> (Who attend)</span>
-							<select name="lawyer_names[]" class="form-control" multiple="multiple" id="select2">
+							<select name="lawyer_names[]" class="form-control select2" multiple="multiple" >
 								@foreach($assign_mem as $assign_m)
 									<option value="{{$assign_m->user_id1}}"
 									@if(count(collect(old('lawyer_names'))) == '0') 
 										@foreach($lawyer_ids as $lawyer_id)
-											{{$lawyer_id == $assign_m->user_id1 ? 'selected' : ''}} 
+											{{$lawyer_id == $assign_m->user_id1 ? 'selected' : ''}}  {{$lawyer_id == $assign_m->user_id1 ? 'locked="locked' : ''}} 
 										@endforeach
 									@else
 									{{ (collect(old('lawyer_names'))->contains($assign_m->user_id1)) ? 'selected': '' }}
@@ -129,7 +129,25 @@
 		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |  forecolor backcolor ",
 	});
 
-	$('#select2').select2();
+$('.select2').select2({
+	tags: true,
+	placeholder: 'Select an option',
+	templateSelection : function (tag, container){
+		
+		var $option = $('.select2 option[value="'+tag.id+'"]');
+	if ($option.attr('locked')){
+	   $(container).addClass('locked-tag');
+	   tag.locked = true; 
+	}
+		return tag.text;
+	},
+})
+.on('select2:unselecting', function(e){
+	
+   if ($(e.params.args.data.element).attr('locked')) {
+       e.preventDefault();
+    }
+ });
 	$(function () {
 		$("#datepicker, #regdatepicker").datepicker({ 
 			singleDatePicker: true,

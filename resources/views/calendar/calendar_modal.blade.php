@@ -148,9 +148,9 @@
 						</div>
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="team_id">Assign To Team Members <span class="text-danger font-weight-bold">*</span></label>
+								<label for="users_id">Assign To Team Members <span class="text-danger font-weight-bold">*</span></label>
 								<br>
-								<select name="team_id[]" class="form-control select2 members_todo" multiple="multiple"  style="width: 100%" required>	
+								<select name="users_id[]" class="form-control select2 members_todo" multiple="multiple"  style="width: 100%" required>	
 									
 								</select>							
 							</div>
@@ -158,7 +158,7 @@
 
 						<div class="row form-group">
 							<div class="col-md-12">
-								<input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+								
 								<button type="submit" class="btn btn-sm btn-success">Submit</button>
 							</div>
 						</div>
@@ -188,9 +188,25 @@ $(document).ready(function(){
 		}
 
 	});
+	$('.select2').select2({
+		tags: true,
+		placeholder: 'Select an option',
+		templateSelection : function (tag, container){
 
-	$('.select2').select2();
-	
+		var $option = $('.select2 option[value="'+tag.id+'"]');
+		if ($option.attr('locked')){
+			$(container).addClass('locked-tag');
+			tag.locked = true; 
+		}
+			return tag.text;
+		},
+	})
+	.on('select2:unselecting', function(e){
+
+		if ($(e.params.args.data.element).attr('locked')) {
+		e.preventDefault();
+		}
+	});
 	$(".start_date,.end_date,.h_date").datepicker({
 		startDate : new Date(),
 		format : 'yyyy-mm-dd',
@@ -250,15 +266,16 @@ $(document).ready(function(){
 		hearing_members(case_id,auth_id);
 	});
 
-	var auth_name = "{{Auth::user()->name}}";
-	var case_id1="{{old('case_id1') != '' ? old('case_id1') : '0' }}";
-	todos_members(case_id1,auth_id,auth_name);
+	var auth_id = "{{Auth::user()->id}}";
+		var auth_name = "{{Auth::user()->name}}";
+		var case_id1="{{old('case_id1') != '' ? old('case_id1') : '0' }}";
+		case_members(case_id1,auth_id,auth_name);
 
-	$('#caseTodo').on('change',function(e){
-		e.preventDefault();
-		var case_id1 = $(this).val();
-		todos_members(case_id1,auth_id,auth_name);
-	});
+		$('#caseTodo').on('change',function(e){
+			e.preventDefault();
+			var case_id1 = $(this).val();
+			case_members(case_id1,auth_id,auth_name);
+		});
 
 	$('#datetimepicker3').datetimepicker({
 	    format: 'HH:mm:ss',

@@ -316,7 +316,7 @@
 							<label for="users_id">User Name <span class="text-danger">*</span> </label> <span class="text-muted">(Case assign to users)</span>
 							<select class="form-control select2 team_users" name="users_id[]" multiple="multiple">
 									@if($case->team_id == 0)
-										<option value="{{Auth::user()->id}}" {{ (collect(old('team_id'))->contains(Auth::user()->id)) ? 'selected':'selected' }}  >{{Auth::user()->name}}</option>
+										<option value="{{Auth::user()->id}}" {{ (collect(old('team_id'))->contains(Auth::user()->id)) ? 'selected':'selected' }}   locked="locked">{{Auth::user()->name}}</option>
 									@endif
 									@foreach($members as $member)								
 										<option value="{{$case->team_id != '0' ? $member->user_id : $member->id}}" 
@@ -359,8 +359,24 @@
 <script>
 $(document).ready(function(){		
 	$('.select2').select2({
-		allowClear: true,
-	});	
+		 tags: true,
+	     placeholder: 'Select an option',
+	     templateSelection : function (tag, container){
+	     	
+	      	var $option = $('.select2 option[value="'+tag.id+'"]');
+	        if ($option.attr('locked')){
+	           $(container).addClass('locked-tag');
+	           tag.locked = true; 
+	        }
+	        return tag.text;
+	     },
+	   })
+	   .on('select2:unselecting', function(e){
+	   
+	       if ($(e.params.args.data.element).attr('locked')) {
+	           e.preventDefault();
+	        }
+	     });	
 		
 	$(function () {
 		$("#datepicker,#affidavit_date,#regdatepicker").datepicker();

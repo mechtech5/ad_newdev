@@ -6,22 +6,21 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Models\Nationality;
-use App\Models\Currency;
+
 class CountryController extends Controller
 {
  
     public function index()
     {
-        $countries = Country::with('nationality','currency')->get();
+        $countries = Country::all();
         return view('admin.dashboard.master.location.country.index',compact('countries'));
     }
 
   
     public function create()
     {
-        $nationalities = Nationality::all();
-        $currencies = Currency::all();
-        return view('admin.dashboard.master.location.country.create',compact('currencies','nationalities'));
+       
+        return view('admin.dashboard.master.location.country.create');
     }
  
     public function store(Request $request)
@@ -45,10 +44,9 @@ class CountryController extends Controller
    
     public function edit($id)
     {
-        $country = Country::find($id);   
-        $nationalities = Nationality::all();
-        $currencies = Currency::all();     
-        return view('admin.dashboard.master.location.country.edit',compact('country','currencies','nationalities'));
+        $country = Country::find($id);
+       
+        return view('admin.dashboard.master.location.country.edit',compact('country'));
     }
 
  
@@ -73,8 +71,9 @@ class CountryController extends Controller
              'phone_code'   => 'nullable|string|max:10|min:1|regex:/^[0-9]+$/',
              'iso2'         => 'nullable|string|max:2|min:2',
              'iso3'         => 'nullable|string|max:3|min:3',
-             'nationality_id'  => 'nullable',
-             'currency_code'=> 'nullable'
+             'nationality'  => 'nullable|string|max:25|min:1',
+             'currency_code'=> 'nullable|min:2|max:6',
+             'currency_name'=> 'nullable|min:1|max:25'
         ]);
     }
 }

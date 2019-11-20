@@ -29,7 +29,8 @@
 									<th>Short name (2 letter)</th>
 									<th>Short name (3 letter)</th>
 									<th>Nationality</th>
-									<th>Currency Code</th>
+									<th>Currency Name</th>
+									<th>Currency Short Name</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -42,12 +43,9 @@
 									<td>{{$country->phone_code}}</td>
 									<td>{{$country->iso2}}</td>
 									<td>{{$country->iso3}}</td>
-									<td>
-										{{$country->nationality != null ? $country->nationality->name : '-' }}
-									</td>
-									<td>
-										{{$country->currency != null ? $country->currency->currency_name : '-' }}
-									</td>
+									<td>{{$country->nationality }}</td>
+									<td>{{$country->currency_name }}</td>
+									<td>{{$country->currency_code }}</td>
 									<td>
 										
 										

@@ -54,22 +54,25 @@
 							<div class="row form-group">
 								<div class="col-md-6">
 									<label>Nationality</label>
-									<select name="nationality_id" class="form-control">
-										<option value="0">Select Nationality</option>
-										@foreach($nationalities as $nationality)
-											<option value="{{$nationality->id}}">{{$nationality->name}}</option>
-										@endforeach
-									</select>
+									<input type="text" name="nationality" class="form-control" value="{{old('nationality')}}" placeholder="Enter nationality name">
+									@error('nationality')
+										<span class="text-danger">
+											<strong>{{$message}}</strong>
+										</span>
+									@enderror
+
 								</div>
 								<div class="col-md-6">
-									<label>Currency</label>
-									<select name="currency_code" class="form-control">
-										<option value="0">Select Nationality</option>
-										@foreach($currencies as $currency)
-											<option value="{{$currency->currency_code}}">{{$currency->currency_name}}</option>
-										@endforeach
-									</select>
+									<label>Currency Name</label>
+									<input type="text" name="currency_name" class="form-control" value="{{old('currency_name')}}">
 								</div>
+							</div>
+							<div class="row form-group">
+								<div class="col-md-6">
+									<label>Currency Short Name</label>
+									<input type="text" name="currency_code" class="form-control" value="{{old('currency_code')}}">
+								</div>
+								
 							</div>
 							<div class="row form-group">
 								<div class="col-md-12">

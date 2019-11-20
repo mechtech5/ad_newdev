@@ -102,15 +102,17 @@ Route::group(['middleware' => ['role:admin']], function() {
 	Route::resource('/master/payment_mode','Admin\Master\PaymentModeController');	
 	Route::resource('/master/religion','Admin\Master\ReligionController');	
 	Route::resource('/master/relation','Admin\Master\RelationController');	
+	Route::resource('/master/profession','Admin\Master\ProfessionMastController');	
 	Route::resource('/master/reservation','Admin\Master\ReservationClassController');	
-	Route::resource('/master/nationality','Admin\Master\NationalityController');	
-	Route::resource('/master/currency','Admin\Master\CurrencyController');	
-
+	Route::resource('/master/designation','Admin\Master\DesignationMastController');	
 	Route::resource('/master/specialization/spec_category','Admin\Master\SpecCategoryController');
 	Route::resource('/master/specialization/spec_subcategory','Admin\Master\SpecSubCategoryController');
 	Route::post('/master/specialization/subCategoryFilter','Admin\Master\SpecSubCategoryController@subCategoryFilter')->name('spec_subCategoryFilter');
 	Route::resource('/master/qualification/qual_category','Admin\Master\QualCategoryController');
 	Route::resource('/master/qualification/qual_subcategory','Admin\Master\QualSubCategoryController');
+	Route::resource('/master/qualification/qual_doc_type','Admin\Master\QualDocTypeController');
+	Route::resource('/master/qualification/qual_doc_mast','Admin\Master\QualDocMastController');
+	
 	
 	Route::post('/master/qualification/qual_subCategoryFilter','Admin\Master\QualSubCategoryController@subCategoryFilter')->name('qual_subCategoryFilter');	
 	Route::resource('/master/court/court_category','Admin\Master\CourtCategoryController');
@@ -189,6 +191,8 @@ Route::group(['middleware' => ['role:lawcollege|teacher|student']], function() {
 	Route::resource('/lawschools', 'LawSchools\LawSchoolsController');
 	Route::resource('/student', 'Student\StudentDashboardController');
 	Route::resource('/student_detail', 'Student\StudentDetailController');
+	Route::post('/temporary_save', 'Student\StudentDetailController@temp_data');
+
 });
 /* --------------Lawcollege--------Teacher-----------Student---------- */
 
@@ -214,6 +218,7 @@ Route::group(['middleware' => ['role:teacher']], function() {
 Route::group(['middleware' => ['role:lawyer|teacher|lawcollege']], function() {   
 	Route::resource('/qualification','QualificationController');
 	Route::get('/qual_category','QualificationController@qualCategory')->name('qual.category');
+	Route::get('/qual_docs','QualificationController@qual_docs');
 
 });
 /* ----------------Lawyer---------------Teacher--------------- */

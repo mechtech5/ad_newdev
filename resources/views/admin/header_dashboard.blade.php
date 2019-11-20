@@ -37,7 +37,19 @@
   <link rel="stylesheet" type="text/css" href="{{asset('css/dashboard/dashboard.css')}}"> 
   
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<style type="text/css">
+   .select2-container--default .select2-selection--multiple .select2-selection__choice {
+      background-color: #247ae4;
+    }
+    .locked-tag .select2-selection__choice__remove{
+    display: none!important;
+  }
 
+  .select2{
+    width: 100% !important;
+  }
+/*    .select2-selection__choice__remove,.select2-selection__clear{display:none !important;} */
+</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -264,8 +276,11 @@
                 <li class="{{ Request()->segment(2) == 'relation' ? 'active' : '' }} nav-item" ><a href="{{route('relation.index')}}"><i class="fa fa-circle-o"></i> Relation</a></li>
                 <li class="{{ Request()->segment(2) == 'religion' ? 'active' : '' }} nav-item" ><a href="{{route('religion.index')}}"><i class="fa fa-circle-o"></i> Religion</a></li>
                 <li class="{{ Request()->segment(2) == 'reservation' ? 'active' : '' }} nav-item" ><a href="{{route('reservation.index')}}"><i class="fa fa-circle-o"></i> Reservation Class</a></li>
-                <li class="{{ Request()->segment(2) == 'nationality' ? 'active' : '' }} nav-item" ><a href="{{route('nationality.index')}}"><i class="fa fa-circle-o"></i> Nationality</a></li>
-                <li class="{{ Request()->segment(2) == 'currency' ? 'active' : '' }} nav-item" ><a href="{{route('currency.index')}}"><i class="fa fa-circle-o"></i> Currency</a></li>
+                
+              
+                <li class="{{ Request()->segment(2) == 'profession' ? 'active' : '' }} nav-item" ><a href="{{route('profession.index')}}"><i class="fa fa-circle-o"></i> Profession</a></li>
+
+                <li class="{{ Request()->segment(2) == 'designation' ? 'active' : '' }} nav-item" ><a href="{{route('designation.index')}}"><i class="fa fa-circle-o"></i> Designation</a></li>
 
                  <li class="treeview {{Request()->segment(2) == 'specialization' ? 'active' : '' }}">
                   <a href="">
@@ -290,6 +305,8 @@
                   <ul class="treeview-menu"> 
                     <li class="{{Request()->segment(3) == 'qual_category' ? 'active' : '' }}"><a href="{{route('qual_category.index')}}"><i class="fa fa-circle-o"></i> Category</a></li>
                     <li class="{{Request()->segment(3) == 'qual_subcategory' ? 'active' : '' }}"><a href="{{route('qual_subcategory.index')}}"><i class="fa fa-circle-o"></i> Subcategory</a></li>
+                    <li class="{{Request()->segment(3) == 'qual_doc_type' ? 'active' : '' }}"><a href="{{route('qual_doc_type.index')}}"><i class="fa fa-circle-o"></i> Document Type</a></li>
+                    <li class="{{Request()->segment(3) == 'qual_doc_mast' ? 'active' : '' }}"><a href="{{route('qual_doc_mast.index')}}"><i class="fa fa-circle-o"></i> Document Mast</a></li>
                   </ul>
                 </li>
                 <li class="{{Request()->segment(2) == 'case_type' ? 'active' : '' }}"><a href="{{route('case_type.index')}}"><i class="fa fa-book"></i> Case Type</a></li>

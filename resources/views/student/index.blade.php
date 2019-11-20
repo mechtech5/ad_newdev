@@ -1,13 +1,16 @@
 @extends('lawschools.layouts.main')
 @section('content')
 <section class="content">
+
+@include('student.header')
+	
 <div class="row">
 	<div class="col-md-12 m-auto " >
-		<div class="box box-primary">
-			<div class="box-header with-border">
-				@include('student.header')	
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">Student Dashboard</h4>
 			</div>
-			<div class="box-body">
+			<div class="panel-body">	
 				<div class="row">
 					<div class="col-md-3 col-sm-6 col-xs-12">
 						<div class="info-box">
