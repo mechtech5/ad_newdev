@@ -21,12 +21,14 @@ use App\Models\StudentQual;
 use App\Models\GuardianMast;
 use App\Models\StudentAddress;
 use App\Models\StudentDocs;
+use App\Models\BatchMast;
 use Auth;
 class StudentDetailController extends Controller
 {
     public function index(){
-        StudentMast::where()
-    	return view('student.student_detail.index');
+        $students = StudentMast::with('qual_course','batch')->where('user_id',Auth::user()->id)->get();
+         // return $students;
+    	return view('student.student_detail.index',compact('students'));
     }
     public function create(){
         $qual_catgs = QualCatg::where('qual_catg_code', '!=',4)->get();
@@ -37,12 +39,131 @@ class StudentDetailController extends Controller
         $countries = Country::all();
         $languages = LanguageMast::all();
         $designations = DesignationMast::all();
-
-    	return view('student.student_detail.create',compact('qual_catgs','professions','reservations','religions','relations','countries','languages','designations'));
+        $batches = BatchMast::where('user_id',Auth::user()->id)->orderBy('name','DESC')->get();
+    
+    	return view('student.student_detail.create',compact('qual_catgs','professions','reservations','religions','relations','countries','languages','designations','batches'));
     }
     public function store(Request $request){
-     
+        $id ='';
+        $data = $this->create_data($request,$id);
 
+        for($i= 0 ; $i < count($request->qual_doc_type_id); $i++) {
+            $stud_docs= [
+                's_id'              => $data['s_id'],
+                'qual_catg_code'    => $request->qual_catg_code,
+                'qual_doc_type_id'  => $request->qual_doc_type_id[$i]
+            ];
+            if($request->doc_check[$i] == '0'){
+                $stud_docs['doc_url'] = null;
+            }else{
+                $filename = $request->f_name.'_'.$request->doc_name[$i].'_'.time().'.'.$request->doc_url[$i]->getClientOriginalExtension();
+                $year = date('Y');
+                $image = $request->doc_url[$i]->storeAs('public/colleges/college_'.Auth::user()->id.'/documents/'.$data['batch_name'].'', $filename);
+                $stud_docs['doc_url'] = 'colleges/college_'.Auth::user()->id.'/documents/'.$data['batch_name'].'/'.$filename;
+            }
+          
+            StudentDocs::create($stud_docs);
+        }
+       
+        return redirect()->route('student_detail.create')->with('success','Student created successfully');
+	   
+    	
+    }
+    public function temp_data(Request $request){
+
+       $value = $request->session()->put('key', 'value');
+        print_r($value);
+      
+    }
+    public function edit($id){
+        $student = StudentMast::with(['stu_qual_details','stud_guardians','stud_addresses','stud_docs.doc_type'])->where('id', $id)->first();
+        
+        $qual_catgs = QualCatg::where('qual_catg_code', '!=',4)->get();
+        $professions = ProfessionMast::all();
+        $reservations = ReservationClass::all();
+        $religions = Religion::all();
+        $relations = Relation::all();
+        $countries = Country::all();
+        $languages = LanguageMast::all();
+        $designations = DesignationMast::all();
+        $batches = BatchMast::where('user_id',Auth::user()->id)->orderBy('name','DESC')->get();
+
+        return view('student.student_detail.edit',compact('student','qual_catgs','professions','reservations','religions','relations','countries','languages','designations','batches'));
+    }
+    public function update(Request $request, $id){        
+        //return $request->all();
+        $data = $this->create_data($request,$id);
+        $student_docs = StudentDocs::where('s_id',$id)->get();
+        StudentDocs::where('s_id',$id)->delete();
+
+        foreach ($student_docs as $value) {
+           $doc_type_ids[] = $value->qual_doc_type_id;
+           $qual_catg = $value->qual_catg_code;
+        }
+        
+        for($i= 0 ; $i < count($request->qual_doc_type_id); $i++) {
+            $stud_docs= [
+                's_id'              => $id,
+                'qual_catg_code'    => $request->qual_catg_code,
+                'qual_doc_type_id'  => $request->qual_doc_type_id[$i]
+            ];
+
+            $doc_t_ids[] = $request->qual_doc_type_id[$i];
+
+            if($request->doc_check[$i] == '0'){
+
+               if($request->s_doc_url[$i] !=null){
+                    $stud_docs['doc_url'] = $request->s_doc_url[$i]; 
+               }else{
+                    foreach ($student_docs as $value) {
+                        if($request->qual_doc_type_id[$i] == $value->qual_doc_type_id){
+                            $stud_docs['doc_url'] = $value->doc_url;
+                        }
+                    }
+               }
+
+            }else{
+                $filename = $request->f_name.'_'.$request->doc_name[$i].'_'.time().'.'.$request->doc_url[$i]->getClientOriginalExtension();
+                if($request->s_doc_url[$i] !=null){                
+                   Storage::delete('public/'.$request->s_doc_url[$i]);
+                }
+                else{                                 
+                    foreach ($student_docs as $value) {
+                        if($request->qual_doc_type_id[$i] == $value->qual_doc_type_id){
+                           if(!empty($value->doc_url)) {
+                               Storage::delete('public/'.$value->doc_url);
+                            }
+                        }
+                    }
+                }              
+               $image = $request->doc_url[$i]->storeAs('public/colleges/college_'.Auth::user()->id.'/documents/'.$data['batch_name'].'', $filename);
+               $stud_docs['doc_url'] = 'colleges/college_'.Auth::user()->id.'/documents/'.$data['batch_name'].'/'.$filename;
+            }
+         
+         
+           StudentDocs::create($stud_docs);
+        }
+        
+       
+        $diff_result = array_diff($doc_type_ids, $doc_t_ids);
+        
+        if(!empty($diff_result)){  
+            foreach ($diff_result as $result) {
+                foreach ($student_docs as $value) {
+                    if($value->qual_doc_type_id == $result){
+                        if($value->doc_url !=null){
+                            Storage::delete('public/'.$value->doc_url);  
+                        }
+                    }
+                }
+            }
+        }     
+
+        return redirect()->back()->with('success','Student Updated successfully');
+    }
+    
+    public function create_data($request,$id){
+        
         $data = [
             'user_id'             => Auth::user()->id,
             'f_name'              => $request->f_name,
@@ -67,7 +188,7 @@ class StudentDetailController extends Controller
             'qual_code'           => $request->qual_code,
             'qual_year'           => $request->qual_year,
             'semester'            => $request->semester,
-            'batch'               => $request->batch,
+            'batch_id'            => $request->batch_id,
             'status'              => $request->status,
             'addm_date'           => $request->addm_date,
             'enroll_no'           => $request->enroll_no,
@@ -77,30 +198,52 @@ class StudentDetailController extends Controller
             'account_name'        => $request->account_name,
             'account_no'          => $request->account_no,
             'ifsc_code'           => $request->ifsc_code,
-        ];
-// return $request->all();
+        ]; 
+        $batches =  BatchMast::all();
+        foreach ($batches as $value) {
+            if($data['batch_id'] == $value->id){
+                $batch_name = $value->name;
+            }
+        }
+
+        if($id !=''){
+            $student = StudentMast::find($id);
+            $guardians = GuardianMast::where('s_id',$id)->get();
+        }else{
+            $student = array();
+        }
+
         if($request->s_photo !=null){
             $verify = $request->validate([
                 's_photo' =>'required|image|mimes:jpeg,png,jpg' 
             ]);
+
             $filename = $request->f_name.'_'.time().'.'.$request->s_photo->getClientOriginalExtension();
             $year = date('Y');
-
-            $image = $request->s_photo->storeAs('public/colleges/college_'.Auth::user()->id.'/students/'.$year.'', $filename);
-            $data['photo'] = 'colleges/college_'.Auth::user()->id.'/students/'.$year.'/'.$filename;
-
+                
+            if(!empty($student)){
+                if($student->photo !=null){
+                 Storage::delete('public/'.$student->photo);   
+                }
+            }
+           $image = $request->s_photo->storeAs('public/colleges/college_'.Auth::user()->id.'/students/'.$batch_name.'', $filename);
+           $data['photo'] = 'colleges/college_'.Auth::user()->id.'/students/'.$batch_name.'/'.$filename;
         }
         else{
-            $data['photo'] = null;
+            $data['photo'] = !empty($student) ? $student->photo : null ;
         }
-        
-        $student = StudentMast::create($data);
-      
-       
-// Academic Details
+
+        if(!empty($student)){
+            StudentMast::find($id)->update($data);
+            StudentQual::where('s_id',$id)->delete();
+            StudentAddress::where('s_id',$id)->delete();
+
+        }else{
+            $create_stud = StudentMast::create($data); 
+        }
         for($i= 0 ; $i < count($request->qual_name); $i++) {
             $student_qual =[
-                's_id'      => $student->id,
+                's_id'      => !empty($student) ? $id : $create_stud->id,
                 'name'      => $request->qual_name[$i],
                 'school'    => $request->qual_clg[$i],
                 'board'     => $request->qual_board[$i],
@@ -110,33 +253,10 @@ class StudentDetailController extends Controller
             ];
             StudentQual::create($student_qual);
         } 
-// Guardian_mast
-        for($i= 0 ; $i < count($request->relation); $i++) {
-            $guardian = [
-                's_id'          => $student->id,
-                'relation_id'   => $request->relation[$i],
-                'name'          => $request->g_name[$i],
-                'mobile'        => $request->g_mobile[$i],
-                'employer'      => $request->employer[$i],
-                'designation_id'=> $request->designation_id[$i],
-                'profession_id' => $request->profession_status[$i],
-                'work_type_id'  => $request->work_status[$i],
-                'employment_type'=>$request->employment_type[$i],
-            ];
-            if($request->g_check[$i] == '0'){
-                $guardian['photo'] = null;
-            }else{
-                $filename = $guardian['name'].'_'.$i.'_'.time().'.'.$request->g_photo[$i]->getClientOriginalExtension();
-                $year = date('Y');
-                $image = $request->g_photo[$i]->storeAs('public/colleges/college_'.Auth::user()->id.'/parents/'.$year.'', $filename);
-                $guardian['photo'] = 'colleges/college_'.Auth::user()->id.'/parents/'.$year.'/'.$filename;
-            }
-            GuardianMast::create($guardian);
-        }
-    
+
         for($i= 0 ; $i < count($request->address); $i++) {
             $address = [
-                's_id'        => $student->id,              
+                's_id'   => !empty($student) ? $id : $create_stud->id, 
                 'country_code'=> $request->country_code[$i],
                 'state_code'  => $request->state_code[$i],
                 'city_code'   => $request->city_code[$i],
@@ -162,73 +282,93 @@ class StudentDetailController extends Controller
         if($request->same_as == 'on'){
           StudentAddress::create($address);
         }
-    
-        for($i= 0 ; $i < count($request->qual_doc_type_id); $i++) {
-            $stud_docs= [
-                's_id'              => $student->id,
-                'qual_catg_code'    => $request->qual_catg_code,
-                'qual_doc_type_id'  => $request->qual_doc_type_id[$i]
-            ];
-            if($request->doc_check[$i] == '0'){
-                $stud_docs['doc_url'] = null;
+        
+
+        for($i= 0 ; $i < count($request->relation); $i++) {
+            $guardian = [
+                's_id'          => !empty($student) ? $id : $create_stud->id,
+                'relation_id'   => $request->relation[$i],
+                'name'          => $request->g_name[$i],
+                'mobile'        => $request->g_mobile[$i],
+                'employer'      => $request->employer[$i],
+                'designation_id'=> $request->designation_id[$i],
+                'profession_id' => $request->profession_status[$i],
+                'work_type_id'  => $request->work_status[$i],
+                'employment_type'=>$request->employment_type[$i],
+            ]; 
+            if($request->g_id[$i] != null){
+                $g_ids[] = $request->g_id[$i] ;
+            }
+            
+            if($request->g_check[$i] == '0'){    //photo not upload
+                if($request->g_id[$i]!=null){   //previous photo check
+                    foreach ($guardians as $guard) {
+                        if($guard->id == $request->g_id[$i]){
+                            $guardian['photo'] =$guard->photo;
+                        }
+                        
+                    }
+                }else{
+                    $guardian['photo'] = null;
+                }              
+            }else{   //photo uploaded new field and old photo
+               $filename = $guardian['name'].'_'.$i.'_'.time().'.'.$request->g_photo[$i]->getClientOriginalExtension();
+
+               $year = date('Y');
+                if($request->g_id[$i]!=null){  //old photo delete 
+                    foreach ($guardians as $guard) {
+                        if($guard->id == $request->g_id[$i]){
+                            $old_photo =$guard->photo;
+                        }                     
+                    }
+                    if($old_photo !=null ){
+                        Storage::delete('public/'.$old_photo);   
+                    }
+
+                }
+               
+                $image = $request->g_photo[$i]->storeAs('public/colleges/college_'.Auth::user()->id.'/parents/'.$batch_name.'', $filename);
+
+                $guardian['photo'] = 'colleges/college_'.Auth::user()->id.'/parents/'.$batch_name.'/'.$filename;
+
+            }
+            if(!empty($student)){
+                if($request->g_id[$i]!=null){
+                    GuardianMast::find($request->g_id[$i])->update($guardian);
+                }else{
+                    GuardianMast::create($guardian);
+                }
             }else{
-                $filename = $request->f_name.'_'.$request->qual_doc_type_id[$i].'_'.time().'.'.$request->doc_url[$i]->getClientOriginalExtension();
-                $year = date('Y');
-                $image = $request->doc_url[$i]->storeAs('public/colleges/college_'.Auth::user()->id.'/documents/'.$year.'', $filename);
-                $stud_docs['doc_url'] = 'colleges/college_'.Auth::user()->id.'/documents/'.$year.'/'.$filename;
+
+                GuardianMast::create($guardian);
+            }
+        }
+        if($id !=''){
+            foreach ($guardians as $guard) {
+              $old_g_ids[]= $guard->id;
             }
           
-            StudentDocs::create($stud_docs);
+            $diff_result = array_diff($old_g_ids, $g_ids);
+            if(!empty($diff_result)){
+                foreach ($diff_result as $value) {
+                    foreach ($guardians as $guard) {
+                        if($guard->id == $value){
+                            $o_photo = $guard->photo;
+                            if($o_photo !=null ){
+                                Storage::delete('public/'.$o_photo);   
+                            }
+                        } 
+                    }
+                }            
+                GuardianMast::whereIn('id',$diff_result)->delete();
+            }           
         }
-       
-        //return $request->doc_check;
-        return redirect()->route('student_detail.create')->with('success','Student created successfully');
-	   
-    	
+        $data['batch_name'] =$batch_name;
+        $data['s_id']   =   !empty($student) ? $id : $create_stud->id;
+        return $data;
     }
-    public function temp_data(Request $request){
-       
 
-       $value = $request->session()->put('key', 'value');
-        print_r($value);
-      
-    }
-    public function validation(){
-            // return $request->all();
-        // $request->validate([
-        //     'f_name'        => 'required|max:30|min:1|string',
-        //     'm_name'        => 'nullable|max:30|string',
-        //     'l_name'        => 'required|max:30|min:1|string',
-        //     's_mobile'      => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-        //     'dob'           => 'required|date_format:Y-m-d',
-        //     'email'         => 'nullable|email|s_email',
-        //     'gender'        => 'required|not_in:""',
-        //     'reservation_class_id' => 'required|not_in:""',
-        //     'religion_id'   => 'nullable',
-        //     'blood_group'   => 'nullable',
-        //     'spec_ailment'  => 'nullable',
-        //     'age'           => 'nullable|min:2',
-        //     'nationality_id'=> 'nullable',
-        //     'taluka'        => 'nullable|max:85|string',
-        //     'language_id'   => 'nullable',
-        //     's_ssmid'       => 'nullable|max:9|min:9',
-        //     'f_ssmid'       => 'nullable|max:8|min:8',
-        //     'aadhar_no'     => 'nullable|min:12|max:12|string',
-        //     'qual_catg_code'=> 'required',
-        //     'qual_code'     => 'required',
-        //     'qual_year'     => 'required',
-        //     'batch'         => 'required',
-        //     'semester'      => 'required',
-        //     'addm_date'     => 'required|date_format:Y-m-d',
-        //     'enroll_no'     => 'nullable|string',
-        //     'roll_no'       => 'nullable|string',
-        //     'bank_name'     => 'nullable|max:85|string',
-        //     'bank_branch'   => 'nullable|max:45|string',
-        //     'account_name'  => 'nullable|max:100|string',
-        //     'account_no'    => 'nullable',
-        //     'ifsc_code'     => 'nullable',  
-        //     'status'        => 'required'      
+    public function show($id){
 
-        // ]);
     }
 }

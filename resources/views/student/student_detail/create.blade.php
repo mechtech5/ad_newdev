@@ -41,6 +41,7 @@
 			<div class="panel-heading">
 				<h1 class="panel-title">Add Student</h1>
 			</div>
+			
 			<div class="panel-body">
 				<div class="row">
 					<div class="col-md-12">
@@ -128,12 +129,13 @@
 									<div class="row form-group">
 										<div class="col-md-3 col-xs-6 col-sm-6 error-div">
 											<label class="required">Recent Batch</label>
-											<select class="form-control required" name="batch">
+											<select class="form-control required" name="batch_id">
 												<option value="">Select Admission Batch</option>
-												<option value="2">2019-2020</option>
-												<option value="1">2018-2019</option>
+												@foreach($batches as $batch)
+													<option value="{{$batch->id}}">{{$batch->name}}</option>
+												@endforeach
 											</select>
-											@error('batch')
+											@error('batch_id')
 												<span class="text-danger">
 													<strong>{{$message}}</strong>
 												</span>
@@ -509,7 +511,7 @@
 						        	<div class="row form-group">
 						        		<div class="col-md-6 col-sm-6 col-xs-6 error-div">
 						        			<label>Bank Name</label>
-						        			<input type="text" name="bank_name" class="form-control">
+						        			<input type="text" name="bank_name" class="form-control"> 
 						        			@error('bank_name')
 												<span class="text-danger">
 													<strong>{{$message}}</strong>
@@ -863,15 +865,16 @@ $(document).ready(function(){
 	$('#qual_field').append('<tr id="row'+i+'"><td class="error-di"><input type="text" name="qual_name[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_clg[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_board[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_marks[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_years[]" class="form-control" ></td><td class="error-di"><select class="form-control" name="qual_division[]"><option value="">Select Division</option><option value="1">1st</option><option value="2">2nd</option><option value="3">3rd</option></select></td><td><a class="btn btn-sm btn-success" id="add_row"><i class="fa fa-plus"></i></a></td></tr>');
 	i++;
 	 $('#add_row').click(function(){
-	 	$('#qual_field').append('<tr id="row'+i+'"><td class="error-di"><input type="text" name="qual_name[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_clg[]"  class="form-control"></td><td class="error-di"><input type="text" name="qual_board[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_marks[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_years[]" class="form-control"></td><td class="error-di"><select class="form-control" name="qual_division[]"><option value="">Select Division</option><option value="1">1st</option><option value="2">2nd</option><option value="3">3rd</option></select></td><td><a class="btn btn-sm btn-danger btn_remove" id="'+i+'"><i class="fa fa-minus"></i></a></td></tr>');
+	 	$('#qual_field').append('<tr id="row'+i+'"><td class="error-di"><input type="text" name="qual_name[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_clg[]"  class="form-control"></td><td class="error-di"><input type="text" name="qual_board[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_marks[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_years[]" class="form-control"></td><td class="error-di"><select class="form-control" name="qual_division[]"><option value="">Select Division</option><option value="1">1st</option><option value="2">2nd</option><option value="3">3rd</option></select></td><td><a class="btn btn-sm btn-danger btn_remove1" id="'+i+'"><i class="fa fa-minus"></i></a></td></tr>');
 	 	i++;
 	 });
 
-	$(document).on('click', '.btn_remove', function(){
+	$(document).on('click', '.btn_remove1', function(){
 		var button_id = $(this).attr("id");
 		//alert(button_id); 
 		$('#row'+button_id+'').remove();
 	});
+
 
 
 	$.validator.addMethod('datebefore',function(value,element){
@@ -912,13 +915,14 @@ $(document).ready(function(){
       	$("[name^=qual_marks]").each(function(i,j){
       		$(this).parent('.error-di').find('em.error').remove();
       		$(this).parent('.error-di').removeClass("has-error");
+      		var test = /^\d{0,2}(\.\d{0,2})?$/;
       		var marks = $.trim($(this).val());
       		if (marks == '') {
       			flag = false;           
                	$(this).parent('.error-di').addClass('has-error').removeClass('has-success');
                	$(this).parent('.error-di').append('<em class="error help-block">This field is required.</em>');   
 
-      		}else if(!$.isNumeric(marks) || marks.length > 3 || marks > 100){
+      		}else if(!test.test(marks)){
       			flag = false;           
                	$(this).parent('.error-di').addClass('has-error').removeClass('has-success');
                	$(this).parent('.error-di').append('<em class="error help-block">The specified marks is invalid.</em>');    
@@ -967,7 +971,7 @@ $(document).ready(function(){
 
 	var k =0;
 
-	var html_div ='<div class="form-group row"><div class="col-sm-6 col-md-4 col-xs-6 error-di"><label >Relation <strong class="text-danger">*</strong></label><select name="relation[]" class="form-control "><option value="">Select Relation</option><?php foreach($relations as $relation){?><option value="{{$relation->id}}">{{$relation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="">Name <strong class="text-danger">*</strong></label><input type="text" name="g_name[]" class="form-control "></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="required">Mobile <strong class="text-danger">*</strong></label><input type="text" name="g_mobile[]" class="form-control "></div></div><div class="row form-group"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Work Status</label><select name="work_status[]" class="form-control"><option value="">Select Work Status</option><option value="0">Self Employed</option><option value="1">Job</option><option value="3">Retired</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Employment Type</label><select name="employment_type[]" class="form-control"><option value="">Select Employment Type</option><option value="0">Government</option><option value="1">Private</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Professtion Type</label><select name="profession_status[]" class="form-control"><option value="">Select Profession type</option><?php foreach($professions as $profession) { ?><option value="{{$profession->id}}">{{$profession->name}}</option><?php  } ?></select></div></div><div class="form-group row"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Employer</label><input type="text" name="employer[]" class="form-control"></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Designation</label><select class="form-control" name="designation_id[]"><option value="">Select Designation Name</option><?php foreach($designations as $designation) { ?> <option value="{{$designation->id}}">{{$designation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label >Student Photo</label><input type="file" name="g_photo[]" id="g_photo" accept="image/*"><input type="hidden" name="g_check[]" class="g_photo" value=""></div><hr></div>';
+	var html_div ='<div class="form-group row"><div class="col-sm-6 col-md-4 col-xs-6 error-di"><label >Relation <strong class="text-danger">*</strong></label><select name="relation[]" class="form-control "><option value="">Select Relation</option><?php foreach($relations as $relation){?><option value="{{$relation->id}}">{{$relation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="">Name <strong class="text-danger">*</strong></label><input type="text" name="g_name[]" class="form-control "></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="required">Mobile <strong class="text-danger">*</strong></label><input type="text" name="g_mobile[]" class="form-control "></div></div><div class="row form-group"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Work Status</label><select name="work_status[]" class="form-control"><option value="">Select Work Status</option><option value="0">Self Employed</option><option value="1">Job</option><option value="3">Retired</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Employment Type</label><select name="employment_type[]" class="form-control"><option value="">Select Employment Type</option><option value="0">Government</option><option value="1">Private</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Professtion Type</label><select name="profession_status[]" class="form-control"><option value="">Select Profession type</option><?php foreach($professions as $profession) { ?><option value="{{$profession->id}}">{{$profession->name}}</option><?php  } ?></select></div></div><div class="form-group row"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Employer</label><input type="text" name="employer[]" class="form-control"></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Designation</label><select class="form-control" name="designation_id[]"><option value="">Select Designation Name</option><?php foreach($designations as $designation) { ?> <option value="{{$designation->id}}">{{$designation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label >Photo</label><input type="file" name="g_photo[]" id="g_photo" accept="image/*"><input type="hidden" name="g_check[]" class="g_photo" value=""><input type="hidden" name="g_id[]" value=""></div><hr></div>';
 
 
 	$('#guard_info').append('<div id="row'+k+'"><div class="row form-group "><a href="#" class="pull-right btn btn-sm btn-success " style="margin:10px 10px 0px 0px" id="add_guar"><i class="fa fa-plus"></i> Add More</a></div>'+html_div+'</div>');
@@ -978,6 +982,11 @@ $(document).ready(function(){
     	$('#guard_info').append('<div id="row'+k+'"><div class="row form-group "><a href="#" class="pull-right btn btn-sm btn-danger btn_remove" style="margin:10px 10px 0px 0px" id="'+k+'"><i class="fa fa-minus"></i></a></div>'+html_div+'</div>');
     	k++;
     });
+    $(document).on('click', '.btn_remove', function(){
+		var button_id = $(this).attr("id");
+		//alert(button_id); 
+		$('#row'+button_id+'').remove();
+	});
 
     $.validator.addMethod("guardian", function (value, element) {
         var flag = true;

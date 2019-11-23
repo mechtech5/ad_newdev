@@ -377,7 +377,7 @@ function case_members(case_id1,auth_id,auth_name){
 		}
 	})
 }
-function qual_course(qual_catg_code){
+function qual_course(qual_catg_code,qual_code){
 	// console.log(qual_catg_code);
 	if(qual_catg_code!=''){
 		$.ajax({
@@ -387,9 +387,9 @@ function qual_course(qual_catg_code){
 				// console.log(res);
 				if(res){
 					  $("#qual_course").empty();
-					$('#qual_course').append('<option value="0">Select Course</option>');
+					$('#qual_course').append('<option value="">Select Course</option>');
 					$.each(res, function(key,value){
-						$("#qual_course").append('<option value="'+value.qual_code+'">'+value.qual_desc+'</option>');
+						$("#qual_course").append('<option value="'+value.qual_code+'" '+(value.qual_code == qual_code ? 'selected' : '')+'>'+value.qual_desc+'</option>');
 					});
 				}
 				else{
@@ -412,7 +412,7 @@ function qual_docs(qual_catg_code){
 				if(data){
 					$('#docs_type').empty();
 					$.each(data,function(i,v){
-						$('#docs_type').append('<tr><td><input type="text" value="'+v.qual_doc_type.name+'" readonly class="form-control"></td><td class="error-di"><input type="file" name="doc_url[]" class="form-control" accept="pdf, image/*"><input type="hidden" name="doc_check[]" value="" class="doc_url"></td><td><input type="hidden" name="qual_doc_type_id[]" value="'+v.qual_doc_type.id+'"></td></tr>');
+						$('#docs_type').append('<tr><td><input type="text" value="'+v.qual_doc_type.name+'" readonly class="form-control" name="doc_name[]"></td><td class="error-di"><input type="file" name="doc_url[]" class="form-control" accept="application/pdf, image/*"><input type="hidden" name="doc_check[]" value="" class="doc_url"></td><td><input type="hidden" name="s_doc_url[]" value=""><input type="hidden" name="qual_doc_type_id[]" value="'+v.qual_doc_type.id+'"></td></tr>');
 					});
 				}else{
 					$('#docs_type').empty();

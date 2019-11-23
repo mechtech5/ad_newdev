@@ -269,7 +269,25 @@
               </li>
             </ul>
           </li>
+
+          <li class="treeview {{Request()->segment(1) == 'class' ? 'active' : '' }} {{Request()->segment(1) == 'class' ? 'active' : '' }} ">
+            <a class="nav-link" href="">
+              <i class="fa fa-graduation-cap"></i>
+                <span>Class</span> <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+
+            <ul class="treeview-menu">
+              <li class="nav-item {{Request()->segment(1) == 'class' ? 'active' : ''}}">
+                <a href="" ><i class="fa fa-circle-o"></i>Class Batch</a>
+              </li>
+            </ul>
+          </li>
+
+
         @endrole
+
         @role('teacher')         
           <li class="{{Request()->segment(1) == 'qualification' ? 'active' : '' }} nav-item">
             <a class="nav-link" href="{{route('qualification.index')}}">
@@ -291,7 +309,7 @@
               <li class="{{Request()->segment(1).'/'.Request()->segment(2) == 'college/profile' ? 'active' : '' }}"><a href="{{route('lawschools.college_profile')}}"><i class="fa fa-user"></i> Profile</a></li>
               <li class="{{Request()->segment(1).'/'.Request()->segment(2) == 'college/courses' ? 'active' : '' }}"><a href="{{route('lawschools.college_courses')}}"><i class="fa fa-gavel"></i> Courses</a></li>
             </ul>
-          </li>     
+          </li>    
           @endif
          @endrole
       </ul>
