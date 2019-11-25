@@ -197,7 +197,7 @@ Route::group(['middleware' => ['role:lawcollege|teacher|student']], function() {
 	Route::get('/upload_student', 'Student\StudentDashboardController@upload_student')->name('upload_student');
 	Route::post('/import_student', 'Student\StudentDashboardController@importStudent')->name('import_student');
 	
-	Route::resource('/batch_mast', 'LawSchools\BatchMastController');
+	Route::resource('manage/batches', 'LawSchools\BatchMastController');
 
 });
 /* --------------Lawcollege--------Teacher-----------Student---------- */

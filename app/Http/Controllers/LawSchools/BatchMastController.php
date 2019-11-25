@@ -4,82 +4,83 @@ namespace App\Http\Controllers\LawSchools;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\BatchMast;
+use Auth;
 
 class BatchMastController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+    public function index(){
+        $batches = BatchMast::where('user_id',Auth::user()->id)->orderBy('name','DESC')->get();
+        return view('lawschools.dashboard.manage.batches.index',compact('batches'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function create()
     {
-        //
+        return view('lawschools.dashboard.manage.batches.create');
+        
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
-        //
+        $user_id    = Auth::user()->id;
+        $data       = $request->validate(['name'=>'unique:batch_mast',
+                                           'start_date'=>'nullable',
+                                           'end_date'=>'nullable', 
+                                            ]);
+        $data['user_id'] = $user_id;
+        $batch = BatchMast::create($data);
+         if ($batch) {
+            return redirect()->back()->with('message', 'Batch added successfully');
+            }else{
+            return redirect()->back()->with('messageError', 'Batch Not added');
+
+        }        
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+
+        $batch_updates = BatchMast::where('id',$id)->get();
+        return view('lawschools.dashboard.manage.batches.edit',compact('batch_updates'));
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(Request $request, $id)
     {
-        //
+        $user_id    = Auth::user()->id;
+        $data       = $request->validate(['name'=>'unique:batch_mast',
+                                           'start_date'=>'nullable',
+                                           'end_date'=>'nullable', 
+                                            ]);
+        $data['user_id'] = $user_id;
+        $batch = BatchMast::where('id', $id)->update($data);
+         if ($batch) {
+            return redirect()->back()->with('message', 'Batch updated successfully');
+            }else{
+            return redirect()->back()->with('messageError', 'Batch Not updated');
+
+        }        
+    
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function destroy($id)
     {
-        //
+        $batch_delete = BatchMast::where('id',$id)->delete();
+         if ($batch_delete) {
+            return redirect()->back()->with('message', 'Batch deleted successfully');
+            }else{
+            return redirect()->back()->with('messageError', 'Batch Not deleted');
+
+        }   
     }
 }

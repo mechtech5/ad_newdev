@@ -273,14 +273,14 @@
           <li class="treeview {{Request()->segment(1) == 'class' ? 'active' : '' }} {{Request()->segment(1) == 'class' ? 'active' : '' }} ">
             <a class="nav-link" href="">
               <i class="fa fa-graduation-cap"></i>
-                <span>Class</span> <span class="pull-right-container">
+                <span>Manage</span> <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
               </span>
             </a>
 
             <ul class="treeview-menu">
               <li class="nav-item {{Request()->segment(1) == 'class' ? 'active' : ''}}">
-                <a href="{{route('batch_mast.index')}}" ><i class="fa fa-circle-o"></i>Manage Batches</a>
+                <a href="{{route('batches.index')}}" ><i class="fa fa-circle-o"></i>Manage Batches</a>
               </li>
             </ul>
           </li>
