@@ -69,7 +69,7 @@
 											@enderror
 										</div>
 										<div class="col-md-3 col-xs-6 col-sm-6 error-div">
-											<label class="required">Courses</label>
+											<label class="required">Course</label>
 											<select class="form-control required" name="qual_code" id="qual_course">
 												
 											</select>

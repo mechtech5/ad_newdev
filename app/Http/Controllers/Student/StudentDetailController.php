@@ -15,7 +15,6 @@ use App\Models\State;
 use App\Models\City;
 use App\Models\LanguageMast;
 use App\Models\DesignationMast; 
-
 use App\Models\StudentMast;
 use App\Models\StudentQual;
 use App\Models\GuardianMast;
@@ -23,11 +22,14 @@ use App\Models\StudentAddress;
 use App\Models\StudentDocs;
 use App\Models\BatchMast;
 use Auth;
+use App\Imports\StudentsImport;
+use Maatwebsite\Excel\Facades\Excel;
 class StudentDetailController extends Controller
 {
     public function index(){
+        $batches = BatchMast::where('user_id',Auth::user()->id)->orderBy('name','DESC')->get();
         $students = StudentMast::with('qual_course','batch')->where('user_id',Auth::user()->id)->get();
-    	return view('student.student_detail.index',compact('students'));
+    	return view('student.student_detail.index',compact('students','batches'));
     }
     public function create(){
         $qual_catgs = QualCatg::where('qual_catg_code', '!=',4)->get();
@@ -373,5 +375,14 @@ class StudentDetailController extends Controller
 
     public function show($id){
 
+    }
+    public function student_filter(){
+
+          $students = StudentMast::with('qual_course','batch')
+                                ->where('batch_id',request()->batch_id)
+                                ->where('qual_year',request()->qual_year)
+                                ->where('semester',request()->semester)
+                                ->where('user_id',Auth::user()->id)->get();
+        return view('student.student_detail.table',compact('students'));
     }
 }

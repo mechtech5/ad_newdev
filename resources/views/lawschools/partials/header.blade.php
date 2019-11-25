@@ -246,7 +246,7 @@
               @endif
           </a>
         </li>
-        <li class="treeview {{Request()->segment(1) == 'student' ? 'active' : '' }} {{Request()->segment(1) == 'student_detail' ? 'active' : '' }} ">
+        <li class="treeview {{Request()->segment(1) == 'student' ? 'active' : '' }} {{Request()->segment(1) == 'student_detail' ? 'active' : '' }} {{Request()->segment(1) == 'upload_student' ? 'active' : '' }} ">
           <a class="nav-link" href="">
             <i class="fa fa-graduation-cap"></i>
             <span>Student</span> <span class="pull-right-container">
@@ -265,7 +265,7 @@
                 <a href="" ><i class="fa fa-circle-o"></i>Manage Student</a>
               </li>
               <li class="nav-item {{Request()->segment(1) == 'upload_student' ? 'active' : ''}}">
-                <a href="" ><i class="fa fa-circle-o"></i>Upload Student</a>
+                <a href="{{route('upload_student')}}" ><i class="fa fa-circle-o"></i>Upload Student</a>
               </li>
             </ul>
           </li>
