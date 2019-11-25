@@ -280,7 +280,7 @@
 
             <ul class="treeview-menu">
               <li class="nav-item {{Request()->segment(1) == 'class' ? 'active' : ''}}">
-                <a href="" ><i class="fa fa-circle-o"></i>Class Batch</a>
+                <a href="{{route('batch_mast.index')}}" ><i class="fa fa-circle-o"></i>Manage Batches</a>
               </li>
             </ul>
           </li>

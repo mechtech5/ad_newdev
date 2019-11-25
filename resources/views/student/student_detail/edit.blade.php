@@ -26,15 +26,9 @@
 	.wizard>.actions .disabled a,.wizard>.actions .disabled a:hover,.wizard>.actions .disabled a:active{background:#eee;color:#aaa}
 
 </style>
-<div class="row">
-	<div class="col-md-12 m-auto " >
-		<div class="box box-primary">
-			<div class="box-header with-border">
-				@include('student.header')
-			</div>
-		</div>
-	</div>
-</div>
+
+@include('student.header')
+		
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-default">
@@ -129,7 +123,7 @@
 									</div>
 									<div class="row form-group">
 										<div class="col-md-3 col-xs-6 col-sm-6 error-div">
-											<label class="required">Recent Batch</label>
+											<label class="required">Addmission Batch</label>
 											<select class="form-control required" name="batch_id">
 												<option value="">Select Admission Batch</option>
 												@foreach($batches as $batch)
@@ -164,7 +158,7 @@
 									<div class="row form-group">
 										<div class="col-md-3 col-sm-6 col-xs-6 error-div">
 											<label class="required">Student Status</label>
-											<select class="form-control required" name="status">
+											<select class="form-control required status" name="status">
 												<option value="R"  {{$student->status == 'R' ? 'selected' : ''}}>Running</option>
 												<option value="P" {{$student->status == 'P' ? 'selected' : ''}}>Pass</option>
 												<option value="F" {{$student->status == 'F' ? 'selected' : ''}}>Fail</option>
@@ -200,7 +194,11 @@
 										
 									</div>		
 									<div class="row form-group">
-										<div class="col-md-4 col-sm-6 col-xs-6 error-div">
+										<div class="col-md-3 col-sm-6 col-xs-6 error-div passout_date">
+											<label class="required">Passout Date</label>
+											<input type="text" name="passout_date" class="form-control datepicker required" readonly="true" data-date-format="yyyy-mm-dd" value="{{$student->passout_date}}" placeholder="{{date('Y-m-d')}}">
+										</div>
+										<div class="col-md-3 col-sm-6 col-xs-6 error-div">
 											<label class="required">Mobile Number</label>
 											<input type="text" name="s_mobile" class="form-control required" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" value="{{$student->mobile}}"> 
 											@error('s_mobile')
@@ -209,7 +207,7 @@
 												</span>
 											@enderror
 										</div>
-										<div class="col-md-4 col-sm-6 col-xs-6 error-div">
+										<div class="col-md-3 col-sm-6 col-xs-6 error-div">
 											<label class="required">Date of Birth</label>
 											<input type="text" name="dob" class="form-control datepicker required" readonly="true" data-date-format="yyyy-mm-dd" placeholder="{{date('Y-m-d')}}" value="{{$student->dob}}">
 											@error('dob')
@@ -218,7 +216,7 @@
 												</span>
 											@enderror
 										</div>
-										<div class="col-md-4 col-sm-6 col-xs-6 error-div">
+										<div class="col-md-3 col-sm-6 col-xs-6 error-div">
 											<label class="">Email Address</label>
 											<input type="text" name="email" class="form-control" value="{{$student->email}}"> 
 											@error('email')
@@ -748,6 +746,9 @@ form.validate({
 		},
 		'doc_url[]':{
 			docs_image:true,
+		},
+		passout_date:{
+			greaterthan:true,
 		}
 
     },
@@ -787,6 +788,26 @@ form.children("div").steps({
 });
 $(document).ready(function(){
 	
+	var status = $('.status').val();
+		// console.log(status);
+		if(status == 'P'){
+			$('.passout_date').show();
+		}else{
+			$('.passout_date').hide();
+		}
+
+	$('.status').on('change',function(e){
+		e.preventDefault();
+		var status = $(this).val();
+		// console.log(status);
+		if(status == 'P'){
+			$('.passout_date').show();
+		}else{
+			$('.passout_date').hide();
+		}
+	});
+
+
 	var qual_catg_code = "{{$student->qual_catg_code}}";
 	if(qual_catg_code != ''){
 		var qual_code = "{{$student->qual_code}}";
@@ -933,6 +954,17 @@ if(qual_array != '0'){
 		$('#row'+button_id+'').remove();
 	});
 
+	$.validator.addMethod('greaterthan',function(value,element){
+		var addm_date =new Date("{{$student->addm_date}}");
+		// console.log(addm_date);
+		var passout_date = new Date(value);
+		if(passout_date.getFullYear() > addm_date.getFullYear()){
+			return true;
+		}else{
+			return false;
+		}
+
+	},"Passout year is greater than addmission date");
 
 	$.validator.addMethod('datebefore',function(value,element){
 		var c_d = new Date();
@@ -1072,13 +1104,34 @@ if(qual_array != '0'){
         $('[name^=relation]').each(function(i,j){
         	$(this).parent('.error-di').find('em.error').remove();
       		$(this).parent('.error-di').removeClass("has-error");
+            var parent_id = $(this).parent().parent().parent().attr('id');
+      		 var relation_id = $.trim($(this).val());
+      		
             if ($.trim($(this).val()) == '') {
                 flag = false;           
                	$(this).parent('.error-di').addClass('has-error').removeClass('has-success');
                	$(this).parent('.error-di').append('<em class="error help-block">This field is required.</em>');             
             }
             else{
-            	$(this).parent('.error-di').addClass( "has-success" ).removeClass( "has-error" );
+				$('[name^=relation]').each(function(i,j){
+					var parent_id1 = $(this).parent().parent().parent().attr('id');
+					var relation_id1 = $.trim($(this).val());
+
+					if(parent_id1 != parent_id){
+						
+						if(relation_id == relation_id1){
+							$(this).parent('.error-di').find('em.error').remove();
+      						$(this).parent('.error-di').removeClass("has-error");
+	
+							flag = false;   
+
+							 $("#"+parent_id+" :nth-child(2) :first").addClass('has-error').removeClass('has-success');
+							 $("#"+parent_id+" :nth-child(2) :first").append('<em class="error help-block">This relation is define previous.</em>');  
+						}
+						
+					}
+
+				});
             }
       		
         });

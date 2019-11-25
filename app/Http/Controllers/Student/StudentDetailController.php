@@ -27,7 +27,6 @@ class StudentDetailController extends Controller
 {
     public function index(){
         $students = StudentMast::with('qual_course','batch')->where('user_id',Auth::user()->id)->get();
-         // return $students;
     	return view('student.student_detail.index',compact('students'));
     }
     public function create(){
@@ -199,6 +198,10 @@ class StudentDetailController extends Controller
             'account_no'          => $request->account_no,
             'ifsc_code'           => $request->ifsc_code,
         ]; 
+
+        if($data['status'] == 'P'){
+            $data['passout_date'] = $request->passout_date;
+        }
         $batches =  BatchMast::all();
         foreach ($batches as $value) {
             if($data['batch_id'] == $value->id){

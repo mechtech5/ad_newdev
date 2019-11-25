@@ -55,7 +55,6 @@ class CaseMastController extends Controller
 
 	public function store(Request $request){
 
-		return $request->all();
 		$id ="";
 		$data = $this->validate_data($request,$id);
 		$data['team_id'] = $request->team_id;

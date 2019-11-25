@@ -26,15 +26,7 @@
 	.wizard>.actions .disabled a,.wizard>.actions .disabled a:hover,.wizard>.actions .disabled a:active{background:#eee;color:#aaa}
 
 </style>
-<div class="row">
-	<div class="col-md-12 m-auto " >
-		<div class="box box-primary">
-			<div class="box-header with-border">
-				@include('student.header')
-			</div>
-		</div>
-	</div>
-</div>
+@include('student.header')		
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-default">
@@ -128,7 +120,7 @@
 									</div>
 									<div class="row form-group">
 										<div class="col-md-3 col-xs-6 col-sm-6 error-div">
-											<label class="required">Recent Batch</label>
+											<label class="required">Addmission Batch</label>
 											<select class="form-control required" name="batch_id">
 												<option value="">Select Admission Batch</option>
 												@foreach($batches as $batch)
@@ -143,7 +135,7 @@
 										</div>
 										<div class="col-md-3 col-xs-6 col-sm-6 error-div">
 											<label class="required">Admission Date</label>
-											<input type="text" name="addm_date" class="form-control datepicker required" readonly="true" data-date-format="yyyy-mm-dd" placeholder="{{date('Y-m-d')}}">
+											<input type="text" name="addm_date" class="form-control datepicker required addm_date" readonly="true" data-date-format="yyyy-mm-dd" placeholder="{{date('Y-m-d')}}">
 											@error('addm_date')
 												<span class="text-danger">
 													<strong>{{$message}}</strong>
@@ -162,12 +154,12 @@
 									<div class="row form-group">
 										<div class="col-md-3 col-sm-6 col-xs-6 error-div">
 											<label class="required">Student Status</label>
-											<select class="form-control required" name="status">
+											<select class="form-control required status" name="status">
 												<option value="R" selected>Running</option>
 												<option value="P">Pass</option>
 												<option value="F">Fail</option>
 											</select>
-										</div>
+										</div>										
 										<div class="col-md-3 col-sm-6 col-xs-6 error-div">
 											<label class="required">First Name</label>
 											<input type="text" name="f_name" id="f_name" class="form-control required">
@@ -198,7 +190,12 @@
 										
 									</div>		
 									<div class="row form-group">
-										<div class="col-md-4 col-sm-6 col-xs-6 error-div">
+										<div class="col-md-3 col-sm-6 col-xs-6 error-div passout_date" style="display: none;">
+											<label class="required">Passout Date</label>
+											<input type="text" name="passout_date" class="form-control datepicker required" readonly="true" data-date-format="yyyy-mm-dd" placeholder="{{date('Y-m-d')}}">
+										</div>
+
+										<div class="col-md-3 col-sm-6 col-xs-6 error-div">
 											<label class="required">Mobile Number</label>
 											<input type="text" name="s_mobile" class="form-control required" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"> 
 											@error('s_mobile')
@@ -207,7 +204,7 @@
 												</span>
 											@enderror
 										</div>
-										<div class="col-md-4 col-sm-6 col-xs-6 error-div">
+										<div class="col-md-3 col-sm-6 col-xs-6 error-div">
 											<label class="required">Date of Birth</label>
 											<input type="text" name="dob" class="form-control datepicker required" readonly="true" data-date-format="yyyy-mm-dd" placeholder="{{date('Y-m-d')}}">
 											@error('dob')
@@ -216,7 +213,7 @@
 												</span>
 											@enderror
 										</div>
-										<div class="col-md-4 col-sm-6 col-xs-6 error-div">
+										<div class="col-md-3 col-sm-6 col-xs-6 error-div">
 											<label class="">Email Address</label>
 											<input type="text" name="email" class="form-control"> 
 											@error('email')
@@ -696,13 +693,13 @@ form.validate({
 			qual:true,
 		},
 		'qual_marks[]':{
-			qual:true,						
+			qual:true,					
 		},
 		'qual_years[]':{
 			qual:true,
 		},
 		'qual_division[]':{
-			qual:true,
+			
 		},
 		'g_name[]':{
 			guardian:true,
@@ -730,6 +727,9 @@ form.validate({
 		},
 		'doc_url[]':{
 			docs_image:true,
+		},
+		passout_date:{
+			greaterthan:true,
 		}
 
     },
@@ -768,7 +768,17 @@ form.children("div").steps({
     }
 });
 $(document).ready(function(){
-
+	$('.status').on('change',function(e){
+		e.preventDefault();
+		var status = $(this).val();
+		// console.log(status);
+		if(status == 'P'){
+			$('.passout_date').show();
+		}else{
+			$('.passout_date').hide();
+		}
+	});
+	
 
 	$('#qual_catg').on('change',function(e){
 		e.preventDefault();
@@ -874,8 +884,16 @@ $(document).ready(function(){
 		//alert(button_id); 
 		$('#row'+button_id+'').remove();
 	});
+	$.validator.addMethod('greaterthan',function(value,element){
+		var addm_date =new Date($('.addm_date').val());
+		var passout_date = new Date(value);
+		if(passout_date.getFullYear() > addm_date.getFullYear()){
+			return true;
+		}else{
+			return false;
+		}
 
-
+	},"Passout year is greater than addmission date");
 
 	$.validator.addMethod('datebefore',function(value,element){
 		var c_d = new Date();
@@ -971,7 +989,7 @@ $(document).ready(function(){
 
 	var k =0;
 
-	var html_div ='<div class="form-group row"><div class="col-sm-6 col-md-4 col-xs-6 error-di"><label >Relation <strong class="text-danger">*</strong></label><select name="relation[]" class="form-control "><option value="">Select Relation</option><?php foreach($relations as $relation){?><option value="{{$relation->id}}">{{$relation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="">Name <strong class="text-danger">*</strong></label><input type="text" name="g_name[]" class="form-control "></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="required">Mobile <strong class="text-danger">*</strong></label><input type="text" name="g_mobile[]" class="form-control "></div></div><div class="row form-group"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Work Status</label><select name="work_status[]" class="form-control"><option value="">Select Work Status</option><option value="0">Self Employed</option><option value="1">Job</option><option value="3">Retired</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Employment Type</label><select name="employment_type[]" class="form-control"><option value="">Select Employment Type</option><option value="0">Government</option><option value="1">Private</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Professtion Type</label><select name="profession_status[]" class="form-control"><option value="">Select Profession type</option><?php foreach($professions as $profession) { ?><option value="{{$profession->id}}">{{$profession->name}}</option><?php  } ?></select></div></div><div class="form-group row"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Employer</label><input type="text" name="employer[]" class="form-control"></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Designation</label><select class="form-control" name="designation_id[]"><option value="">Select Designation Name</option><?php foreach($designations as $designation) { ?> <option value="{{$designation->id}}">{{$designation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label >Photo</label><input type="file" name="g_photo[]" id="g_photo" accept="image/*"><input type="hidden" name="g_check[]" class="g_photo" value=""><input type="hidden" name="g_id[]" value=""></div><hr></div>';
+	var html_div ='<div class="form-group row relation"><div class="col-sm-6 col-md-4 col-xs-6 error-di"><label >Relation <strong class="text-danger">*</strong></label><select name="relation[]" class="form-control "><option value="">Select Relation</option><?php foreach($relations as $relation){?><option value="{{$relation->id}}">{{$relation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="">Name <strong class="text-danger">*</strong></label><input type="text" name="g_name[]" class="form-control "></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="required">Mobile <strong class="text-danger">*</strong></label><input type="text" name="g_mobile[]" class="form-control "></div></div><div class="row form-group"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Work Status</label><select name="work_status[]" class="form-control"><option value="">Select Work Status</option><option value="0">Self Employed</option><option value="1">Job</option><option value="3">Retired</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Employment Type</label><select name="employment_type[]" class="form-control"><option value="">Select Employment Type</option><option value="0">Government</option><option value="1">Private</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Professtion Type</label><select name="profession_status[]" class="form-control"><option value="">Select Profession type</option><?php foreach($professions as $profession) { ?><option value="{{$profession->id}}">{{$profession->name}}</option><?php  } ?></select></div></div><div class="form-group row"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Employer</label><input type="text" name="employer[]" class="form-control"></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Designation</label><select class="form-control" name="designation_id[]"><option value="">Select Designation Name</option><?php foreach($designations as $designation) { ?> <option value="{{$designation->id}}">{{$designation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label >Photo</label><input type="file" name="g_photo[]" id="g_photo" accept="image/*"><input type="hidden" name="g_check[]" class="g_photo" value=""><input type="hidden" name="g_id[]" value=""></div><hr></div>';
 
 
 	$('#guard_info').append('<div id="row'+k+'"><div class="row form-group "><a href="#" class="pull-right btn btn-sm btn-success " style="margin:10px 10px 0px 0px" id="add_guar"><i class="fa fa-plus"></i> Add More</a></div>'+html_div+'</div>');
@@ -993,13 +1011,33 @@ $(document).ready(function(){
         $('[name^=relation]').each(function(i,j){
         	$(this).parent('.error-di').find('em.error').remove();
       		$(this).parent('.error-di').removeClass("has-error");
+      		 var parent_id = $(this).parent().parent().parent().attr('id');
+      		 var relation_id = $.trim($(this).val());
+      		
             if ($.trim($(this).val()) == '') {
                 flag = false;           
                	$(this).parent('.error-di').addClass('has-error').removeClass('has-success');
                	$(this).parent('.error-di').append('<em class="error help-block">This field is required.</em>');             
             }
             else{
-            	$(this).parent('.error-di').addClass( "has-success" ).removeClass( "has-error" );
+				$('[name^=relation]').each(function(i,j){
+					var parent_id1 = $(this).parent().parent().parent().attr('id');
+					var relation_id1 = $.trim($(this).val());
+
+					if(parent_id1 != parent_id){						
+						if(relation_id == relation_id1){
+							$(this).parent('.error-di').find('em.error').remove();
+      						$(this).parent('.error-di').removeClass("has-error");
+	
+							flag = false;   
+
+							 $("#"+parent_id+" :nth-child(2) :first").addClass('has-error').removeClass('has-success');
+							 $("#"+parent_id+" :nth-child(2) :first").append('<em class="error help-block">This relation is define previous.</em>');  
+						}
+						
+					}
+
+				});
             }
       		
         });

@@ -193,6 +193,9 @@ Route::group(['middleware' => ['role:lawcollege|teacher|student']], function() {
 	Route::resource('/student_detail', 'Student\StudentDetailController');
 	Route::post('/temporary_save', 'Student\StudentDetailController@temp_data');
 
+	
+	Route::resource('/batch_mast', 'LawSchools\BatchMastController');
+
 });
 /* --------------Lawcollege--------Teacher-----------Student---------- */
 
