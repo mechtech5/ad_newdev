@@ -25,31 +25,21 @@ class BatchMastController extends Controller
     public function store(Request $request)
     {
         $user_id    = Auth::user()->id;
-        $data       = $request->validate(['name'=>'unique:batch_mast',
+
+        $data       = $request->validate(['name'=>'unique:batch_mast,name,'.$user_id.'user_id',
                                            'start_date'=>'nullable',
                                            'end_date'=>'nullable', 
                                             ]);
         $data['user_id'] = $user_id;
         $batch = BatchMast::create($data);
-         if ($batch) {
-            return redirect()->back()->with('message', 'Batch added successfully');
-            }else{
-            return redirect()->back()->with('messageError', 'Batch Not added');
-
-        }        
+        return redirect()->route('batches.index')->with('success','Batch Inserted Successfully');    
     }
 
     
-    public function show($id)
-    {
-        //
-    }
-
     public function edit($id)
     {
-
-        $batch_updates = BatchMast::where('id',$id)->get();
-        return view('lawschools.dashboard.manage.batches.edit',compact('batch_updates'));
+        $batch = BatchMast::find($id);        
+        return view('lawschools.dashboard.manage.batches.edit',compact('batch'));
 
     }
 
@@ -57,30 +47,20 @@ class BatchMastController extends Controller
     public function update(Request $request, $id)
     {
         $user_id    = Auth::user()->id;
-        $data       = $request->validate(['name'=>'unique:batch_mast',
+        $data       = $request->validate(['name'=>'unique:batch_mast,user_id,'.$user_id,
                                            'start_date'=>'nullable',
                                            'end_date'=>'nullable', 
                                             ]);
         $data['user_id'] = $user_id;
-        $batch = BatchMast::where('id', $id)->update($data);
-         if ($batch) {
-            return redirect()->back()->with('message', 'Batch updated successfully');
-            }else{
-            return redirect()->back()->with('messageError', 'Batch Not updated');
-
-        }        
+        $batch = BatchMast::find($id)->update($data);
+        return redirect()->route('batches.index')->with('success','Batch Updated Successfully');        
     
     }
 
    
     public function destroy($id)
     {
-        $batch_delete = BatchMast::where('id',$id)->delete();
-         if ($batch_delete) {
-            return redirect()->back()->with('message', 'Batch deleted successfully');
-            }else{
-            return redirect()->back()->with('messageError', 'Batch Not deleted');
-
-        }   
+        $batch_delete = BatchMast::find($id)->delete();
+        return redirect()->route('batches.index')->with('success','Batch Deleted Successfully');  
     }
 }
