@@ -11,6 +11,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						
+						<h4><b>Qualification Name:</b> {{ $data->qual_catg_desc}}</h4><br>
 						<h4><b>Course  Name:</b> {{ $data->qual_desc}}</h4><br>
 						<h4><b>Course Duration:</b> {{$data->course_duration}} years</h4><br>
 					</div>

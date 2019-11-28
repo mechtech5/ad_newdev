@@ -22,6 +22,15 @@
 	.error{
 		color:red;
 	}
+	.info-box{
+		box-shadow: 0 1px 7px 3px rgba(0,0,0,0.10);
+	}
+	.info-box-text{
+		font-size: 16px;
+		font-weight: bold;
+		padding-top: 5px;
+
+	}
 </style>
 <script src="{{asset('js/jquery.validate.min.js')}}"></script>
 <script src="{{asset('js/additional-methods.min.js')}}"></script>

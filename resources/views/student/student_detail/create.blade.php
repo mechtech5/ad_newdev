@@ -603,10 +603,6 @@ $(function () {
 	});
 });
 
-
-
-
-
 $('label.required').append('&nbsp;<strong class="text-danger">*</strong>&nbsp;');
 $('th.required').append('&nbsp;<strong class="text-danger">*</strong>&nbsp;');
 var form = $("#example-form");

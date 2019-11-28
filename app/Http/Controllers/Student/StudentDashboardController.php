@@ -24,8 +24,8 @@ use App\Helpers\Helpers;
 class StudentDashboardController extends Controller
 {
     public function index(){
-    	
-    	return view('student.index');
+    	$students = StudentMast::where('user_id',Auth::user()->id)->get();
+    	return view('student.index',compact('students'));
     }
     public function upload_student(){
     	return view('student.upload_student.index');

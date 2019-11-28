@@ -21,7 +21,7 @@
 							<select name="qual_catg_code" class="form-control" id="qual_catg_code">
 								<option value="">Select</option>
 			        				@foreach($courses as $course)
-			        				<option value="{{$course->qual_catg_code}}" name ="qual_code">{{$course->qual_catg_desc}}</option>>
+			        				<option value="{{$course->qual_catg_code}}" {{old('qual_catg_code') == $course->qual_catg_code ? 'selected' : ''}}>{{$course->qual_catg_desc}}</option>>
 			        				@endforeach
 							</select>
 							@error('qual_catg_code')
@@ -46,7 +46,7 @@
 					<div class="row form-group">
 			        		<div class="col-md-6 ">
 			        			<label for="course_duration">Course Duration<span class="text-danger">*</span></label><span class="text-muted">(course duration must be enter month wise only 5 year month add)</span>
-			        			<input type="text" name="course_duration" class="form-control" placeholder="Enter total number of month" value="{{old('course_duration')}}" id="course_duration">			        			
+			        			<input type="text" name="course_duration" class="form-control" placeholder="Enter total number of month in year" value="{{old('course_duration')}}" id="course_duration">			        			
 			        			@error('course_duration')
 			                    <span class="invalid-feedback text-danger" role="alert">
 			                       <strong>{{ $message }}</strong>
@@ -91,6 +91,10 @@
 <script type="text/javascript">
 	
 $(document).ready(function(){
+	var qual_catg_code = "{{old('qual_catg_code')}}";
+	var qual_code = "{{old('qual_code')}}";
+	qual_course(qual_catg_code,qual_code);
+
 $('#qual_catg_code').on('change',function(e){
 		e.preventDefault();
 		var qual_catg_code = $(this).val();

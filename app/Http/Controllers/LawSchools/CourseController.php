@@ -15,7 +15,8 @@ class CourseController extends Controller
 {
      public function index()
     {
-      $courses = CollegeCourse::with('course')->where('user_id', Auth::user()->id)->get();
+      $courses = CollegeCourse::where('user_id', Auth::user()->id)->get();
+     
       return view('lawschools.dashboard.courses.index',compact('courses'));
     }
     /**
@@ -40,7 +41,7 @@ class CourseController extends Controller
         $id = '';
         $data =  $this->validation($request,$id);
         if(count($data) !=6){
-           return redirect()->back()->with('warning','course name already in records');
+           return back()->withInput()->with('warning','course name already in records');
         }
      
         $data['user_id'] = Auth::user()->id;
@@ -55,7 +56,7 @@ class CourseController extends Controller
      */
     public function show($id)
     {
-        $data = CollegeCourse::with('course')->where('id',$id)->first();
+        $data = CollegeCourse::where('id',$id)->first();
         return view('lawschools.dashboard.courses.show',compact('data'));
     
     }
@@ -84,7 +85,7 @@ class CourseController extends Controller
 
         $data =  $this->validation($request,$id);
         if(count($data) !=6){
-            return redirect()->back()->with('warning','course name already in records');
+            return back()->withInput()->with('warning','course name already in records');
         }
     
         CollegeCourse::find($id)->update($data);
@@ -105,6 +106,11 @@ class CourseController extends Controller
             'qual_code'       =>  'required',
             'course_duration' =>  'required|numeric|min:2|max:60',
             'syllabus'        =>  'nullable'
+        ],
+        [
+            'qual_catg_code.required'   => 'This field is required.',
+            'qual_code.required'        => 'This field is required.',
+            'course_duration.required'  => 'This field is required.',
         ]);
 
         $clg_courses = CollegeCourse::where('user_id',Auth::user()->id)->get();
@@ -116,8 +122,6 @@ class CourseController extends Controller
                     }
                 }            
             } 
-        }else{
-            $data['error'] = "0";
         }
        
 

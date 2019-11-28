@@ -17,6 +17,7 @@
 					<thead>
 						<tr class="row">
 							<th>SNo.</th>
+							<th>Qualification Name</th>
 							<th>Course Name</th>
 							<th>Course Duration</th>
 							<th>Action</th>
@@ -28,6 +29,7 @@
 						@foreach($courses as $cours)
 						<tr class="row">
 							<td>{{++$count}}</td>
+							<td>{{$cours->qual_catg_desc}}</td>
 							<td>{{$cours->qual_desc}}</td>
 							<td>{{$cours->course_duration}} Months</td>
 							<td class="">

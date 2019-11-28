@@ -18,8 +18,9 @@
 
 							<div class="info-box-content">
 								<span class="info-box-text"><b>Total Student</b></span>
-								<span class="info-box-number">0</span>
-							</div>					
+								<span class="info-box-number">{{count($students)}}</span>
+							</div>	
+									
 						</div>			
 					</div>
 				</div>
