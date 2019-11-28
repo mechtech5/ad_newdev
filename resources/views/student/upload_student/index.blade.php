@@ -62,13 +62,13 @@
 							<p>
 								Quaification Name: 
 								<ul>
-									<li>Post Graduate (PG) -  1</li>
-									<li>Under Graduate (UG) - 2</li>
-									<li>Diploma (Diplo) - 3</li>
+									<li>Post Graduate -(PG)</li>
+									<li>Under Graduate -(UG)</li>
+									<li>Diploma -(Diplo) </li>
 								</ul>
 								Course Name:
 								<ul>
-									<li>LLM-Criminal, LLM-Civil</li>
+									<li>LLM-Criminal Law, LLM-Civil Law, L</li>
 									<li>B.A. LL.B, BBA LL.B, B.Sc LL.B</li>
 								</ul>
 								Gender:
@@ -91,7 +91,7 @@
 						</div>	
 						<div class="col-md-4 " style="margin-top: 10px;">
 							<div class="row">
-								<a href="#">
+								<a href="{{route('student_sample')}}">
 									<div class="col-md-12">
 										<div class="info-box " >
 											<span class="info-box-icon bg-green"><i class="fa fa-download"></i></span>

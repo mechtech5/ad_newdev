@@ -8,15 +8,10 @@
 						<h3 class="">Batches <a href="{{route('batches.create')}}" class="btn btn-sm btn-primary pull-right">Add Batch</a></h3>
 					</div>
 					<div class="box-body table-responsive">
-						 @if(session()->has('message'))
-						    <div class="alert bg-success">
-						        {{ session()->get('message') }}
-						    </div>
-							@endif
-							@if(session()->has('messageError'))
-						    <div class="alert bg-danger">
-						        {{ session()->get('messageError') }}
-						    </div>
+						@if($message = Session::get('success'))
+								<div style="margin-top: 10px;" class="alert bg-success">
+									{{$message}}
+								</div>
 							@endif
 						<table class="table table-striped table-bordered" id="myTable">
 							<thead>

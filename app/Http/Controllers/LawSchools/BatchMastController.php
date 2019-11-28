@@ -24,12 +24,18 @@ class BatchMastController extends Controller
     
     public function store(Request $request)
     {
-        $user_id    = Auth::user()->id;
-
-        $data       = $request->validate(['name'=>'unique:batch_mast,name,'.$user_id.'user_id',
-                                           'start_date'=>'nullable',
-                                           'end_date'=>'nullable', 
-                                            ]);
+        $user_id = Auth::user()->id;
+        $batches = BatchMast::where('user_id',Auth::user()->id)->get();
+        $data =  $request->validate([
+            'start_date' =>'required',
+            'end_date' =>'required',
+        ]);
+        foreach ($batches as $batch) {         
+            if($batch->name == $request->name){
+                return back()->withInput()->with('warning','Batch name already in records');
+            }                 
+        }    
+        $data['name']= $request->name;
         $data['user_id'] = $user_id;
         $batch = BatchMast::create($data);
         return redirect()->route('batches.index')->with('success','Batch Inserted Successfully');    
@@ -47,13 +53,23 @@ class BatchMastController extends Controller
     public function update(Request $request, $id)
     {
         $user_id    = Auth::user()->id;
-        $data       = $request->validate(['name'=>'unique:batch_mast,user_id,'.$user_id,
-                                           'start_date'=>'nullable',
-                                           'end_date'=>'nullable', 
-                                            ]);
+        $batches    = BatchMast::where('user_id',Auth::user()->id)->get();
+        $data       = $request->validate([
+                    'start_date' =>'required',
+                    'end_date' =>'required',
+        ]);
+        foreach ($batches as $batch) {
+            if($batch->id != $id){
+                if($batch->name == $request->name){
+                    return back()->withInput()->with('warning','Batch name already in records');
+                }
+            }        
+        }   
+
+        $data['name']= $request->name;       
         $data['user_id'] = $user_id;
         $batch = BatchMast::find($id)->update($data);
-        return redirect()->route('batches.index')->with('success','Batch Updated Successfully');        
+        return redirect()->route('batches.index')->with('success','Batch Updated Successfully');    
     
     }
 

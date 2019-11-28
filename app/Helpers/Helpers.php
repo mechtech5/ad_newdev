@@ -81,5 +81,11 @@ class Helpers
 		return $query;
 	}
 
+	public static function valid_email($email) {
+         return (!preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $email)) ? FALSE : TRUE;
+    }
 	
+	public static function isIfscCodeValid($ifsc_code){
+	     return (!preg_match("/^[A-Za-z]{4}0[A-Z0-9]{6}$/", $ifsc_code)) ? FALSE : TRUE;
+	}
 }

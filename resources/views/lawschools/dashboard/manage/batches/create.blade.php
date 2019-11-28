@@ -8,15 +8,10 @@
 						<h3 class="">Batch<a href="{{route('batches.index')}}" class="btn btn-sm btn-primary pull-right">Back</a></h3>
 					</div>
 					<div class="box-body">
-						 @if(session()->has('message'))
-						    <div class="alert bg-success">
-						        {{ session()->get('message') }}
-						    </div>
-							@endif
-							@if(session()->has('messageError'))
-						    <div class="alert bg-danger">
-						        {{ session()->get('messageError') }}
-						    </div>
+						@if($message = Session::get('warning'))
+								<div style="margin-top: 10px;" class="alert bg-warning">
+									{{$message}}
+								</div>
 							@endif
 						<form id="example-form1" action="{{route('batches.store')}}" method="post">
 			        	<div class="row form-group">			        		
@@ -42,12 +37,8 @@
 			        	<div class="row form-group">
 			        		<div class="col-md-6 col-sm-6 col-xs-6 error-div">
 			        			<label class="required">Batch Name</label>
-			        			<input readonly="true" type="text" name="name" class="form-control" placeholder="YYYY-YYYY" value="{{old('name')}}"> 
-			        			@error('name')
-									<span class="text-danger">
-										<strong>{{$message}}</strong>
-									</span>
-								@enderror
+			        			<input readonly="true" type="text" name="name" class="form-control" placeholder="YYYY-YYYY" value="{{old('name')}}">			        			
+			        			
 			        		</div>
 			        	</div>
 			        	<div class="row form-group">
@@ -69,7 +60,6 @@
 			format:'yyyy-mm-dd'
 		});
 		$('#myTable').DataTable();
-
 		  $("#end_date").on('focusout keyup',function(){
             var startDate = new Date($('#start_date').val()).getFullYear();
             var endDate = new Date($(this).val()).getFullYear();
@@ -79,11 +69,9 @@
            
         });
     });
-
 	$('label.required').append('&nbsp;<strong class="text-danger">*</strong>&nbsp;');
     $('th.required').append('&nbsp;<strong class="text-danger">*</strong>&nbsp;');
 		var form = $("#example-form1");
-
 		form.validate({   
 		    rules: {
 		    	start_date:{
@@ -97,12 +85,10 @@
 		    	},
 		    	
 		    },
-
 			errorElement: "em",
 			errorPlacement: function errorPlacement(error, element) { 
 				element.after(error);
 				error.addClass( "help-block" );
-
 			 },
 			highlight: function ( element, errorClass, validClass ) {
 				$( element ).parents( ".error-div" ).addClass( "has-error" ).removeClass( "has-success" );
@@ -117,14 +103,13 @@
 		$.validator.addMethod('greaterthan',function(value,element){
 				var start_date =new Date($('#start_date').val());
 				var end_date = new Date(value);
-				if(end_date.getFullYear() > start_date.getFullYear()){
+				console.log(start_date.getFullYear()+1);
+				if(end_date.getFullYear() == start_date.getFullYear()+1 ){
 					return true;
 				}else{
 					return false;
 				}
-
-			},"End date year should be greater than start date year.");
-
+			},"End date year should be greater than 1 year to start date year.");
 	
 </script>
 @endsection

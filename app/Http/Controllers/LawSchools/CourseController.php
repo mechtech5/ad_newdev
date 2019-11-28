@@ -9,20 +9,15 @@ use App\User;
 use App\Models\UserQualification;
 use App\Models\CourseMast;
 use App\Models\CollegeCourse;
+use App\Models\QualCatg;
+use App\Models\QualMast;
 class CourseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+     public function index()
     {
       $courses = CollegeCourse::with('course')->where('user_id', Auth::user()->id)->get();
-    
       return view('lawschools.dashboard.courses.index',compact('courses'));
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -30,10 +25,10 @@ class CourseController extends Controller
      */
     public function create()
     {
-        $courses = CourseMast::all();
+        $courses = QualCatg::all();
+        // dd($courses);
         return view('lawschools.dashboard.courses.create',compact('courses'));
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -41,24 +36,17 @@ class CourseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $data =  $this->validation($request);
-
-        $course = CourseMast::find($data['course_code']);
-        $clg = CollegeCourse::where('course_code',$data['course_code'])->where('user_id', Auth::user()->id)->get();
-       // return $clg;
-
-        if(count($clg)!=0){
-            return redirect()->back()->with('warning','Course already inserted');
+    {   
+        $id = '';
+        $data =  $this->validation($request,$id);
+        if(count($data) !=6){
+           return redirect()->back()->with('warning','course name already in records');
         }
-        $data['course_desc'] = $course->course_desc;
+     
         $data['user_id'] = Auth::user()->id;
-
         CollegeCourse::create($data);
         return redirect()->route('course.index')->with('success','Course Inserted Successfully');
-
     }   
-
     /**
      * Display the specified resource.
      *
@@ -68,11 +56,9 @@ class CourseController extends Controller
     public function show($id)
     {
         $data = CollegeCourse::with('course')->where('id',$id)->first();
-
         return view('lawschools.dashboard.courses.show',compact('data'));
     
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -82,10 +68,10 @@ class CourseController extends Controller
     public function edit($id)
     {
         $data = CollegeCourse::find($id);
-        $courses = CourseMast::all();
+        $courses = QualCatg::all();
+        
         return view('lawschools.dashboard.courses.edit',compact('data','courses'));
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -95,35 +81,49 @@ class CourseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = $this->validation($request);
-        $course = CourseMast::find($data['course_code']);
 
-        $data['course_desc'] = $course->course_desc;
-
-        $user = CollegeCourse::find($id);
-        $user->update($data);
+        $data =  $this->validation($request,$id);
+        if(count($data) !=6){
+            return redirect()->back()->with('warning','course name already in records');
+        }
+    
+        CollegeCourse::find($id)->update($data);
+        
         return redirect()->route('course.index')->with('success','Course Updated Successfully');
+       
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function destroy($id)
     {
-       
         CollegeCourse::find($id)->delete();
         return redirect()->route('course.index')->with('success','Course Deleted Successfully');
     }
-    public function validation($request){
-        return $request->validate([
-            'course_code' => 'required|not_in:0',
-            'syllabus'    => 'required',
-        ],
-        [    
-            'course_code.*' => 'The selected course name field required',
+
+    public function validation($request,$id){
+        $data =  $request->validate([
+            'qual_catg_code'  =>  'required',
+            'qual_code'       =>  'required',
+            'course_duration' =>  'required|numeric|min:2|max:60',
+            'syllabus'        =>  'nullable'
         ]);
+
+        $clg_courses = CollegeCourse::where('user_id',Auth::user()->id)->get();
+        if(count($clg_courses) != 0){
+            foreach ($clg_courses as $clg_course) { 
+                if($id != $clg_course->id){
+                    if($clg_course->qual_code == $request->qual_code){
+                        $data['error'] = "1";
+                    }
+                }            
+            } 
+        }else{
+            $data['error'] = "0";
+        }
+       
+
+        $qualCatgDesc = QualMast::where('qual_code',$request->qual_code)->first();
+        $data['qual_catg_desc'] = $qualCatgDesc->qual_catg_desc;
+        $data['qual_desc']      = $qualCatgDesc->qual_desc;
+        return $data;
     }
 }

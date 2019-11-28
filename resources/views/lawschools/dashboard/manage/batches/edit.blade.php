@@ -9,15 +9,10 @@
 						<h3 class="">Batch<a href="{{route('batches.index')}}" class="btn btn-sm btn-primary pull-right">Back</a></h3>
 					</div>
 					<div class="box-body">
-						 @if(session()->has('message'))
-						    <div class="alert bg-success">
-						        {{ session()->get('message') }}
-						    </div>
-							@endif
-							@if(session()->has('messageError'))
-						    <div class="alert bg-danger">
-						        {{ session()->get('messageError') }}
-						    </div>
+						@if($message = Session::get('warning'))
+								<div style="margin-top: 10px;" class="alert bg-warning">
+									{{$message}}
+								</div>
 							@endif
 						<form id="example-form1" action="{{route('batches.update', $batch->id)}} " method="post">
 							@method('PATCH')
@@ -70,7 +65,6 @@
 			format:'yyyy-mm-dd'
 		});
 		$('#myTable').DataTable();
-
 		  $("#end_date,#start_date").on('focusout keyup',function(){
             var startDate = new Date($('#start_date').val()).getFullYear();
             var endDate = new Date($(this).val()).getFullYear();
@@ -82,11 +76,9 @@
             // }
         });
     });
-
 	$('label.required').append('&nbsp;<strong class="text-danger">*</strong>&nbsp;');
     $('th.required').append('&nbsp;<strong class="text-danger">*</strong>&nbsp;');
 	var form = $("#example-form1");
-
 	form.validate({   
 	    rules: {
 	    	start_date:{
@@ -99,12 +91,10 @@
 	    		date:true
 	    	}
 	    },
-
 	errorElement: "em",
 	errorPlacement: function errorPlacement(error, element) { 
 		element.after(error);
 		error.addClass( "help-block" );
-
 	 },
 	highlight: function ( element, errorClass, validClass ) {
 		$( element ).parents( ".error-div" ).addClass( "has-error" ).removeClass( "has-success" );
@@ -117,15 +107,14 @@
                           }
 });
 $.validator.addMethod('greaterthan',function(value,element){
-		var start_date =new Date($('#start_date').val());
-		var end_date = new Date(value);
-		if(end_date.getFullYear() > start_date.getFullYear()){
-			return true;
-		}else{
-			return false;
-		}
-
-	},"End date year should be greater than start date year.");
-
+				var start_date =new Date($('#start_date').val());
+				var end_date = new Date(value);
+				console.log(start_date.getFullYear()+1);
+				if(end_date.getFullYear() == start_date.getFullYear()+1 ){
+					return true;
+				}else{
+					return false;
+				}
+			},"End date year should be greater than 1 year to start date year.");
 </script>
 @endsection

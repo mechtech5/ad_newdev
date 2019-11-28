@@ -411,8 +411,7 @@
 						        </section>
 						        <h3>Student Address</h3>
 						        <section>
-						        	
-					        		<div class="panel panel-default">
+						        	<div class="panel panel-default">
 										<div class="panel-heading">
 											<h1 class="panel-title">Permanent Address:</h1>
 										</div>
@@ -421,13 +420,13 @@
 
 												<div class="col-md-4 error-di">
 													<label class="required">Address Line</label> {{-- <span class="text-muted">(HouseNo./GaliNo./Area/Colony/Near by/)</span> --}}
-													<input type="text" class="form-control" name="address[]" value="{{$student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->address : $student->stud_addresses[0]->address }}" id="address">
+													<input type="text" class="form-control" name="address[]" value="{{count($student->stud_addresses) ==0 ? '' : ($student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->address : $student->stud_addresses[0]->address)}}" id="address">
 												</div>
 												<div class="col-md-4 error-di">
 													<label class="required">Country Name</label>
 													<select name="country_code[]" class="form-control" id="country">
 														@foreach($countries as $country)
-															<option value="{{$country->country_code}}" {{$student->stud_addresses[0]->addr_type == 'S' ? ($student->stud_addresses[0]->country_code == $country->country_code  ? 'selected' :'' ): $student->stud_addresses[0]->country_code == $country->country_code  ? 'selected' : ''  }}>{{$country->country_name}}</option>
+															<option value="{{$country->country_code}}" {{count($student->stud_addresses) ==0 ? '' : ($student->stud_addresses[0]->addr_type == 'S' ? ($student->stud_addresses[0]->country_code == $country->country_code  ? 'selected' :'' ): $student->stud_addresses[0]->country_code == $country->country_code  ? 'selected' : '')  }}>{{$country->country_name}}</option>
 														@endforeach
 													</select>
 												</div>
@@ -448,7 +447,7 @@
 												</div>
 												<div class="col-md-4 error-di">
 													<label class="required">Zip Code</label>
-													<input type="text" name="zip_code[]" class="form-control" id="zip_code" value="{{$student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->zip_code : $student->stud_addresses[0]->zip_code }}">
+													<input type="text" name="zip_code[]" class="form-control" id="zip_code" value="{{count($student->stud_addresses) == 0 ? '' : ($student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->zip_code : $student->stud_addresses[0]->zip_code) }}">
 												</div>
 											</div>
 										</div>
@@ -462,7 +461,7 @@
 											<div class="row form-group">
 												<div class="col-md-12 ">
 													<label>
-														<input type="checkbox" name="same_as" id="p_l_same" {{$student->stud_addresses[0]->addr_type == 'S' ? 'checked' : '' }}>
+														<input type="checkbox" name="same_as" id="p_l_same" {{count($student->stud_addresses) == 0 ? '' : ($student->stud_addresses[0]->addr_type == 'S' ? 'checked' : '') }}>
 													</label>
 													<label>Same as Permanent Address</label><span class="text-muted">(Click to copy permanent address data)</span>
 													
@@ -471,13 +470,13 @@
 											<div class="row form-group">
 												<div class="col-md-4 error-di">
 													<label class="required">Address Line</label> {{-- <span class="text-muted">(HouseNo./GaliNo./Area/Colony/Near by)</span> --}}
-													<input type="text" class="form-control" name="address[]" id="address1" value="{{$student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->address : $student->stud_addresses[1]->address }}">
+													<input type="text" class="form-control" name="address[]" id="address1" value="{{count($student->stud_addresses) == 0 ? '' : ($student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->address : $student->stud_addresses[1]->address) }}">
 												</div>
 												<div class="col-md-4 error-di">
 													<label class="required">Country Name</label>
 													<select name="country_code[]" class="form-control" id="country1">
 														@foreach($countries as $country)
-															<option value="{{$country->country_code}}" {{$student->stud_addresses[0]->addr_type == 'S' ? ($student->stud_addresses[0]->country_code == $country->country_code  ? 'selected' :'' ): $student->stud_addresses[1]->country_code == $country->country_code  ? 'selected' : ''  }}>{{$country->country_name}}</option>
+															<option value="{{$country->country_code}}" {{count($student->stud_addresses) ==0 ? '' : ($student->stud_addresses[0]->addr_type == 'S' ? ($student->stud_addresses[0]->country_code == $country->country_code  ? 'selected' :'' ): $student->stud_addresses[1]->country_code == $country->country_code  ? 'selected' : '' ) }}>{{$country->country_name}}</option>
 														@endforeach
 													</select>
 												</div>
@@ -498,12 +497,11 @@
 												</div>
 												<div class="col-md-4 error-di">
 													<label class="required">Zip Code</label>
-													<input type="text" name="zip_code[]" class="form-control" id="zip_code1" value="{{$student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->zip_code : $student->stud_addresses[1]->zip_code }}">
+													<input type="text" name="zip_code[]" class="form-control" id="zip_code1" value="{{count($student->stud_addresses) == 0 ? '' : ($student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->zip_code : $student->stud_addresses[1]->zip_code) }}">
 												</div>
 											</div>
 										</div>
 					        		</div>
-						       
 						        </section>
 						        <h3>Bank Details</h3>
 						        <section>
@@ -865,7 +863,7 @@ $(document).ready(function(){
 
 
 	var country_code = $('#country').val();
-	var state_code = "{{$student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->state_code  : $student->stud_addresses[0]->state_code }}";
+	var state_code = "{{count($student->stud_addresses) !=0 ?  ($student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->state_code  : $student->stud_addresses[0]->state_code) : '' }}";
 	var state_id = '#state';
 	state_fetch(country_code,state_id,state_code);
 
@@ -878,7 +876,7 @@ $(document).ready(function(){
 	});
 
 	var country_code1 = $('#country1').val();
-	var state_code1 =  "{{$student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->state_code  : $student->stud_addresses[1]->state_code }}";
+	var state_code1 =  "{{count($student->stud_addresses) !=0 ? ($student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->state_code  : $student->stud_addresses[1]->state_code) : '' }}";
 	var state_id1 = '#state1';
 	state_fetch(country_code1,state_id1,state_code1);
 
@@ -891,7 +889,7 @@ $(document).ready(function(){
 	});
 
 	
-	var city_code_c = "{{$student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->city_code  : $student->stud_addresses[0]->city_code }}";
+	var city_code_c = "{{count($student->stud_addresses) !=0 ? ($student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->city_code  : $student->stud_addresses[0]->city_code) : '' }}";
 	var city_id = '#city';
 	city_fetch(state_code,city_code_c,city_id);
 	// var state_code = $('#state').val();
@@ -907,7 +905,7 @@ $(document).ready(function(){
 
 	
 	
-	var city_code_c1 = "{{$student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->city_code  : $student->stud_addresses[1]->city_code }}";
+	var city_code_c1 = "{{count($student->stud_addresses) !=0 ? ($student->stud_addresses[0]->addr_type == 'S' ? $student->stud_addresses[0]->city_code  : $student->stud_addresses[1]->city_code) : '' }}";
 	var city_id1 = '#city1';
 	city_fetch(state_code1,city_code_c1,city_id1);
 
@@ -919,21 +917,22 @@ $(document).ready(function(){
 		city_fetch(state_code,city_code,city_id);
 	});
 
-	var qual_array = "{{count($student->stu_qual_details)}}"; 
-if(qual_array != '0'){
+var qual_array = "{{count($student->stu_qual_details)}}"; 
+// if(qual_array != '0'){
 	var i = 0;
 	@php
 		$i = 0; 
 		$count_qual = count($student->stu_qual_details);
 	@endphp
 
-	$('#qual_field').append('<tr id="row'+i+'"><td class="error-di"><input type="text" name="qual_name[]" class="form-control" value="{{$student->stu_qual_details[$i]->name}}"></td><td class="error-di"><input type="text" name="qual_clg[]" class="form-control" value="{{$student->stu_qual_details[$i]->school}}"></td><td class="error-di"><input type="text" name="qual_board[]" class="form-control" value="{{$student->stu_qual_details[$i]->board}}"></td><td class="error-di"><input type="text" name="qual_marks[]" value="{{$student->stu_qual_details[$i]->pass_marks}}" class="form-control"></td><td class="error-di"><input type="text" name="qual_years[]" class="form-control" value="{{$student->stu_qual_details[$i]->pass_year}}"></td><td class="error-di"><select class="form-control" name="qual_division[]"><option value="">Select Division</option><option value="1" {{$student->stu_qual_details[$i]->pass_division == '1' ? 'selected' : ''}}>1st</option><option value="2" {{$student->stu_qual_details[$i]->pass_division == '2' ? 'selected' : ''}}>2nd</option><option value="3" {{$student->stu_qual_details[$i]->pass_division == '3' ? 'selected' : ''}}>3rd</option></select></td><td><a class="btn btn-sm btn-success" id="add_row"><i class="fa fa-plus"></i></a></td></tr>');
+
+	$('#qual_field').append('<tr id="row'+i+'"><td class="error-di"><input type="text" name="qual_name[]" class="form-control" value="{{$count_qual !=0 ? $student->stu_qual_details[$i]->name : ''}}"></td><td class="error-di"><input type="text" name="qual_clg[]" class="form-control" value="{{$count_qual !=0 ? $student->stu_qual_details[$i]->school : ''}}"></td><td class="error-di"><input type="text" name="qual_board[]" class="form-control" value="{{$count_qual !=0 ? $student->stu_qual_details[$i]->board : ''}}"></td><td class="error-di"><input type="text" name="qual_marks[]" value="{{$count_qual !=0 ? $student->stu_qual_details[$i]->pass_marks : ''}}" class="form-control"></td><td class="error-di"><input type="text" name="qual_years[]" class="form-control" value="{{$count_qual !=0 ? $student->stu_qual_details[$i]->pass_year : ''}}"></td><td class="error-di"><select class="form-control" name="qual_division[]"><option value="">Select Division</option><option value="1" {{$count_qual == '0'  ?  : ($student->stu_qual_details[$i]->pass_division == '1' ? 'selected' : '')}}>1st</option><option value="2" {{$count_qual == '0'  ? : ($student->stu_qual_details[$i]->pass_division == '2' ? 'selected' : '')}}>2nd</option><option value="3" {{$count_qual == '0'  ? : ($student->stu_qual_details[$i]->pass_division == '3' ? 'selected' : '')}}>3rd</option></select></td><td><a class="btn btn-sm btn-success" id="add_row"><i class="fa fa-plus"></i></a></td></tr>');
 	i++;
 	@php 
 	$i++;
 		while($i < $count_qual){ 
 	@endphp
-		$('#qual_field').append('<tr id="row'+"{{$i}}"+'"><td class="error-di"><input type="text" name="qual_name[]" class="form-control" value="{{$student->stu_qual_details[$i]->name}}"></td><td class="error-di"><input type="text" name="qual_clg[]"  class="form-control" value="{{$student->stu_qual_details[$i]->school}}"></td><td class="error-di"><input type="text" name="qual_board[]" class="form-control" value="{{$student->stu_qual_details[$i]->board}}"></td><td class="error-di"><input type="text" name="qual_marks[]" class="form-control" value="{{$student->stu_qual_details[$i]->pass_marks}}"></td><td class="error-di"><input type="text" name="qual_years[]" class="form-control" value="{{$student->stu_qual_details[$i]->pass_year}}"></td><td class="error-di"><select class="form-control" name="qual_division[]"><option value="">Select Division</option><option value="1" {{$student->stu_qual_details[$i]->pass_division == '1' ? 'selected' : ''}}>1st</option><option value="2" {{$student->stu_qual_details[$i]->pass_division == '2' ? 'selected' : ''}}>2nd</option><option value="3" {{$student->stu_qual_details[$i]->pass_division == '3' ? 'selected' : ''}}>3rd</option></select></td><td><a class="btn btn-sm btn-danger btn_remove1" id="'+"{{$i}}"+'"><i class="fa fa-minus"></i></a></td></tr>');
+		$('#qual_field').append('<tr id="row'+"{{$i}}"+'"><td class="error-di"><input type="text" name="qual_name[]" class="form-control" value="{{$count_qual !=0 ? $student->stu_qual_details[$i]->name : ''}}"></td><td class="error-di"><input type="text" name="qual_clg[]" class="form-control" value="{{$count_qual !=0 ? $student->stu_qual_details[$i]->school : ''}}"></td><td class="error-di"><input type="text" name="qual_board[]" class="form-control" value="{{$count_qual !=0 ? $student->stu_qual_details[$i]->board : ''}}"></td><td class="error-di"><input type="text" name="qual_marks[]" value="{{$count_qual !=0 ? $student->stu_qual_details[$i]->pass_marks : ''}}" class="form-control"></td><td class="error-di"><input type="text" name="qual_years[]" class="form-control" value="{{$count_qual !=0 ? $student->stu_qual_details[$i]->pass_year : ''}}"></td><td class="error-di"><select class="form-control" name="qual_division[]"><option value="">Select Division</option><option value="1" {{$count_qual == '0'  ?  : ($student->stu_qual_details[$i]->pass_division == '1' ? 'selected' : '')}}>1st</option><option value="2" {{$count_qual == '0'  ? : ($student->stu_qual_details[$i]->pass_division == '2' ? 'selected' : '')}}>2nd</option><option value="3" {{$count_qual == '0'  ? : ($student->stu_qual_details[$i]->pass_division == '3' ? 'selected' : '')}}>3rd</option></select></td><td><a class="btn btn-sm btn-danger btn_remove1" id="'+"{{$i}}"+'"><i class="fa fa-minus"></i></a></td></tr>');
 	 	
 	 @php 
 	 	$i++;
@@ -941,7 +940,8 @@ if(qual_array != '0'){
 
 	 @endphp
 	 i = "{{$i}}";
-}
+// }
+
 	
 	 $('#add_row').click(function(){
 	 	$('#qual_field').append('<tr id="row'+i+'"><td class="error-di"><input type="text" name="qual_name[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_clg[]"  class="form-control"></td><td class="error-di"><input type="text" name="qual_board[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_marks[]" class="form-control"></td><td class="error-di"><input type="text" name="qual_years[]" class="form-control"></td><td class="error-di"><select class="form-control" name="qual_division[]"><option value="">Select Division</option><option value="1">1st</option><option value="2">2nd</option><option value="3">3rd</option></select></td><td><a class="btn btn-sm btn-danger btn_remove1" id="'+i+'"><i class="fa fa-minus"></i></a></td></tr>');
@@ -1057,33 +1057,25 @@ if(qual_array != '0'){
     }, "");
 
 
-	// var html_div ='';
+	var k =0;
+	@php 
+		$k =0;
+		$count_guard = count($student->stud_guardians);
+	@endphp
 
-	var guard_array = "{{count($student->stud_guardians)}}";
-	if(guard_array != 0){
-		var k =0;
-		@php 
-			$k =0;
-			$count_guard = count($student->stud_guardians);
-		@endphp
-
-		$('#guard_info').append('<div id="row'+k+'"><div class="row form-group "><a href="#" class="pull-right btn btn-sm btn-success " style="margin:10px 10px 0px 0px" id="add_guar"><i class="fa fa-plus"></i> Add More</a></div><div class="form-group row"><div class="col-sm-6 col-md-4 col-xs-6 error-di"><label >Relation <strong class="text-danger">*</strong></label><select name="relation[]" class="form-control " ><option value="">Select Relation</option><?php foreach($relations as $relation){?><option value="{{$relation->id}}" {{$student->stud_guardians[$k]->relation_id == $relation->id ? 'selected' : ''}}>{{$relation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="">Name <strong class="text-danger">*</strong></label><input type="text" name="g_name[]" class="form-control " value="{{$student->stud_guardians[$k]->name}}"></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="required">Mobile <strong class="text-danger">*</strong></label><input type="text" name="g_mobile[]" class="form-control " value="{{$student->stud_guardians[$k]->mobile}}"></div></div><div class="row form-group"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Work Status</label><select name="work_status[]" class="form-control"><option value="">Select Work Status</option><option value="1" {{$student->stud_guardians[$k]->work_type_id == '1' ? 'selected' : ''}}>Self Employed</option><option value="2" {{$student->stud_guardians[$k]->work_type_id == '2' ? 'selected' : ''}}>Job</option><option value="3" {{$student->stud_guardians[$k]->work_type_id == '3' ? 'selected' : ''}}>Retired</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Employment Type</label><select name="employment_type[]" class="form-control"><option value="">Select Employment Type</option><option value="0" {{$student->stud_guardians[$k]->employment_type == '0' ? 'selected' : ''}}>Government</option><option value="1" {{$student->stud_guardians[$k]->employment_type == '1' ? 'selected' : ''}}>Private</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Professtion Type</label><select name="profession_status[]" class="form-control"><option value="">Select Profession type</option><?php foreach($professions as $profession) { ?><option value="{{$profession->id}}" {{$student->stud_guardians[$k]->profession_id == $profession->id ? 'selected' : ''}}>{{$profession->name}}</option><?php  } ?></select></div></div><div class="form-group row"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Employer</label><input type="text" name="employer[]" class="form-control" value="{{$student->stud_guardians[$k]->employer}}"></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Designation</label><select class="form-control" name="designation_id[]"><option value="">Select Designation Name</option><?php foreach($designations as $designation) { ?> <option value="{{$designation->id}}" {{$designation->id == $student->stud_guardians[$k]->designation_id ? 'selected' : ''}}>{{$designation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label >Photo</label><input type="file" name="g_photo[]" id="g_photo" accept="image/*"><img src="{{asset($student->stud_guardians[$k]->photo !=null ? 'storage/'.$student->stud_guardians[$k]->photo : 'images/student_demo.png')}}" style="width:20px;padding-top:3px;"><span>{{$student->stud_guardians[$k]->photo !=null ? ' Photo Uploaded' : ' Not Uploaded'}}</span><input type="hidden" name="g_check[]" class="g_photo" value=""><input type="hidden" name="g_id[]" value="{{$student->stud_guardians[$k]->id}}"></div><hr></div></div>');
-			        		
-		k++;
-		@php
-		$k++;
-		while ($k < $count_guard) {
-		@endphp
-			$('#guard_info').append('<div id="row_g'+"{{$k}}"+'"><div class="row form-group "><a href="#" class="pull-right btn btn-sm btn-danger btn_remove" style="margin:10px 10px 0px 0px" id="'+"{{$k}}"+'"><i class="fa fa-minus"></i></a></div><div class="form-group row"><div class="col-sm-6 col-md-4 col-xs-6 error-di"><label >Relation <strong class="text-danger">*</strong></label><select name="relation[]" class="form-control " ><option value="">Select Relation</option><?php foreach($relations as $relation){?><option value="{{$relation->id}}" {{$student->stud_guardians[$k]->relation_id == $relation->id ? 'selected' : ''}}>{{$relation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="">Name <strong class="text-danger">*</strong></label><input type="text" name="g_name[]" class="form-control " value="{{$student->stud_guardians[$k]->name}}"></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="required">Mobile <strong class="text-danger">*</strong></label><input type="text" name="g_mobile[]" class="form-control " value="{{$student->stud_guardians[$k]->mobile}}"></div></div><div class="row form-group"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Work Status</label><select name="work_status[]" class="form-control"><option value="">Select Work Status</option><option value="1" {{$student->stud_guardians[$k]->work_type_id == '1' ? 'selected' : ''}}>Self Employed</option><option value="2" {{$student->stud_guardians[$k]->work_type_id == '2' ? 'selected' : ''}}>Job</option><option value="3" {{$student->stud_guardians[$k]->work_type_id == '3' ? 'selected' : ''}}>Retired</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Employment Type</label><select name="employment_type[]" class="form-control"><option value="">Select Employment Type</option><option value="0" {{$student->stud_guardians[$k]->employment_type == '0' ? 'selected' : ''}}>Government</option><option value="1" {{$student->stud_guardians[$k]->employment_type == '1' ? 'selected' : ''}}>Private</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Professtion Type</label><select name="profession_status[]" class="form-control"><option value="">Select Profession type</option><?php foreach($professions as $profession) { ?><option value="{{$profession->id}}" {{$student->stud_guardians[$k]->profession_id == $profession->id ? 'selected' : ''}}>{{$profession->name}}</option><?php  } ?></select></div></div><div class="form-group row"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Employer</label><input type="text" name="employer[]" class="form-control" value="{{$student->stud_guardians[$k]->employer}}"></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Designation</label><select class="form-control" name="designation_id[]"><option value="">Select Designation Name</option><?php foreach($designations as $designation) { ?> <option value="{{$designation->id}}" {{$designation->id == $student->stud_guardians[$k]->designation_id ? 'selected' : ''}}>{{$designation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label >Photo</label><input type="file" name="g_photo[]" id="g_photo" accept="image/*"><img src="{{asset($student->stud_guardians[$k]->photo !=null ? 'storage/'.$student->stud_guardians[$k]->photo : 'images/student_demo.png')}}" style="width:20px;padding-top:3px;"><span>{{$student->stud_guardians[$k]->photo !=null ? ' Photo Uploaded' : ' Not Uploaded'}}</span><input type="hidden" name="g_check[]" class="g_photo" value=""> <input type="hidden" name="g_id[]" value="{{$student->stud_guardians[$k]->id}}"></div><hr></div></div>');
-		@php
-		$k++;
-		}
-		@endphp
-		k = "{{$k}}";
+	$('#guard_info').append('<div id="row'+k+'"><div class="row form-group "><a href="#" class="pull-right btn btn-sm btn-success " style="margin:10px 10px 0px 0px" id="add_guar"><i class="fa fa-plus"></i> Add More</a></div><div class="form-group row"><div class="col-sm-6 col-md-4 col-xs-6 error-di"><label >Relation <strong class="text-danger">*</strong></label><select name="relation[]" class="form-control " ><option value="">Select Relation</option><?php foreach($relations as $relation){?><option value="{{$relation->id}}" {{$count_guard ==0 ? '' : ($student->stud_guardians[$k]->relation_id == $relation->id ? 'selected' : '')}}>{{$relation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="">Name <strong class="text-danger">*</strong></label><input type="text" name="g_name[]" class="form-control " value="{{$count_guard !='0' ? $student->stud_guardians[$k]->name : ''}}"></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="required">Mobile <strong class="text-danger">*</strong></label><input type="text" name="g_mobile[]" class="form-control " value="{{$count_guard !='0' ? $student->stud_guardians[$k]->mobile : ''}}"></div></div><div class="row form-group"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Work Status</label><select name="work_status[]" class="form-control"><option value="">Select Work Status</option><option value="1" {{$count_guard == 0 ? '' : ($student->stud_guardians[$k]->work_type_id == '1' ? 'selected' : '')}}>Self Employed</option><option value="2" {{$count_guard == 0 ? '' : ($student->stud_guardians[$k]->work_type_id == '2' ? 'selected' : '')}}>Job</option><option value="3" {{$count_guard == 0 ? '' : ($student->stud_guardians[$k]->work_type_id == '3' ? 'selected' : '')}}>Retired</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Employment Type</label><select name="employment_type[]" class="form-control"><option value="">Select Employment Type</option><option value="0" {{$count_guard == 0 ? '' : ($student->stud_guardians[$k]->employment_type == '0' ? 'selected' : '')}}>Government</option><option value="1" {{$count_guard == 0 ? '' : ($student->stud_guardians[$k]->employment_type == '1' ? 'selected' : '')}}>Private</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Professtion Type</label><select name="profession_status[]" class="form-control"><option value="">Select Profession type</option><?php foreach($professions as $profession) { ?><option value="{{$profession->id}}" {{$count_guard == 0  ? '' : ($student->stud_guardians[$k]->profession_id == $profession->id ? 'selected' : '')}}>{{$profession->name}}</option><?php  } ?></select></div></div><div class="form-group row"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Employer</label><input type="text" name="employer[]" class="form-control" value="{{$count_guard !=0 ? $student->stud_guardians[$k]->employer : ''}}"></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Designation</label><select class="form-control" name="designation_id[]"><option value="">Select Designation Name</option><?php foreach($designations as $designation) { ?> <option value="{{$designation->id}}" {{$count_guard == 0 ? '' : ($designation->id == $student->stud_guardians[$k]->designation_id ? 'selected' : '')}}>{{$designation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label >Photo</label><input type="file" name="g_photo[]" id="g_photo" accept="image/*"><img src="{{asset($count_guard == 0 ? '' : ($student->stud_guardians[$k]->photo !=null ? 'storage/'.$student->stud_guardians[$k]->photo : 'images/student_demo.png'))}}" style="width:20px;padding-top:3px;"><span>{{$count_guard == 0 ? 'Not Uploaded' :( $student->stud_guardians[$k]->photo !=null ? ' Photo Uploaded' : 'Not Uploaded')}}</span><input type="hidden" name="g_check[]" class="g_photo" value=""><input type="hidden" name="g_id[]" value="{{$count_guard != 0 ? $student->stud_guardians[$k]->id : ''}}"></div><hr></div></div>');
+		        		
+	k++;
+	@php
+	$k++;
+	while ($k < $count_guard) {
+	@endphp
+		$('#guard_info').append('<div id="row_g'+"{{$k}}"+'"><div class="row form-group "><a href="#" class="pull-right btn btn-sm btn-danger btn_remove" style="margin:10px 10px 0px 0px" id="'+"{{$k}}"+'"><i class="fa fa-minus"></i></a></div><div class="form-group row"><div class="col-sm-6 col-md-4 col-xs-6 error-di"><label >Relation <strong class="text-danger">*</strong></label><select name="relation[]" class="form-control " ><option value="">Select Relation</option><?php foreach($relations as $relation){?><option value="{{$relation->id}}" {{$count_guard ==0 ? '' : ($student->stud_guardians[$k]->relation_id == $relation->id ? 'selected' : '')}}>{{$relation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="">Name <strong class="text-danger">*</strong></label><input type="text" name="g_name[]" class="form-control " value="{{$count_guard !='0' ? $student->stud_guardians[$k]->name : ''}}"></div><div class="col-md-4 col-sm-6 col-xs-6 error-di"><label class="required">Mobile <strong class="text-danger">*</strong></label><input type="text" name="g_mobile[]" class="form-control " value="{{$count_guard !='0' ? $student->stud_guardians[$k]->mobile : ''}}"></div></div><div class="row form-group"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Work Status</label><select name="work_status[]" class="form-control"><option value="">Select Work Status</option><option value="1" {{$count_guard == 0 ? '' : ($student->stud_guardians[$k]->work_type_id == '1' ? 'selected' : '')}}>Self Employed</option><option value="2" {{$count_guard == 0 ? '' : ($student->stud_guardians[$k]->work_type_id == '2' ? 'selected' : '')}}>Job</option><option value="3" {{$count_guard == 0 ? '' : ($student->stud_guardians[$k]->work_type_id == '3' ? 'selected' : '')}}>Retired</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Employment Type</label><select name="employment_type[]" class="form-control"><option value="">Select Employment Type</option><option value="0" {{$count_guard == 0 ? '' : ($student->stud_guardians[$k]->employment_type == '0' ? 'selected' : '')}}>Government</option><option value="1" {{$count_guard == 0 ? '' : ($student->stud_guardians[$k]->employment_type == '1' ? 'selected' : '')}}>Private</option></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label class="">Professtion Type</label><select name="profession_status[]" class="form-control"><option value="">Select Profession type</option><?php foreach($professions as $profession) { ?><option value="{{$profession->id}}" {{$count_guard == 0  ? '' : ($student->stud_guardians[$k]->profession_id == $profession->id ? 'selected' : '')}}>{{$profession->name}}</option><?php  } ?></select></div></div><div class="form-group row"><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Employer</label><input type="text" name="employer[]" class="form-control" value="{{$count_guard !=0 ? $student->stud_guardians[$k]->employer : ''}}"></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label>Designation</label><select class="form-control" name="designation_id[]"><option value="">Select Designation Name</option><?php foreach($designations as $designation) { ?> <option value="{{$designation->id}}" {{$count_guard == 0 ? '' : ($designation->id == $student->stud_guardians[$k]->designation_id ? 'selected' : '')}}>{{$designation->name}}</option> <?php } ?></select></div><div class="col-md-4 col-xs-6 col-sm-6 error-di"><label >Photo</label><input type="file" name="g_photo[]" id="g_photo" accept="image/*"><img src="{{asset($count_guard == 0 ? '' : ($student->stud_guardians[$k]->photo !=null ? 'storage/'.$student->stud_guardians[$k]->photo : 'images/student_demo.png'))}}" style="width:20px;padding-top:3px;"><span>{{$count_guard == 0 ? 'Not Uploaded' :( $student->stud_guardians[$k]->photo !=null ? ' Photo Uploaded' : 'Not Uploaded')}}</span><input type="hidden" name="g_check[]" class="g_photo" value=""><input type="hidden" name="g_id[]" value="{{$count_guard != 0 ? $student->stud_guardians[$k]->id : ''}}"></div><hr></div></div>');
+	@php
+	$k++;
 	}
-
-	
-
+	@endphp
+	k = "{{$k}}";
 
 	// $('#guard_info').append('<div id="row'+k+'"><div class="row form-group "><a href="#" class="pull-right btn btn-sm btn-success " style="margin:10px 10px 0px 0px" id="add_guar"><i class="fa fa-plus"></i> Add More</a></div>'+html_div+'</div>');
 			        		

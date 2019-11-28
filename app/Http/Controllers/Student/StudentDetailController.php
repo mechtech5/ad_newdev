@@ -78,7 +78,7 @@ class StudentDetailController extends Controller
     }
     public function edit($id){
         $student = StudentMast::with(['stu_qual_details','stud_guardians','stud_addresses','stud_docs.doc_type'])->where('id', $id)->first();
-        
+       
         $qual_catgs = QualCatg::where('qual_catg_code', '!=',4)->get();
         $professions = ProfessionMast::all();
         $reservations = ReservationClass::all();
