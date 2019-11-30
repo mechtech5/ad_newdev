@@ -191,7 +191,7 @@ Route::group(['middleware' => ['role:lawcollege|teacher|student']], function() {
 	Route::resource('/lawschools', 'LawSchools\LawSchoolsController');
 	Route::resource('/student', 'Student\StudentDashboardController');
 	Route::resource('/student_detail', 'Student\StudentDetailController');
-	Route::post('/temporary_save', 'Student\StudentDetailController@temp_data');
+	// Route::post('/temporary_save', 'Student\StudentDetailController@temp_data');
 
 	Route::post('/student_filter', 'Student\StudentDetailController@student_filter')->name('student_filter');
 	Route::get('/upload_student', 'Student\StudentDashboardController@upload_student')->name('upload_student');

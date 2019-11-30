@@ -70,12 +70,15 @@ class StudentDetailController extends Controller
 	   
     	
     }
-    public function temp_data(Request $request){
 
-       $value = $request->session()->put('key', 'value');
-        print_r($value);
+    // public function temp_data(Request $request){  // session data store in future  this functionn used 
+
+    //    $value = $request->session()->put('key', 'value');
+    //     print_r($value);
       
-    }
+    // }
+
+
     public function edit($id){
         $student = StudentMast::with(['stu_qual_details','stud_guardians','stud_addresses','stud_docs.doc_type'])->where('id', $id)->first();
        
@@ -374,11 +377,14 @@ class StudentDetailController extends Controller
     }
 
     public function show($id){
-
+        $student =  StudentMast::with(['stu_qual_details','stud_guardians','stud_guardians.relation','stud_guardians.designation','stud_guardians.profession','stud_addresses','stud_docs.doc_type','qual_course','batch','reservation','religion','country','language'])->find($id);
+         // return $student;
+       
+        return view('student.student_detail.show',compact('student'));
     }
     public function student_filter(){
 
-          $students = StudentMast::with('qual_course','batch')
+        $students = StudentMast::with('qual_course','batch')
                                 ->where('batch_id',request()->batch_id)
                                 ->where('qual_year',request()->qual_year)
                                 ->where('semester',request()->semester)

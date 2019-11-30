@@ -30,4 +30,16 @@ class StudentMast extends Model
     public function stud_docs(){
         return $this->hasMany('App\Models\StudentDocs','s_id');
     }
+    public function reservation(){
+        return $this->belongsTo('App\Models\ReservationClass','reservation_class_id');
+    }
+    public function religion(){
+        return $this->belongsTo('App\Models\Religion','religion_id');
+    }
+    public function country(){
+        return $this->belongsTo('App\Models\Country','nationality_id');
+    }
+    public function language(){
+        return $this->belongsTo('App\Models\LanguageMast','language_id');
+    }
 }
