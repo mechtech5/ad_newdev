@@ -2,9 +2,7 @@
 @section('content')
 <section class="content">
 @include('student.header')
-<style >
-	
-</style>
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-default">
@@ -15,7 +13,7 @@
 				<form action="{{route('import_student')}}" method="post" enctype="multipart/form-data">
 					@csrf
 					<div class="row">
-						<div class="col-md-8" style="margin-top: 10px;">
+						<div class="col-md-8" style="margin-top: 10px;" >
 							<h4><b>Import Student</b></h4>
 							<br>
 							<label>Upload File</label>
@@ -94,7 +92,7 @@
 									</div>
 								</a>
 								<br>
-								<a href="#">
+								<a href="{{route('all_students_export')}}">
 									<div class="col-md-12">
 										<div class="info-box " >
 											<span class="info-box-icon bg-purple"><i class="fa fa-download"></i></span>
@@ -105,7 +103,7 @@
 									</div>
 								</a>
 
-								<a href="#">
+								<a href="{{route('s_batch_wise')}}">
 									<div class="col-md-12">
 										<div class="info-box " >
 											<span class="info-box-icon bg-purple"><i class="fa fa-download"></i></span>

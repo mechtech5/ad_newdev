@@ -13,21 +13,24 @@
 					<br>
 				
 					<div class="row">
-						<div class="col-md-9">
-							<span class="btn btn-md btn-primary btn-default " style="color:white"><b>All</b> (0
-							) </span>
-							<span class="btn btn-md btn-default"><b>Pending</b> (0)</span>
-							{{-- <span class="btn btn-md btn-default"><b>Upcoming</b> (0)</span> --}}
-							<span class="btn btn-md btn-default"><b>Completed</b> (0)</span>
+						<div class="col-md-6">
+							<select class="form-control" name="status" >
+								<option value="all" selected>--- All ---</option>
+								<option value="P">Pending</option>
+								<option value="A">Awaiting</option>
+								<option value="M">Missed</option>
+								<option value="C">Completed</option>
+								<option value="O">Closed</option> 
+							</select>						
 						</div>
-							@if(Auth::user()->parent_id == null )<div class="col-md-3 form-group">
-								<select class="pull-right form-control" name="todoChange">
-									{{-- <option>Everyone To-dos</option> --}}
-									<option value="1" {{$todoCategory == '1' ? 'selected' : ''}}>My To-dos</option>
-									<option value="0" {{$todoCategory == '0' ? 'selected' : ''}}>Member To-dos</option>	
-								</select>
-							
-							</div>
+							@if(Auth::user()->parent_id == null )
+								<div class="col-md-4 form-group pull-right">
+									<select class="form-control" name="todoChange">
+
+										<option value="0" {{$todoCategory == '0' ? 'selected' : ''}}>My To-dos</option>
+										<option value="1" {{$todoCategory == '1' ? 'selected' : ''}}>Member To-dos</option>	
+									</select>							
+								</div>
 							@endif
 					</div>
 					<br>
@@ -54,10 +57,12 @@
 		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-		$("select[name='todoChange']").on('change',function(){
-			var todo = $(this).val();
+
+		$("select[name='todoChange'], select[name='status'] ").on('change',function(){
+			var todoCategory = $("select[name='todoChange'] option:selected").val();
+			var status = $("select[name='status'] option:selected").val();
 			
-			if(todo ==1){
+			if(todoCategory ==1){
 				$('#todoHeader').text('My To-dos List');
 			}
 			else{
@@ -65,13 +70,32 @@
 			}
 			$.ajax({
 				type :'POST',
-				url : "{{route('todos.tablechange')}}",
-				data : {todo:todo},
+				url : "{{route('todo.category_table_change')}}",
+				data : {todoCategory:todoCategory,status:status},
 				success:function(data){
+					// console.log(data);
 					$('#todoTable').empty().html(data);
 				}
 			});
 		});
+
+		@if(Auth::user()->parent_id !=null)
+			$('select[name="status"]').on('change',function(){
+				var status = $(this).val();
+				console.log(status);
+				$.ajax({
+					type :'POST',
+					url : "{{route('todo.status_table_change')}}",
+					data : {status:status},
+					success:function(data){
+						 // console.log(data);
+						$('#todoTable').empty().html(data);
+					}
+				});
+			});
+		@endif
+
+
 
 		var todo = '1';
 		if(todo ==1){
@@ -80,6 +104,43 @@
 			else{
 				$('#todoHeader').text('Member To-dos List');
 			}
+
+		$('.complete').on('click',function(e){
+			e.preventDefault();
+			var todo_id = $(this).attr('id');
+			swal({
+			  title: "Are you sure?",
+			  text: "Once Completed, you will not be able continue working to this to-dos",
+			  icon: "warning",
+			  buttons: true,
+			  dangerMode: true,
+			})
+			.then((isConfirm) => {
+			  if (isConfirm) {
+			   	$.ajax({
+			   		type:'post',
+			   		url: "{{route('todos.todoUpdate')}}",
+			   		data:{id:todo_id},
+			   		success:function(res){
+			   			swal({
+			   				icon:'success',
+			   				title: res,
+			   				button: true,
+			   			}).then((ok)=> {
+			   				if(ok){
+			   					location.reload();
+			   				}
+			   			});
+			   		}
+			   	});
+			  } else {
+			    swal("Now you will continue work to this to-dos");
+			  }
+			});
+			// console.log(todo_id);
+		})
+
+
 
 	});
 </script>

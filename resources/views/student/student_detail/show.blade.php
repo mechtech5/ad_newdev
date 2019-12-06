@@ -432,8 +432,32 @@
 						   	</div>
 						  </div>
 						  <div id="tab05" class="tab-contents">
-						    <h2>Tab 5</h2>
-						    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius quos aliquam consequuntur, esse provident impedit minima porro! Laudantium laboriosam culpa quis fugiat ea, architecto velit ab, deserunt rem quibusdam voluptatum.</p>
+						    	<table class="table">
+						          		<thead>
+						          			<tr>
+						          				<th>Document Name</th>
+						          				<th>Uploaded File</th>
+						          			</tr>
+						          		</thead>
+						          		<tbody id="docs_type">
+						          			@foreach($student->stud_docs as $docs)
+						          			<tr>
+						          				<td>
+						          					<input value="{{$docs->doc_type->name}}" readonly class="form-control">
+						          				</td>
+						          				
+						          				<td>
+						          					@if($docs->doc_url !=null)
+						          						<a href="{{asset($docs->doc_url !=null ? 'storage/'.$docs->doc_url : 'images/student_demo.png')}}" target="_blank">{{$docs->doc_type->name}} Document</a>
+						          					@else 
+						          						Not Uploaded
+						          					@endif	
+						          		
+						          				</td>
+						          			</tr>
+						          			@endforeach
+						          		</tbody>
+						          	</table>
 						  </div>
 						
 					</div>

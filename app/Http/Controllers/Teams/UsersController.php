@@ -13,6 +13,7 @@ use App\VerifyUser;
 use App\Mail\UserMail;
 use App\Models\Status;
 use App\Models\RoleUser;
+use App\Models\CaseLawyer;
 class UsersController extends Controller
 {
 	public function index(){
@@ -154,6 +155,12 @@ class UsersController extends Controller
        $id =  request()->id;
        $user =  User::find($id);
        // return $member;
-       return response()->json($user);
+      $case = CaseLawyer::with(['case.client','case.court','case.casetype'])->where('user_id1',$id)->where('deallocate_date',null)->get();
+
+    //   CaseLawyer::with(['member','case' => function($query){
+				// $query->with(['client','court','casetype']);
+				// }])
+
+       return response()->json($case);
     }
 }

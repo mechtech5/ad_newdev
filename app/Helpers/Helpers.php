@@ -2,9 +2,10 @@
 namespace App\Helpers;
 
 use Auth;
-use App\Customer;
+use App\Models\Customer;
 use App\User;
-
+use App\Models\CaseMast;
+use App\Models\Todo;
 class Helpers 
 {
 	public static function deletedClients(){
@@ -87,5 +88,22 @@ class Helpers
 	
 	public static function isIfscCodeValid($ifsc_code){
 	     return (!preg_match("/^[A-Za-z]{4}0[A-Z0-9]{6}$/", $ifsc_code)) ? FALSE : TRUE;
+	}
+	public static function cases($del_client){
+		$query = CaseMast::with('casetype','client')
+                        ->where('case_mast.user_id',Auth::user()->id)                       
+                        ->whereNotIn('cust_id',$del_client);
+      
+        return $query;
+	}	
+	public static function user_all_todos(){
+		  $query = Todo::with(['created_user' => function($query){
+                 $query->select('id','name');
+            }])->with(['assigned_user' => function($query){
+                 $query->select('id','name');
+            }])->with(['relate_to_case'=>function($query){
+            	$query->select('case_id','case_title');
+            }]);
+            return $query;
 	}
 }

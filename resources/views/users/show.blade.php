@@ -63,6 +63,7 @@
 			url: "{{ route('login_history')}}",
 			data: {id:id},
 			success:function(res){
+
 				$('#login_time').empty();
 				$('#login_time').append("<td>"+(res.last_login_in_at !=null ? res.last_login_in_at : '')+"</td>");
 				$('#login_time').append("<td>"+(res.last_logout_in_at != null ? res.last_logout_in_at : '-' )+"</td>");
@@ -77,10 +78,18 @@
 			type:'POST',
 			url: "{{ route('member_cases')}}",
 			data: {id:id},
-			success:function(res){
-				
+			success:function(res){			
+				if(res.length != '0'){
+					$('#case-body').empty();
+					$.each(res,function(index,value){
+						$('#case-body').append('<a href="/case_mast/'+value.case_id+',case_diary"><div class="panel panel-default"><div class="panel-body " style="padding: 8px;"><h4 class="text-primary">'+value.case.case_title+'  <span class="pull-right">Reg. Date : '+value.case.case_reg_date+' </span> </h4><span>Client Name: '+value.case.client.cust_name+'</span><span class="pull-right">Court Name : '+value.case.court.court_type_desc+'</span></div></div></a>')
+					});
+				}
+				else{
+					$('#case-body').empty();
+					$('#case-body').html('<h4 class="text-center">No Records Found</h4>')					
+				}		
 				$('#cases_modal').modal('show');
-				// console.log(res.last_login_in_at);
 			}
 		});
 	}

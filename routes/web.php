@@ -161,7 +161,9 @@ Route::group(['middleware' => ['role:lawyer|lawcompany']], function() {
 
 
 	Route::resource('/todos', 'TodosController');
-	Route::post('/todos/todoTableChange', 'TodosController@todoTableChange')->name('todos.tablechange');
+	Route::post('/todos/category_table_change', 'TodosController@category_table_change')->name('todo.category_table_change');
+	Route::post('/status_table_change', 'TodosController@status_table_change')->name('todo.status_table_change');
+	Route::post('/todo_status_update', 'TodosController@todo_status_update')->name('todos.todoUpdate');
 	Route::get('/todos/form/create', 'TodosController@create_form')->name('todos.create_form');
 
 });
@@ -197,6 +199,11 @@ Route::group(['middleware' => ['role:lawcollege|teacher|student']], function() {
 	Route::get('/upload_student', 'Student\StudentDashboardController@upload_student')->name('upload_student');
 	Route::post('/import_student', 'Student\StudentDashboardController@importStudent')->name('import_student');
 	Route::get('/student_sample', 'Student\StudentDashboardController@student_sample')->name('student_sample');
+	Route::get('/all_students_export', 'Student\StudentDashboardController@all_students_export')->name('all_students_export');
+
+	Route::get('/s_batch_wise', 'Student\StudentDashboardController@export_batch_wise')->name('s_batch_wise');
+	Route::post('/batch_wise_export', 'Student\StudentDashboardController@batch_wise_export')->name('batch_wise_export');
+
 	
 	Route::resource('manage/batches', 'LawSchools\BatchMastController');
 

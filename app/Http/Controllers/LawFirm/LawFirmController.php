@@ -38,15 +38,15 @@ class LawFirmController extends Controller
 			$query->where('status',0);
 		},'members' => function($query){
 			$query->where('status','!=','S');
-		}])->find($id);
-	
+		}])->with('teams')->find($id);
 		
-		$allcases = CaseMast::with('casetype')->where('case_mast.user_id',$id)->whereNotIn('cust_id',$del_client)->get();
-
-		$onCases = CaseMast::with('casetype','client')->where('case_mast.user_id',$id)->where('case_mast.case_status','cg')->whereNotIn('cust_id',$del_client)->get();
-
-		$message = MessageTalk::where('recv_id',$id)->where('status',0)->get(); 
-
+		$cases = Helpers::cases($del_client)->get();
+        $running_cases = Helpers::cases($del_client)->where('case_status','cr')->get();
+        $closed_case = Helpers::cases($del_client)->where('case_status','cc')->get();
+        $direction_cases = Helpers::cases($del_client)->where('case_status','cd')->get();
+        $order_cases = Helpers::cases($del_client)->where('case_status','co')->get();
+        $transferred_cases = Helpers::cases($del_client)->where('case_status','ct')->get();
+	
 		$unbookings = Booking::where('user_id',$id)
 							->where('client_status',1)
 							->where('user_status',0)
@@ -60,16 +60,16 @@ class LawFirmController extends Controller
 						->where('user_status',0)
 						->get();
 
-		$cases = CaseMast::with('casetype','client')
-                        ->where('case_mast.user_id',$id)
-                        ->where('case_mast.case_status','cr')
-                        ->whereNotIn('cust_id',$del_client)
-                        ->get();
-                        				
-		$hearings = CaseDetail::with(['case','client'])->where('hearing_date','>=', date('Y-m-d') )->where('user_id',$id)->get();
-		$todos = Todo::where('status','P')->where('user_id',$id)->get();
 
-		return view('lawfirm.dashboard.index',compact('user','allcases','onCases','message','unbookings','booked','cancelled','hearings','todos','cases'));
+		// return $cancelled;
+		// $hearings = CaseDetail::with(['case','client'])->where('hearing_date','>=', date('Y-m-d') )->where('user_id',$id)->get();
+		
+		// $todos = Todo::where('status','P')->where('user_id',$id)->get();
+		// return $todos;
+		// return view('lawfirm.dashboard.index',compact('user','allcases','onCases','message','unbookings','booked','cancelled','hearings','todos','cases'));
+
+		return view('lawfirm.dashboard.index',compact('user','cases','running_cases','closed_case','order_cases','direction_cases','transferred_cases','unbookings','booked','cancelled','todos'));
+
 
 	}
 	public function show($id){

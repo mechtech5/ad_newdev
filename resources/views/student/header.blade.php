@@ -56,7 +56,7 @@
 						<i class="fa fa-cube"></i>
 						<h5>Manage Student</h5>
 					</div></a>
-					<a href="{{route('upload_student')}}" ><div class="col-md-2 col-sm-6 col-xs-11  btn-nav btn-mar" >
+					<a href="{{route('upload_student')}}" ><div class="col-md-2 col-sm-6 col-xs-11  btn-nav btn-mar {{Request()->segment(1) == 'upload_student' ? 'active-li' : ''}}" >
 						<i class="fa fa-cube"></i>
 						<h5>Upload Student</h5>
 					</div></a>

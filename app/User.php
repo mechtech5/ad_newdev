@@ -100,5 +100,11 @@ class User extends Authenticatable
     public function members(){
         return $this->hasMany('App\User','parent_id');
     }
+    public function teams(){
+        return $this->hasMany('App\Models\Team','user_id');
+    }
+    // public function todos(){
+    //     return $this->hasMany('App\Models\Todo','user_id1');
+    // }
 
 }

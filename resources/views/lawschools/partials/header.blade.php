@@ -33,6 +33,7 @@
   <script src="{{asset('tinymce/tinymce.min.js')}}"></script>
   <link rel="stylesheet" type="text/css" href="{{asset('css/dashboard/dashboard.css')}}"> 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' />
  <style type="text/css">
    .select2-container--default .select2-selection--multiple .select2-selection__choice {
       background-color: #247ae4;

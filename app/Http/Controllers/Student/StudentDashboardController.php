@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Auth;
 use App\Imports\StudentsImport;
 use App\Exports\StudentErrorExport;
+use App\Exports\StudentDetailExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use App\Models\StudentMast;
@@ -32,6 +33,18 @@ class StudentDashboardController extends Controller
     }
     public function student_sample(){
     	return Storage::download('/public/document/excel_format/student_sample_export.xlsx');;
+    }
+    public function all_students_export(){
+    	return Excel::download(new StudentDetailExport, 'student_details.xlsx');
+    	
+    }
+    public function export_batch_wise(){
+    	$batches = BatchMast::where('user_id',Auth::user()->id)->orderBy('name','DESC')->get();
+
+    	return view('student.upload_student.batch_wise_export',compact('batches'));
+    }
+    public function batch_wise_export(){
+    	return request()->all();
     }
     public function importStudent(Request $request){
     	 $this->validate($request,[

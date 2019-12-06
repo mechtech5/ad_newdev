@@ -2,12 +2,13 @@
 	<thead>
 		<tr>
 			<th>#</th>
-			<th>Title</th>
-			<th>Description</th>
+			<th>Title</th>	
+			<th>Relate to Case</th>		
 			<th>Start Date</th>								
-			<th>End Date</th>								
-			<th>Team Member</th>								
-			<th>Status</th>								
+			<th>End Date</th>	
+			<th>Status</th>		
+			<th>Assign Member Name</th>						
+			<th>Action</th>						
 		</tr>
 	</thead>
 	<tbody>
@@ -15,18 +16,18 @@
 		@foreach($todos as $todo)
 		<tr>
 			<td>{{++$count}}</td>
-			<td>{{  $todo->todos->title}}</td>
-			<td>{{ $todo->todos->description}}</td>
-			<td>{{ date('d-m-Y', strtotime($todo->todos->start_date))}}</td>
-			<td>{{ date('d-m-Y', strtotime($todo->todos->end_date))}}</td>
+			<td>{{ $todo->title}}</td>	
+			<td>{{$todo->relate_to_case !=null ? 'Yes' : 'No'}}</td>	
+			<td>{{ date('d-m-Y', strtotime($todo->start_date))}}</td>
+			<td>{{ date('d-m-Y', strtotime($todo->end_date))}}</td>
+			<td>{{ $todo->status == 'P' ? 'Pending' : ($todo->status == 'A' ? 'Awaiting' : ($todo->status == 'C' ? 'completed' : ($todo->status == 'M' ? 'Missed' : 'Closed')))}}</td>
+			<td>{{$todo->created_user->name}} <i class="fa fa-long-arrow-right" aria-hidden="true"></i> {{$todo->assigned_user->name}}</td>
 			<td>
-				
-				@foreach($todo->todos->users as $users)
-					<span>{{$users->user->name . ', '}}</span>
-				@endforeach
-			
+				<a href="{{route('todos.show',$todo->id)}}" title="show" class=" btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+				@if($todo->status == 'P' && $todo->user_id1 == Auth::user()->id)
+				<a class="complete btn btn-sm btn-success" id="{{$todo->id}}" title="completed"><i class="fa fa-check"></i></a>
+				@endif
 			</td>
-			<td></td>
 		</tr>
 		@endforeach
 	</tbody>

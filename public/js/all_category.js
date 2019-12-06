@@ -346,29 +346,30 @@ function team_users(team_id,auth_id,auth_name){
 }
 
 
-function case_members(case_id1,auth_id,auth_name){
+function case_members(case_id1,auth_id,auth_name,assignee_user_id){
 	case_id =case_id1;
 	$.ajax({
 		type:'GET',
 		url : "/case_member?case_id="+case_id,
 		success:function(res){
-			console.log(res);
+			// console.log(res);
 			if(case_id ==0){
 				if(res){
 					$('.members_todo').empty();
-					$('.members_todo').append('<option value="'+auth_id+'" selected="selected" locked="locked">'+auth_name+'</option>')
+					$('.members_todo').append('<option value="'+auth_id+'" '+(assignee_user_id == auth_id ? 'selected' : '')+' locked="locked">'+auth_name+'</option>')
 					$.each(res,function(key,value){
-						$('.members_todo').append('<option value="'+value.id+'" '+ (auth_id == value.id ? 'selected' : '') +' >'+value.name+'</option>');
+						$('.members_todo').append('<option value="'+value.id+'"  '+(assignee_user_id == value.id ? 'selected' : '')+'>'+value.name+'</option>');
 					});
 				}else{
 					$('.members_todo').empty();
 				}
 			}else{				
 				if(res){
+
 					$('.members_todo').empty();
 				
 					$.each(res,function(key,value){
-						$('.members_todo').append('<option value="'+value.user_id1+'" '+(auth_id == value.user_id1 ? 'selected' : '') +' '+(auth_id == value.user_id1 ? 'locked="locked"' : '') +'>'+value.member.name+'</option>');
+						$('.members_todo').append('<option value="'+value.user_id1+'" '+(assignee_user_id != '' ? (assignee_user_id ==value.user_id1 ? 'selected' : '')  : (auth_id == value.user_id1 ? 'selected' : ''))+' '+(auth_id == value.user_id1 ? 'locked="locked"' : '') +'>'+value.member.name+'</option>');
 					});
 				}else{
 					$('.members_todo').empty();
