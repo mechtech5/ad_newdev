@@ -38,6 +38,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
 
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' />
+  <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
   <style type="text/css">
    .select2-container--default .select2-selection--multiple .select2-selection__choice {
       background-color: #247ae4;
@@ -134,7 +135,21 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-bell-o"></i>
               <span class="label label-warning"></span>
-            </a>            
+            </a>   
+             <ul class="dropdown-menu">
+              <li class="header">You have 10 notifications</li>
+              <li>
+                <!-- inner menu: contains the actual data -->
+                <ul class="menu">
+                  <li>
+                    <a href="#">
+                      <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                    </a>
+                  </li>
+                </ul>
+            </li>
+           </ul>
+
           </li>
           <!-- Tasks: style can be found in dropdown.less -->
           <!-- <li class="dropdown tasks-menu">

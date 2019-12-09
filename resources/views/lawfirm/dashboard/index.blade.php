@@ -8,7 +8,7 @@
             <div class="inner">
               <h3>{{count($cases)}}</h3>
               <h4>Cases</h4>
-              <span>Running: {{count($running_cases)}} | Closed : {{count($closed_case)}} | Transfed/NOC : {{count($transferred_cases)}} | Direction Matter : {{count($direction_cases)}}  | Order Reserved : {{count($order_cases)}}</span>
+              <span>Running: {{count($running_cases)}} | Closed : {{count($closed_cases)}} | Transfed/NOC : {{count($transferred_cases)}} | Direction Matter : {{count($direction_cases)}}  | Order Reserved : {{count($order_cases)}}</span>
             </div>
             <div class="icon">
               <i class="fa fa-briefcase"></i>
@@ -54,7 +54,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>{{count($unbookings) + count($booked) + count($cancelled)}}</h3>
+              <h3>{{count($appointments)}}</h3>
               <h4>Appointment</h4>
               <span>Unconfirmed : {{count($unbookings)}} | Confirmed : {{count($booked)}} | Cancelled Request : {{count($cancelled)}} </span>
             </br><br>
@@ -84,11 +84,9 @@
       <!-- small box -->
         <div class="small-box" style="background-color: #23bab5; color: white">
           <div class="inner">
-            <h3>0</h3>
-
+            <h3>{{count($todos)}}</h3>
             <h4>To-dos</h4>
-            <span>Pending : 0 | Complete: 0</span>
-          </br></br>
+            <span>Pending : {{count($pen_todos)}} | Complete: {{count($com_todos)}} | Awaiting: {{count($awt_todos)}} | Closed: {{count($clos_todos)}} | Missed : {{count($mis_todos)}}</span>
           </div>
           <div class="icon">
             <i class="fa fa-list-alt"></i>
@@ -152,32 +150,35 @@
               <h3 class="box-title">Pending To-Dos</h3>
             </div>
             <!-- /.box-header -->
-            <div class="box-body" style="height: 200px;">
+            <div class="box-body" >
               <!-- See dist/js/pages/dashboard.js to activate the todoList plugin -->
-              <ul class="todo-list">
+              <ul class="todo-list" style="height: 200px;">
+                @foreach($pen_todos as $todo)
                 <li>
-                  <label>September 17, 2019</label>
+                  <span><b><span>Start Date: &nbsp;{{date('M d, Y' , strtotime($todo->start_date))}}</span>  <p class="pull-right">End Date: &nbsp; {{date('M d, Y' , strtotime($todo->end_date))}}</p></b></span>
                   <br>
-                  <span class="label label-success">2:00 PM</span>
-                  <span>Design a nice theme</span>
-                 
-                {{--   <!-- todo text -->
-                  <span class="text">Design a nice theme</span>
-                  <!-- Emphasis label -->
-                  <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
-                  <!-- General tools such as edit or delete--> --}}
+                  <span style="margin-right: 10px;"><b>Creator:</b> {{$todo->created_user->name}} </span> 
+                  <span><b>Assignee:</b> {{$todo->assigned_user->name}}</span>
+                  <br> 
+                  <span><b>Title: </b></span>
+                  
+                  <span class="text-capitalize">{{ str_limit($todo->title, $limit = 40, $end = '...') }}</span>
+                
                   <div class="tools">
-                    <i class="fa fa-edit"></i>
-                    <i class="fa fa-trash-o"></i>
+                    <a href="{{route('todos.show',$todo->id)}}"><i class="fa fa-eye text-primary fa-icon" ></i></a>
+                  @if($todo->user_id == Auth::user()->id)  <a href="{{route('todos.edit',$todo->id)}}"><i class="fa fa-edit text-success fa-icon" ></i></a>@endif
+                   {{--  <a href="{{route('todos.delete',$todo->id)}}"><i class="fa fa-trash-o fa-icon"></i></a> --}}
+
                   </div>
                 </li>
+                @endforeach
                
               </ul>
             </div>
             <!-- /.box-body -->
             <div class="box-footer clearfix no-border">
-              <button type="button" class="btn btn-default pull-right">More info <i class="fa fa-arrow-circle-right"></i></button>
-              <button type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add Todo</button>
+              <a href="{{route('todos.index')}}" class="btn btn-default pull-right">More info <i class="fa fa-arrow-circle-right"></i></a>
+               @if($todo->user_id == Auth::user()->id) <a href="{{route('todos.create')}}" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add Todo</a> @endif
             </div>
           </div>
         </div>
@@ -189,9 +190,9 @@
               <h3 class="box-title">Upcoming Hearing Dates</h3>
             </div>
             <!-- /.box-header -->
-            <div class="box-body" style="height: 200px;">
+            <div class="box-body">
               <!-- See dist/js/pages/dashboard.js to activate the todoList plugin -->
-              <ul class="todo-list">
+              <ul class="todo-list"  style="height: 200px;">
                 <li>
                   <label>September 17, 2019</label>
                   <br>
@@ -257,7 +258,11 @@
 
 
 	</section>
+<script>
+  
 
+
+</script>
 @endsection
 
 

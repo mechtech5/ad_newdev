@@ -165,6 +165,9 @@ Route::group(['middleware' => ['role:lawyer|lawcompany']], function() {
 	Route::post('/status_table_change', 'TodosController@status_table_change')->name('todo.status_table_change');
 	Route::post('/todo_status_update', 'TodosController@todo_status_update')->name('todos.todoUpdate');
 	Route::get('/todos/form/create', 'TodosController@create_form')->name('todos.create_form');
+	Route::get('/update_todo_missed', 'TodosController@update_todo_missed')->name('todos.update_todo_missed');
+	Route::get('/todo_closed_reason', 'TodosController@todo_closed_reason')->name('todos.todo_closed_reason');
+
 
 });
 /* ------------------Lawyer-------------------Lawcompany------------- */

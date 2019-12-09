@@ -18,5 +18,8 @@ class Todo extends Model
     public function relate_to_case(){
     	return $this->belongsTo('App\Models\CaseMast','case_id','case_id');
     }
-    
+    public function missed(){
+    	$this->status = 'M';
+    	$this->save();
+    }
 }

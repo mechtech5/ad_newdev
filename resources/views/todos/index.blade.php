@@ -11,7 +11,7 @@
 						@endif
 					</h4>
 					<br>
-				
+					{{-- <a href="{{route('todos.update_todo_missed')}}">Missed</a> --}}
 					<div class="row">
 						<div class="col-md-6">
 							<select class="form-control" name="status" >
@@ -122,6 +122,7 @@
 			   		url: "{{route('todos.todoUpdate')}}",
 			   		data:{id:todo_id},
 			   		success:function(res){
+			   			
 			   			swal({
 			   				icon:'success',
 			   				title: res,

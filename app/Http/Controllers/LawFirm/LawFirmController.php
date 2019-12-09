@@ -41,25 +41,30 @@ class LawFirmController extends Controller
 		}])->with('teams')->find($id);
 		
 		$cases = Helpers::cases($del_client)->get();
-        $running_cases = Helpers::cases($del_client)->where('case_status','cr')->get();
-        $closed_case = Helpers::cases($del_client)->where('case_status','cc')->get();
-        $direction_cases = Helpers::cases($del_client)->where('case_status','cd')->get();
-        $order_cases = Helpers::cases($del_client)->where('case_status','co')->get();
-        $transferred_cases = Helpers::cases($del_client)->where('case_status','ct')->get();
-	
-		$unbookings = Booking::where('user_id',$id)
-							->where('client_status',1)
-							->where('user_status',0)
-							->get();   
-		$booked = Booking::where('user_id',$id)
-						->where('client_status',1)
-						->where('user_status',1)
-						->get();
-		$cancelled = Booking::where('user_id',$id)
-						->where('client_status',0)
-						->where('user_status',0)
-						->get();
 
+        $running_cases = collect($cases)->where('case_status','cr');
+        $closed_cases = collect($cases)->where('case_status','cc');
+        $direction_cases = collect($cases)->where('case_status','cd');
+        $order_cases = collect($cases)->where('case_status','co');
+        $transferred_cases = collect($cases)->where('case_status','ct');
+        
+        if(Auth::user()->parent_id == null){
+        	$todos = Helpers::user_all_todos()->where('user_id',$id)->orderBy('id','DESC')->get();       	    	
+        }else{
+        	$todos = Helpers::user_all_todos()->where('user_id1',$id)->orderBy('id','DESC')->get();
+        }
+
+		$pen_todos 	= collect($todos)->where('status','P');
+		$com_todos 	= collect($todos)->where('status','C');
+		$mis_todos 	= collect($todos)->where('status','M');
+		$clos_todos = collect($todos)->where('status','O');
+		$awt_todos 	= collect($todos)->where('status','A');
+	
+		$appointments = Booking::where('user_id',$id)->get();
+		$unbookings = collect($appointments)->where('client_status', '1')->where('user_status','0');
+		$booked = collect($appointments)->where('client_status', '1')->where('user_status','1');
+		$cancelled = collect($appointments)->where('client_status', '0')->where('user_status','0');
+		
 
 		// return $cancelled;
 		// $hearings = CaseDetail::with(['case','client'])->where('hearing_date','>=', date('Y-m-d') )->where('user_id',$id)->get();
@@ -68,7 +73,7 @@ class LawFirmController extends Controller
 		// return $todos;
 		// return view('lawfirm.dashboard.index',compact('user','allcases','onCases','message','unbookings','booked','cancelled','hearings','todos','cases'));
 
-		return view('lawfirm.dashboard.index',compact('user','cases','running_cases','closed_case','order_cases','direction_cases','transferred_cases','unbookings','booked','cancelled','todos'));
+		return view('lawfirm.dashboard.index',compact('user','cases','running_cases','closed_cases','order_cases','direction_cases','transferred_cases','appointments','unbookings','booked','cancelled','todos','pen_todos','com_todos','mis_todos','clos_todos','awt_todos'));
 
 
 	}
@@ -263,4 +268,5 @@ class LawFirmController extends Controller
 		$lawcomp = User::find($users->parent_id);
 		return view('lawfirm.dashboard.company.profile',compact('lawcomp'));
 	}
+
 }

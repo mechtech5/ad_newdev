@@ -10,6 +10,7 @@ use App\Models\Team;
 use App\Models\UserTodo;
 use App\Models\CaseMast;
 use App\Helpers\Helpers;
+use App\Events\TodoNotifications;
 class TodosController extends Controller
 {
     public function __construct(){
@@ -21,7 +22,7 @@ class TodosController extends Controller
         if(Auth::user()->parent_id !=null){
             $todos = $this->query->where('user_id1',$id)->get();
         }else{
-            $todos = $this->query->where('user_id',$id)->where('user_id1',$id)->get();
+            $todos = $this->query->where('user_id',$id)->get();
         }
           // return $todos;
         $todoCategory = '0';
@@ -40,6 +41,7 @@ class TodosController extends Controller
     }
     public function store(Request $request){
         $data = $this->validation($request);
+
     	$todo = Todo::create($data);
  
         if($request->page_name == 'todo'){
@@ -125,7 +127,7 @@ class TodosController extends Controller
             if($status == 'all'){          
                 $todos = $this->query->where('user_id',$id)->where('user_id1',$id)->get();      
             }else{
-                $todos = $this->query->where('status', $status)->where('user_id',$id)->where('user_id1',$id)->get();            }
+                $todos = $this->query->where('status', $status)->where('user_id',$id)->get();            }
         }
         
     	return view('todos.todo_table',compact('todos'));
@@ -138,9 +140,26 @@ class TodosController extends Controller
         $todos = $this->query->where('status',$request->status)->where('user_id1',$id)->get();
         return view('todos.todo_table',compact('todos'));
         // return $request->all();
-
-    
     }
+    public function update_todo_missed(){
+       $todos = Todo::where('end_date', '<', now())->where('status','P')->get();
+       foreach ($todos as $todo) {
+            $todo->missed();
+       }
+
+    }
+    public function todo_closed_reason(){
+        $todo_id = request()->id;
+        $data = [
+            'missed_reason' => request()->reason,
+            'status' => 'O'
+        ];
+        Todo::find($todo_id)->update($data);
+
+        return "Todo Reason successfully submitted";
+    }
+
+
     // public function create_form(){
     //     $client_ids = Helpers::deletedClients();
     //     $id =Auth::user()->id;
