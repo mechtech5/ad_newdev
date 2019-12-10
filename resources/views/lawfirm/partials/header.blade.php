@@ -38,7 +38,6 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
 
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' />
-  <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
   <style type="text/css">
    .select2-container--default .select2-selection--multiple .select2-selection__choice {
       background-color: #247ae4;
@@ -134,21 +133,42 @@
           <li class="dropdown notifications-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-bell-o"></i>
-              <span class="label label-warning"></span>
-            </a>   
-             <ul class="dropdown-menu">
-              <li class="header">You have 10 notifications</li>
+              <span class="label label-danger">{{count(Auth::user()->unreadNotifications)}}</span>
+            </a>  
+            <ul class="dropdown-menu">
+              <li class="header">You have {{count(Auth::user()->unreadNotifications)}} notifications</li>
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
+                  @foreach(Auth::user()->unreadNotifications as $notification)
+
                   <li>
-                    <a href="#">
-                      <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                    </a>
+                    @if(snake_case(class_basename($notification->type)) == 'todo_awaiting_complete')
+                      @if($notification['data']['type'] == 'awaiting')
+                        <a href="{{route('todos.show',$notification['data']['id'].'_'.$notification->id)}}">
+                          <i class="fa fa-tasks text-yellow"></i> 
+                          <span> {{str_limit($notification['data']['title'], $limit = 30, $end = '...') }} </span>
+                          <br>
+                          <span>Todo completed by: {{$notification['data']['assignee']}}</span>
+                        </a>
+                      @else
+                        <a href="{{route('todos.show',$notification['data']['id'].'_'.$notification->id)}}">
+                          <i class="fa fa-tasks text-success"></i> 
+                          <span> {{str_limit($notification['data']['title'], $limit = 30, $end = '...') }} </span><br>
+                          <span>Your awaiting todo successfully approved</span>
+                         
+                        </a>
+                      @endif
+
+                    @endif
                   </li>
-                </ul>
+                  @endforeach
+
+                  <li>
+                </li>
+              </ul>
             </li>
-           </ul>
+          </ul>
 
           </li>
           <!-- Tasks: style can be found in dropdown.less -->

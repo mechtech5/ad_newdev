@@ -9,7 +9,11 @@
 						<a href="{{route('todos.index')}}" class="btn btn-sm btn-info pull-right">Back</a>
 						@if($todo->user_id == Auth::user()->id)
 						<a href="{{route('todos.edit',$todo->id)}}" class="pull-right btn btn-sm btn-success" style="margin-right: 10px;">Edit</a>
+						@if($todo->status == 'A')
+						<button class="pull-right btn btn-sm btn-primary btnChecked" style="margin-right: 10px;">Approve</button>
 						@endif
+						@endif
+
 					</h4>
 
 				</div>
@@ -110,6 +114,24 @@
 </section>
 <script >
 	$(document).ready(function(){
+		var noti_id = "{{$noti_id}}";
+ 		if(noti_id !=null){
+ 			$.ajax({
+				type:'GET',
+				url:"{{route('todos.todo_closed_reason')}}",
+				data:{id:id,reason:reason},
+							success:function(res){
+								swal({
+					   				icon:'success',
+					   				title: res,
+					   				button: true,
+					   			}).then((ok)=> {
+					   				if(ok){
+					   					location.reload();
+					   				}
+					   			});
+							}
+ 		}
 		$('#btnSubmit').on('click',function(e){
 			e.preventDefault();
 			var reason = $('#reason').val();
@@ -157,7 +179,29 @@
 			
 			$('.error').hide();
 			$('#reason').css("border-color","#d2d6de");
-		})
+		});
+
+		$('.btnChecked').on('click',function(e){
+			e.preventDefault();
+			var id = "{{$todo->id}}";
+			$.ajax({
+				type:'GET',
+				url:"{{route('todos.awaiting_todo_update')}}",
+				data:{id:id},
+				success:function(res){
+					swal({
+		   				icon:'success',
+		   				title: res,
+		   				button: true,
+		   			}).then((ok)=> {
+		   				if(ok){
+		   					location.reload();
+		   				}
+		   			});
+				}
+			});
+		});
+
 	});
 </script>
 @endsection

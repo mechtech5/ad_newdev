@@ -11,6 +11,7 @@ use App\Models\UserTodo;
 use App\Models\CaseMast;
 use App\Helpers\Helpers;
 use App\Events\TodoNotifications;
+use App\Notifications\TodoAwaitingComplete;
 class TodosController extends Controller
 {
     public function __construct(){
@@ -54,8 +55,14 @@ class TodosController extends Controller
     	
     }
     public function show($id){
-        $todo = $this->query->find($id);      
-        return view('todos.show',compact('todo'));
+        $arr = explode('_', $id);
+        $todo_id = $arr[0];
+        $noti_id = $arr[1];
+        $todo = $this->query->find($todo_id);      
+        return view('todos.show',compact('todo','noti_id'));
+    }
+    public function mark_as_read($id){
+        auth()->user()->unreadNotifications->where('id', $id)->markAsRead();
     }
     public function edit($id){
         $client_ids = Helpers::deletedClients();        
@@ -100,17 +107,29 @@ class TodosController extends Controller
 
 
     public function todo_status_update(){
-        $todo = Todo::find(request()->id);
+        $todo = Helpers::user_all_todos()->find(request()->id);
+
         if($todo->user_id == Auth::user()->id){
             $data['status'] = 'C';
+            $message = "Todo complete";
         }else{
             $data['status'] = 'A';
+            $message =  "Your To-dos submitted to creator. creator will response you soon...";
+            $user = User::find($todo->user_id);
+            $user->notify(new TodoAwaitingComplete($todo));
         }
-        $todo->update($data);
-        return "To-dos completed";
+        $todo->update($data);        
+        return $message;
     }
 
+    public function awaiting_todo_update(){
+        $todo = Helpers::user_all_todos()->find(request()->id);
+        $todo->update(['status' => 'C']);
+        $user = User::find($todo->user_id1);
+        $user->notify(new TodoAwaitingComplete($todo));  
 
+        return "Todo successfully checked";
+    }   
 
     public function category_table_change(Request $request){ 
         $todoCategory =  $request->todoCategory;

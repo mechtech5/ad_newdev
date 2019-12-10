@@ -178,7 +178,7 @@
             <!-- /.box-body -->
             <div class="box-footer clearfix no-border">
               <a href="{{route('todos.index')}}" class="btn btn-default pull-right">More info <i class="fa fa-arrow-circle-right"></i></a>
-               @if($todo->user_id == Auth::user()->id) <a href="{{route('todos.create')}}" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add Todo</a> @endif
+              @if(Auth::user()->parent_id == null )<a href="{{route('todos.create')}}" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add Todo</a> @endif
             </div>
           </div>
         </div>

@@ -167,6 +167,7 @@ Route::group(['middleware' => ['role:lawyer|lawcompany']], function() {
 	Route::get('/todos/form/create', 'TodosController@create_form')->name('todos.create_form');
 	Route::get('/update_todo_missed', 'TodosController@update_todo_missed')->name('todos.update_todo_missed');
 	Route::get('/todo_closed_reason', 'TodosController@todo_closed_reason')->name('todos.todo_closed_reason');
+	Route::get('/awaiting_todo_update', 'TodosController@awaiting_todo_update')->name('todos.awaiting_todo_update');
 
 
 });
