@@ -153,7 +153,7 @@ function city_fetch(state_code,city_code,city_id){
 function case_court_select(court_code, court_type, no_catg, cnr){
 	if(court_type =='1'){
 		$('#no_catg_div').show();
-		
+		$('#state_city_div').hide();
 		$('#no_div').hide();
 		$('#case_type_div').hide();
 		$('#court_code_div').hide();

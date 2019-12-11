@@ -1,6 +1,8 @@
 <div class="row">
 	<div class="col-md-12">			
-		<a href="{{route('case_hearing.create', ['case_id'=>$case_id.','.$page_name])}}" class="btn btn-md btn-primary pull-right" >Add Hearing</a>	
+		@if(Auth::user()->parent_id == null)
+			<a href="{{route('case_hearing.create', ['case_id'=>$case_id.','.$page_name])}}" class="btn btn-md btn-primary pull-right" >Add Hearing</a>	
+		@endif
 	</div>
 </div>
 <div class="row">
@@ -14,7 +16,7 @@
 				<th>Judge Name</th>
 				<th>Hearing Date</th>
 				<th>Start Time</th>
-				<th>Action</th>	
+				@if(Auth::user()->parent_id == null)<th>Action</th>	@endif
 			</tr>														
 		</thead>
 		<tbody>
@@ -43,11 +45,12 @@
 				<td>{{ $case_hearing->hearing_date}}</td>
 				<td>{{ $case_hearing->start_time}}</td>
 					
-				<td class="d-flex">
+			@if(Auth::user()->parent_id == null)	<td class="d-flex">
 					<form action="{{ route('case_hearing.destroy',['id'=>$case_hearing->case_tran_id])}}" method="POST" id="delform_{{ $case_hearing->case_tran_id}}">
 						@method('DELETE')
 							
-						<a href="{{ route('case_hearing.edit', $case_hearing->case_tran_id.','.$page_name) }}" ><i class="btn text-success fa fa-edit"></i></a>					
+						@if($case_hearing->hearing_date >= date('Y-m-d')) <a href="{{ route('case_hearing.edit', $case_hearing->case_tran_id.','.$page_name) }}" ><i class="btn text-success fa fa-edit"></i></a>	
+						@endif				
 					
 						<a href="javascript:$('#delform_{{ $case_hearing->case_tran_id}}').submit();" onclick="return confirm('Are you sure?')" class=""><i class="btn btn-sm text-danger fa fa-trash"></i></a >
 
@@ -55,6 +58,7 @@
 					</form>
 					</span>
 				</td>	
+				@endif
 			</tr>
 		@endforeach							
 		</tbody>

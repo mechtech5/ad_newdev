@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-12">
-		<a href="{{route('case_notes.create', ['case_id'=>$case_id.','.$page_name])}}" class="btn btn-md btn-primary pull-right">Add Notes</a>
+		@if(Auth::user()->parent_id == null)<a href="{{route('case_notes.create', ['case_id'=>$case_id.','.$page_name])}}" class="btn btn-md btn-primary pull-right">Add Notes</a>@endif
 	</div>
 </div>
 <div class="row">
@@ -14,7 +14,7 @@
 					<th>Case Notes</th>							
 					<th>Case Notes Date</th>
 					<th>Case Notes Type</th>
-					<th>Action</th>
+				@if(Auth::user()->parent_id == null)	<th>Action</th>@endif
 				</tr>								
 			</thead>
 			<tbody>
@@ -32,7 +32,7 @@
 							{{'Customer'}}
 						@endif
 					</td>
-					<td >						
+					@if(Auth::user()->parent_id == null)<td >						
 					<form action="{{route('case_notes.destroy', ['notes_id' =>$case_note->case_notes_id])}}" method="POST" id="delform_{{$case_note->case_notes_id}}">
 					@method('DELETE')
 						<a href="{{route('case_notes.edit', ['notes_id'=> $case_note->case_notes_id.','.$page_name])}}" ><i class="btn btn-sm text-success fa fa-edit"></i>
@@ -42,7 +42,7 @@
 
 					@csrf
 					</form>
-					</td>
+					</td>@endif
 				</tr>	
 				@endforeach	
 										

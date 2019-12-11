@@ -19,6 +19,7 @@ use App\Models\Customer;
 use App\Models\CaseMast;
 use App\Models\CaseType;
 use App\Models\CourtMast;
+use App\Models\CaseLawyer;
 use App\Models\CourtType;
 use App\Models\CatgMast;
 use App\Models\Booking;
@@ -39,8 +40,18 @@ class LawFirmController extends Controller
 		},'members' => function($query){
 			$query->where('status','!=','S');
 		}])->with('teams')->find($id);
-		
-		$cases = Helpers::cases($del_client)->get();
+
+		$case_assign = CaseLawyer::where('user_id1',$id)->where('deallocate_date',null)->get();
+        $case_id = collect($case_assign)->map(function($e){
+            return $e->case_id;
+        }); 
+        $hearings = CaseDetail::with(['case','client'])->where('hearing_date','>=', date('Y-m-d') )->whereIn('case_id',$case_id)->get();
+
+        $hearings = collect($hearings)->filter(function($e) use($id){
+            return in_array($id, json_decode($e->lawyer_names));
+        });
+
+		$cases = Helpers::cases($del_client)->whereIn('case_mast.case_id',$case_id)->get();
 
         $running_cases = collect($cases)->where('case_status','cr');
         $closed_cases = collect($cases)->where('case_status','cc');
@@ -73,7 +84,7 @@ class LawFirmController extends Controller
 		// return $todos;
 		// return view('lawfirm.dashboard.index',compact('user','allcases','onCases','message','unbookings','booked','cancelled','hearings','todos','cases'));
 
-		return view('lawfirm.dashboard.index',compact('user','cases','running_cases','closed_cases','order_cases','direction_cases','transferred_cases','appointments','unbookings','booked','cancelled','todos','pen_todos','com_todos','mis_todos','clos_todos','awt_todos'));
+		return view('lawfirm.dashboard.index',compact('user','cases','running_cases','closed_cases','order_cases','direction_cases','transferred_cases','appointments','unbookings','booked','cancelled','todos','pen_todos','com_todos','mis_todos','clos_todos','awt_todos','hearings'));
 
 
 	}
@@ -269,4 +280,17 @@ class LawFirmController extends Controller
 		return view('lawfirm.dashboard.company.profile',compact('lawcomp'));
 	}
 
+	public function upcoming_hearings(){
+		$id =Auth::user()->id;
+		$case_assign = CaseLawyer::where('user_id1',$id)->where('deallocate_date',null)->get();
+        $case_id = collect($case_assign)->map(function($e){
+            return $e->case_id;
+        }); 
+        $hearings = CaseDetail::with(['case','client'])->where('hearing_date','>=', date('Y-m-d') )->whereIn('case_id',$case_id)->get();
+
+        $hearings = collect($hearings)->filter(function($e) use($id){
+            return in_array($id, json_decode($e->lawyer_names));
+        });
+		return view('case_management.upcoming_hearings',compact('hearings'));
+	}
 }

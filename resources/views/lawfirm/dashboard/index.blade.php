@@ -91,7 +91,7 @@
           <div class="icon">
             <i class="fa fa-list-alt"></i>
           </div>
-          <a href="" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          <a href="{{route('todos.index')}}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
       </div>
         
@@ -193,34 +193,31 @@
             <div class="box-body">
               <!-- See dist/js/pages/dashboard.js to activate the todoList plugin -->
               <ul class="todo-list"  style="height: 200px;">
+                @foreach($hearings as $hearing)
                 <li>
-                  <label>September 17, 2019</label>
+                  <label>{{date('M d, Y', strtotime($hearing->hearing_date))}}</label>
                   <br>
-                  <span>Original Suit 1231 / 2019 - case</span>
-                 
-                  <!-- todo text -->
-                {{--   <span class="text">Design a nice theme</span>
-                  <!-- Emphasis label -->
-                  <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small> --}}
-                  <!-- General tools such as edit or delete-->
+                  <span>{{$hearing->case->case_title}}</span>
+              
                   <div class="tools">
-                    <i class="fa fa-edit"></i>
-                    <i class="fa fa-trash-o"></i>
+                    <a href="{{ route('case_mast.show', $hearing->case_id.',case_diary') }}"><i class="fa fa-eye text-primary fa-icon"></i></a>
+                   @if($hearing->user_id == Auth::user()->id)  <a href="{{route('case_hearing.edit', $hearing->case_tran_id.',case_diary')}}"><i class="fa fa-edit text-success fa-icon" ></i></a>@endif
                   </div>
                 </li>
+                @endforeach
                
               </ul>
             </div>
             <!-- /.box-body -->
             <div class="box-footer clearfix no-border">
-              <button type="button" class="btn btn-default pull-right">More info <i class="fa fa-arrow-circle-right"></i></button>
-              <button type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add Hearing</button>
+              <a href="{{route('upcomingHearings')}}" class="btn btn-default pull-right">More info <i class="fa fa-arrow-circle-right"></i></a>
+             {{-- @if(Auth::user()->parent_id == null ) <a href="" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add Hearing</a>@endif --}}
 
             </div>
           </div>
         </div>
       </div>
-    {{--   <div class="row">
+   {{--    <div class="row">
         <div class="col-md-12">
           <div class="box box-primary" style="height: 300px;">
             <div class="box-header">
@@ -253,9 +250,12 @@
             </div>
           </div>
         </div>
-      </div> --}}
-     {{-- @include('calendar.calendar_show') --}}
-
+      </div>
+     {{-- @include('calendar.calendar_show') --}} 
+    <br>
+        @include('calendar.calendar_show')
+    </br>
+     </div>
 
 	</section>
 <script>

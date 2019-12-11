@@ -2,16 +2,17 @@
 		<div class="col-md-12">
 			<div class="box">
 				<div class="box-body">
-					<div id="calendar"></div>
-					<br>
 					<div class="row">
 						<div class="col-md-12 text-center">
-							<label><i class="fa fa-square" style="color: #ff4566; height: 25px;width: 20px;"></i> Member To-dos</label>
-							<label><i class="fa fa-square" style="color: #fda503; height: 25px;width: 20px;"></i> Everyone To-dos</label>
-							<label><i class="fa fa-square" style="color: #8259ff; height: 25px;width: 20px;"></i> Hearing Morning Session</label>
-							<label><i class="fa fa-square" style="color: #0cab0a; height: 25px;width: 20px;"></i> Hearing Evening Session</label>
+							<label><i class="fa fa-square" style="color: #3c8dbc; height: 25px;width: 20px;"></i> My To-dos</label>
+							@if(Auth::user()->parent_id ==null )<label><i class="fa fa-square" style="color: #ff4566; height: 25px;width: 20px;"></i> Member To-dos</label>@endif
+							<label><i class="fa fa-square" style="color: #0cab0a; height: 25px;width: 20px;"></i> Hearing Morning Session</label>
+							<label><i class="fa fa-square" style="color: #8259ff; height: 25px;width: 20px;"></i> Hearing Evening Session</label>
 						</div>
 					</div>
+					<div id="calendar"></div>
+					<br>
+					
 				</div>
 			</div>
 		</div>
@@ -65,9 +66,9 @@
 			{	
 				id: '{{$todo->id}}',
 				title: '{{$todo->title}}',
-				
-				color: '{{$todo->user_id == $todo->team_id ? '#fda503': '#ff4566'}}',
-				url : '{{route('todos.show',$todo->id)}}',
+				description: 'Creator : {{$todo->created_user->name}} <br> Assignee: {{$todo->assigned_user->name}} <br>Status: {{$todo->status == 'P' ? 'Pending' : ''}} <br> Start Date: {{date('d-m-Y', strtotime($todo->start_date))}} <br> End Date: {{date('d-m-Y', strtotime($todo->end_date))}}',
+				color: '{{$todo->user_id1 == Auth::user()->id ? '#3c8dbc': '#ff4566'}}',
+				url : '{{route('todos.show',$todo->id.'_')}}',
 				start: '{{$todo->start_date}}',
 				end: '{{$todo->end_date}}',
 				
@@ -97,16 +98,17 @@
   
 
 		select: function(start, end, jsEvent, view) {
-         	
-			var start_date = moment(start).format('YYYY-MM-DD');
+			var show = "{{Auth::user()->parent_id}}" ;
+	         if(show == ''){
+					var start_date = moment(start).format('YYYY-MM-DD');
 
-			var end_date =  moment(end).subtract(1, 'days').format('YYYY-MM-DD');
-			// alert(end_date);
-	        $('.start_date').val(start_date);
-			$('.end_date').val(end_date);
-			$('.h_date').val(start_date);
-			$('#calendar_modal').modal({"backdrop": "static"});
-	         
+					var end_date =  moment(end).subtract(1, 'days').format('YYYY-MM-DD');
+					// alert(end_date);
+			        $('.start_date').val(start_date);
+					$('.end_date').val(end_date);
+					$('.h_date').val(start_date);
+					$('#calendar_modal').modal({"backdrop": "static"});
+		      }
 	    }
 
 	

@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-12">
-		<a href="{{route('case_doc.create',['case_id'=>$case_id.','.$page_name])}}" class="btn btn-md btn-primary pull-right">Add Document</a>
+		@if(Auth::user()->parent_id == null)<a href="{{route('case_doc.create',['case_id'=>$case_id.','.$page_name])}}" class="btn btn-md btn-primary pull-right">Add Document</a>@endif
 		
 	</div>
 </div>
@@ -36,11 +36,11 @@
 					<td >					
 					<form action="{{route('case_doc.destroy',['doc_id'=>$case_doc->doc_id])}}" method="POST" id="delform_{{$case_doc->doc_id}}">
 						@method('DELETE')
-							<a href="{{asset($case_doc->doc_url)}}" ><i class="btn btn-sm text-success fa fa-eye"></i>
-							</a>
+							@if(Auth::user()->parent_id == null)<a href="{{asset($case_doc->doc_url)}}" ><i class="btn btn-sm text-success fa fa-eye"></i>
+							</a>@endif
 							<a href="{{route('fileDownload',['doc_id' =>$case_doc->doc_id])}}"><i class="btn btn-sm text-info fa fa-download"></i></a>
 
-							<a href="javascript:$('#delform_{{$case_doc->doc_id}}').submit();" onclick="return confirm('Are you sure?')" ><i class="fa fa-trash btn btn-sm text-danger" ></i></a>
+							@if(Auth::user()->parent_id == null)<a href="javascript:$('#delform_{{$case_doc->doc_id}}').submit();" onclick="return confirm('Are you sure?')" ><i class="fa fa-trash btn btn-sm text-danger" ></i></a>@endif
 						@csrf
 					</form>
 		

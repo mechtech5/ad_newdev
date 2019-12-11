@@ -10,8 +10,7 @@ use App\Models\Team;
 use App\Models\UserTodo;
 use App\Models\CaseMast;
 use App\Helpers\Helpers;
-use App\Events\TodoNotifications;
-use App\Notifications\TodoAwaitingComplete;
+use App\Notifications\TodoNotifications;
 class TodosController extends Controller
 {
     public function __construct(){
@@ -44,12 +43,17 @@ class TodosController extends Controller
         $data = $this->validation($request);
 
     	$todo = Todo::create($data);
- 
+        $todo = Helpers::user_all_todos()->find($todo->id);
+
+        if($todo->user_id1 != Auth::user()->id){
+            $user = User::find($todo->user_id1);
+            $user->notify(new TodoNotifications($todo));
+        }
+
         if($request->page_name == 'todo'){
             return redirect()->route('todos.index')->with('success','To-dos created successfully');
         }
         else{
-
     	   return redirect()->back()->with('success','To-dos created successfully');
         }
     	
@@ -61,9 +65,16 @@ class TodosController extends Controller
         $todo = $this->query->find($todo_id);      
         return view('todos.show',compact('todo','noti_id'));
     }
-    public function mark_as_read($id){
-        auth()->user()->unreadNotifications->where('id', $id)->markAsRead();
+    public function mark_as_read(){
+      $notification =  auth()->user()->unreadNotifications->where('id', request()->noti_id);
+          if(count($notification) !=0){
+            $notification->markAsRead();
+            return "true";
+          }else{
+            return "false";
+          }
     }
+
     public function edit($id){
         $client_ids = Helpers::deletedClients();        
         $cases = CaseMast::with('casetype','client')
@@ -94,7 +105,7 @@ class TodosController extends Controller
         $data = $request->validate([
             'title'         => 'required|max:100',
             'description'   => 'nullable',
-            'start_date'    => 'required',
+            'start_date'    => 'required|after_or_equal:today',
             'end_date'      => 'required|after_or_equal:start_date',
             'user_id1'      => 'required',
             
@@ -115,8 +126,9 @@ class TodosController extends Controller
         }else{
             $data['status'] = 'A';
             $message =  "Your To-dos submitted to creator. creator will response you soon...";
+            $todo['status'] = 'A';
             $user = User::find($todo->user_id);
-            $user->notify(new TodoAwaitingComplete($todo));
+            $user->notify(new TodoNotifications($todo));
         }
         $todo->update($data);        
         return $message;
@@ -125,11 +137,13 @@ class TodosController extends Controller
     public function awaiting_todo_update(){
         $todo = Helpers::user_all_todos()->find(request()->id);
         $todo->update(['status' => 'C']);
+        $todo['status'] = 'C';
         $user = User::find($todo->user_id1);
-        $user->notify(new TodoAwaitingComplete($todo));  
+        $user->notify(new TodoNotifications($todo));  
 
         return "Todo successfully checked";
     }   
+
 
     public function category_table_change(Request $request){ 
         $todoCategory =  $request->todoCategory;
@@ -160,12 +174,13 @@ class TodosController extends Controller
         return view('todos.todo_table',compact('todos'));
         // return $request->all();
     }
-    public function update_todo_missed(){
-       $todos = Todo::where('end_date', '<', now())->where('status','P')->get();
-       foreach ($todos as $todo) {
+    public function update_todo_missed(){  //Crone 
+        $todos = Todo::where('end_date', '<', now())->where('status','P')->get();
+        foreach ($todos as $todo) {
             $todo->missed();
-       }
-
+            $user = User::find($todo->user_id1);
+            $user->notify(new TodoNotifications($todo));  
+        }
     }
     public function todo_closed_reason(){
         $todo_id = request()->id;

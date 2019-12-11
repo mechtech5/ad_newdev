@@ -14,16 +14,33 @@ class CalendarController extends Controller
 {
     public function index(){
     	
-    	$id = Auth::user()->id;
-    	$todos = Todo::where('status','P')->where('user_id',$id)->get();
+    	$id =Auth::user()->id;
+        if(Auth::user()->parent_id !=null){
+            $todos = Helpers::user_all_todos()->where('user_id1',$id)->where('status','P')->get();
+        }else{
+            $todos = Helpers::user_all_todos()->where('user_id',$id)->where('status','P')->get();
+        }
+        // return $todos;
     	$client_ids = Helpers::deletedClients();
         $cases = CaseMast::with('casetype','client')
-                        ->where('case_mast.user_id',$id)
-                        ->where('case_mast.case_status','cr')
-                        ->whereNotIn('cust_id',$client_ids)
-                        ->get();
-        $hearings = CaseDetail::with(['case','client'])->where('hearing_date','>=', date('Y-m-d') )->where('user_id',$id)->get();
+                    ->where('case_mast.user_id',$id)
+                    ->where('case_mast.case_status','cr')
+                    ->whereNotIn('cust_id',$client_ids)
+                  ->get();
 
+        $case_assign = CaseLawyer::where('user_id1',$id)->where('deallocate_date',null)->get();
+
+        // return $case_assign;
+        $case_id = collect($case_assign)->map(function($e){
+            return $e->case_id;
+        });
+        // return $case_id;
+        $hearings = CaseDetail::with(['case','client'])->where('hearing_date','>=', date('Y-m-d') )->whereIn('case_id',$case_id)->get();
+
+        $hearings = collect($hearings)->filter(function($e) use($id){
+            return in_array($id, json_decode($e->lawyer_names));
+        });
+       
     	return view('calendar.index', compact('todos','cases','hearings'));
     }
     public function case_member(){

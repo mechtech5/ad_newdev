@@ -33,7 +33,7 @@ Route::resource('/contact','ContactController');
 Route::get('/refreshCaptcha','ContactController@refreshCaptcha')->name('contact.refreshCaptcha');
 Route::get('/display_blogs/{id}', 'BlogController@show_blogs')->name('display_blogs');
 Route::get('/more_articles','BlogController@more_articles')->name('more_articles');
-
+Route::get('/notifications','HomeController@all_notifications')->name('all_notifications');
 
 
 
@@ -128,6 +128,7 @@ Route::group(['middleware' => ['role:admin']], function() {
 /* ------------------Lawyer-------------------Lawcompany------------- */
 Route::group(['middleware' => ['role:lawyer|lawcompany']], function() {
 	Route::resource('/lawfirm', 'LawFirm\LawFirmController');
+	Route::get('/upcoming_hearings','LawFirm\LawFirmController@upcoming_hearings')->name('upcomingHearings');
 
 	Route::get('/practicing_court', 'LawFirm\LawFirmController@practicing_court')->name('practicing_court.index');
 	Route::post('/practicing_court/store', 'LawFirm\LawFirmController@store_practicing_court')->name('practicing_court.store');
@@ -168,6 +169,8 @@ Route::group(['middleware' => ['role:lawyer|lawcompany']], function() {
 	Route::get('/update_todo_missed', 'TodosController@update_todo_missed')->name('todos.update_todo_missed');
 	Route::get('/todo_closed_reason', 'TodosController@todo_closed_reason')->name('todos.todo_closed_reason');
 	Route::get('/awaiting_todo_update', 'TodosController@awaiting_todo_update')->name('todos.awaiting_todo_update');
+
+	Route::get('/mark_as_read', 'TodosController@mark_as_read')->name('mark_as_read');
 
 
 });

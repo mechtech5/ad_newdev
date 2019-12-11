@@ -90,8 +90,7 @@ class Helpers
 	     return (!preg_match("/^[A-Za-z]{4}0[A-Z0-9]{6}$/", $ifsc_code)) ? FALSE : TRUE;
 	}
 	public static function cases($del_client){
-		$query = CaseMast::with('casetype','client')
-                        ->where('case_mast.user_id',Auth::user()->id)                       
+		$query = CaseMast::with('casetype','client')                 
                         ->whereNotIn('cust_id',$del_client);
       
         return $query;

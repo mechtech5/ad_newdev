@@ -14,6 +14,7 @@ use App\Models\CaseMast;
 use App\Models\CaseNotes;
 use App\Models\CaseDetail;
 use App\Models\CaseLawyer;
+use App\Notifications\CaseNotifications;
 class CaseHearingController extends Controller
 {
 	public function __construct(){
@@ -32,6 +33,8 @@ class CaseHearingController extends Controller
 
 	public function store(Request $request){
 		$data = $this->validation($request);
+		$lawyer_names = $data['lawyer_names'];
+
 		$data['lawyer_names'] = json_encode($data['lawyer_names']);
 		$data['judges_name'] = json_encode($data['judges_name']);
 
@@ -43,10 +46,11 @@ class CaseHearingController extends Controller
 			$end_date = $end_array->hearing_date;
 			$end_seq_no = $end_array->seq_no +1;
 			
-			
+			//hearing date check must be unique and greater than end date
 			$data['seq_no'] = $end_seq_no;
 
-			if($end_date > $data['hearing_date']){
+			if($end_date >= $data['hearing_date']){
+
 				$request->validate([
 					'hearing_date' => 'after:'.$end_date,
 				],
@@ -62,7 +66,18 @@ class CaseHearingController extends Controller
 		$case =CaseMast::find($data['case_id']); 
 		$data['cust_id'] = $case->cust_id;
 		
+
 		CaseDetail::create($data);
+
+		foreach ($lawyer_names as $val) {
+			if($val != Auth::user()->id){
+				$case['notify_type'] = 'case_hearing';
+				$case['date'] = $data['hearing_date'];
+				$user = User::find($val);
+				$user->notify(new CaseNotifications($case));
+			}
+		}
+
 		if($request->page_name == 'calendar'){
 			return redirect()->back()->with('success', 'Case Hearing Inserted Successfully');
 		}
@@ -104,10 +119,13 @@ class CaseHearingController extends Controller
 	public function update(Request $request ,$id){
 		
 		$data = $this->validation($request);
+		$lawyer_names = $data['lawyer_names'];
 		$data['lawyer_names'] = json_encode($data['lawyer_names']);
 		$data['judges_name'] = json_encode($data['judges_name']);
 
 		$case_hearing = CaseDetail::find($id);
+
+
 		// return $case_hearing->hearing_date;
 		if($case_hearing->hearing_date != $data['hearing_date'] ){
 			$prev_hearing = CaseDetail::where('case_id',$data['case_id'])->get();
@@ -127,6 +145,27 @@ class CaseHearingController extends Controller
 		
 		CaseDetail::where('case_tran_id',$id)->update($data);
 		
+		$case = CaseMast::find($request->case_id);
+		foreach ($lawyer_names as $val) {
+			if($case_hearing->hearing_date != $data['hearing_date']){
+				if($val != Auth::user()->id){
+
+					$case['notify_type'] = 'case_hearing';
+					$case['date'] = $data['hearing_date'];
+					$user = User::find($val);
+					$user->notify(new CaseNotifications($case));
+				}
+			}
+			if(!(in_array($val,json_decode($case_hearing->lawyer_names)))){
+				$case['notify_type'] = 'case_hearing';
+				$case['date'] = $data['hearing_date'];
+				$user = User::find($val);
+				$user->notify(new CaseNotifications($case));
+			}
+			
+		}		
+
+
 		return redirect()->route('case_mast.show', $request->case_id.','.$request->page_name)->with('success', 'Case Hearing Updated Successfully'); 
 		
 

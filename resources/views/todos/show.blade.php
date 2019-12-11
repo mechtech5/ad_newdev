@@ -114,23 +114,23 @@
 </section>
 <script >
 	$(document).ready(function(){
-		var noti_id = "{{$noti_id}}";
- 		if(noti_id !=null){
+		var noti_id = "{{$noti_id}}";		
+ 		if(noti_id !=''){
  			$.ajax({
 				type:'GET',
-				url:"{{route('todos.todo_closed_reason')}}",
-				data:{id:id,reason:reason},
-							success:function(res){
-								swal({
-					   				icon:'success',
-					   				title: res,
-					   				button: true,
-					   			}).then((ok)=> {
-					   				if(ok){
-					   					location.reload();
-					   				}
-					   			});
-							}
+				url:"{{route('mark_as_read')}}",
+				data:{noti_id:noti_id},
+				success:function(res){
+					if(res == 'true'){
+						console.log(res);
+						
+						location.reload();
+					}else{
+						console.log(res);
+					}
+		   		
+				}
+			});
  		}
 		$('#btnSubmit').on('click',function(e){
 			e.preventDefault();

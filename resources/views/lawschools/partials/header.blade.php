@@ -41,7 +41,7 @@
     .select2-selection__choice__remove,.select2-selection__clear{display:none !important;} 
 </style>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini fixed">
 <div class="wrapper">
 @php
 // $msg = \App\Models\MessageTalk::where('recv_id',Auth::user()->id)->where('status',0)->get();         

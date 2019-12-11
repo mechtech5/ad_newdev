@@ -10,48 +10,32 @@ use Illuminate\Notifications\Messages\MailMessage;
 class TodoNotifications extends Notification
 {
     use Queueable;
-
-    /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public $todo;
+  
+    public function __construct($todo)
     {
-        //
+        $this->todo = $todo;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toMail($notifiable)
+    public function toDatabase($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        return [
+            'id' => $this->todo->id,
+            'title' => $this->todo->title,
+            'creator' => $this->todo->created_user->name,
+            'assignee' => $this->todo->assigned_user->name,
+            'start_date' => $this->todo->start_date,
+            'end_date' => $this->todo->end_date,
+            'type' => $this->todo->status == 'A' ? 'awaiting' : ($this->todo->status == 'C' ? 'completed' : ($this->todo->status == 'P' ? 'pending' : 'missed'))
+
+        ];
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function toArray($notifiable)
     {
         return [

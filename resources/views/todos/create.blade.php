@@ -13,7 +13,7 @@
 					<form action="{{route('todos.store')}}" method="POST">
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="title">Title <span class="text-danger font-weight-bold">*</span></label></label>
+								<label for="title">Title <span class="text-danger font-weight-bold">*</span></label>
 								<input type="text" name="title" value="{{old('title')}}" class="form-control" required>
 								@error('title')
 									<span class="invalid-feedback text-danger" role="alert">
@@ -24,7 +24,7 @@
 						</div>
 						<div class="row form-group">
 							<div class="col-md-12">
-								<label for="description">Description</label></label>
+								<label for="description">Description</label>
 								<textarea type="text" name="description" class="form-control tinymce" rows="5" ></textarea> 
 								@error('description')
 									<span class="invalid-feedback text-danger" role="alert">
@@ -45,12 +45,12 @@
 								<input type="text" name="start_date" class="form-control start_date" date-format="yyyy-mm-dd" placeholder="{{date('Y-m-d')}}" value="{{old('start_date')}}" readonly="">
 								@error('start_date')
 									<span class="invalid-feedback text-danger">
-										<strong>{{"This field is required"}}</strong>
+										<strong>{{$message}}</strong>
 									</span>
 								@enderror 
 							</div>
 							<div class="col-md-6">
-								<label for="end_date">End Date <span class="text-danger font-weight-bold">*</span></label></label>
+								<label for="end_date">End Date <span class="text-danger font-weight-bold">*</span></label>
 								<input type="text" name="end_date" class="form-control end_date"  date-format="yyyy-mm-dd" placeholder="{{date('Y-m-d')}}" value="{{old('end_date')}}" readonly="">
 								@error('end_date')
 									<span class="invalid-feedback text-danger">

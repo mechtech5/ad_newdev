@@ -81,4 +81,7 @@ class HomeController extends FindlawyerController
       $subcategories = SubCatgMast::where('catg_code',request()->catg_code)->get(); 
       return response()->json($subcategories);
     }
+    public function all_notifications(){
+      return view('notifications.all_notifications');
+    }
 }

@@ -52,7 +52,7 @@
 /*    .select2-selection__choice__remove,.select2-selection__clear{display:none !important;} */
 </style>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini fixed">
 <div class="wrapper">
 @php
 
@@ -136,37 +136,22 @@
               <span class="label label-danger">{{count(Auth::user()->unreadNotifications)}}</span>
             </a>  
             <ul class="dropdown-menu">
-              <li class="header">You have {{count(Auth::user()->unreadNotifications)}} notifications</li>
+              <li class="header">You have {{count(Auth::user()->unreadNotifications)}} notifications </li>
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
                   @foreach(Auth::user()->unreadNotifications as $notification)
-
                   <li>
-                    @if(snake_case(class_basename($notification->type)) == 'todo_awaiting_complete')
-                      @if($notification['data']['type'] == 'awaiting')
-                        <a href="{{route('todos.show',$notification['data']['id'].'_'.$notification->id)}}">
-                          <i class="fa fa-tasks text-yellow"></i> 
-                          <span> {{str_limit($notification['data']['title'], $limit = 30, $end = '...') }} </span>
-                          <br>
-                          <span>Todo completed by: {{$notification['data']['assignee']}}</span>
-                        </a>
-                      @else
-                        <a href="{{route('todos.show',$notification['data']['id'].'_'.$notification->id)}}">
-                          <i class="fa fa-tasks text-success"></i> 
-                          <span> {{str_limit($notification['data']['title'], $limit = 30, $end = '...') }} </span><br>
-                          <span>Your awaiting todo successfully approved</span>
-                         
-                        </a>
-                      @endif
-
-                    @endif
+                    @include('notifications.'.snake_case(class_basename($notification->type)))
                   </li>
                   @endforeach
 
                   <li>
                 </li>
               </ul>
+            </li>
+            <li class="footer">
+              <a href="{{route('all_notifications')}}">All Notifications</a>
             </li>
           </ul>
 

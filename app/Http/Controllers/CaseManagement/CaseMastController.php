@@ -24,15 +24,14 @@ use App\Models\CaseLawyer;
 use App\Models\Team;
 use App\Models\UserTeam;
 use App\Helpers\Helpers;
-
+use App\Notifications\CaseNotifications;
 class CaseMastController extends Controller
 {
 	public function __construct(){
 		$this->middleware('auth');
 	}
 	public function index(){
-		$case_status = CaseStatusMast::all();
-	
+		$case_status = CaseStatusMast::all();	
 		return view('case_management.case.index',compact('case_status'));
 	}
 
@@ -73,6 +72,13 @@ class CaseMastController extends Controller
 					'user_id1' => $val,
 					'allocate_date' => date('Y-m-d'),
 				];
+
+				if($val != Auth::user()->id){
+					$case['notify_type'] = 'case_create';
+					$case['date'] = $case->case_reg_date;
+					$user = User::find($val);
+					$user->notify(new CaseNotifications($case));
+				}
 				CaseLawyer::create($data);
 			}
 		}
@@ -192,7 +198,10 @@ class CaseMastController extends Controller
 
 
 	public function destroy($id){
+
 		CaseMast::where('case_id',$id)->delete();
+		CaseDetail::where('case_id',$id)->delete();
+		
 		return redirect()->back()->with('success', 'Client case deleted successfully');
 	}
 	public function caseValidation($request){
