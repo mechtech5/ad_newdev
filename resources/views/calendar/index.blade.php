@@ -1,4 +1,4 @@
-@extends('lawfirm.layouts.main')
+@extends('lawfirm.main')
 @section('content')
 <section class="content">
 	@include('calendar.calendar_show')

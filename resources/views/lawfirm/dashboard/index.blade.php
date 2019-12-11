@@ -1,4 +1,4 @@
-@extends('lawfirm.layouts.main')
+@extends('lawfirm.main')
 @section('content')
 <section class="content">
 	<div class="row">
@@ -16,6 +16,7 @@
             <a href="{{route('case_mast.index')}}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
+        @if(Auth::user()->parent_id ==null)
         <div class="col-md-4 ">
           <!-- small box -->
           <div class="small-box bg-aqua">
@@ -32,6 +33,7 @@
             <a href="{{route('clients.index')}}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
+        @endif
         <!-- ./col -->
         <div class="col-md-4 ">
           <!-- small box -->
@@ -46,10 +48,14 @@
             </div>
             <a href="" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
+  
         </div>
-    </div>
-    <div class="row">
+   
+@if(Auth::user()->parent_id ==null)
 
+ </div>
+
+    <div class="row">
       <div class="col-md-4 ">
           <!-- small box -->
           <div class="small-box bg-blue">
@@ -65,7 +71,7 @@
             <a href="{{route('booking.index')}}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
-
+@endif
         <div class="col-md-4 ">
           <!-- small box -->
           <div class="small-box " style="color:white; background-color: #5c6a77">
@@ -96,6 +102,8 @@
       </div>
         
     </div>
+    @if(Auth::user()->parent_id ==null)
+
     <div class="row">
        <div class="col-md-4 ">
   
@@ -124,7 +132,7 @@
             </div>
             <a href="{{route('teams.index')}}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
-        </div>
+      </div>
      
       {{-- <div class="col-md-4 ">
       <!-- small box -->
@@ -141,7 +149,8 @@
           <a href="{{route('case_diary.index',['caseBtn' =>'ca'])}}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
       </div> --}}
-    </div>
+    </div>'
+@endif
       <div class="row">
         <div class="col-md-6" >
             <div class="box box-primary " style="height: 300px;">

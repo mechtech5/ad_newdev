@@ -1,4 +1,4 @@
-@extends('lawschools.layouts.main')
+@extends('lawschools.main')
 @section('content')
 <section class="content">
 @include('student.header')

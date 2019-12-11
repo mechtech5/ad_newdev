@@ -1,4 +1,4 @@
-@extends(Auth::user()->user_catg_id == 2 ? 'lawfirm.layouts.main' : (Auth::user()->user_catg_id == 3 ? 'lawfirm.layouts.main' : 'admin.main'))
+@extends(Auth::user()->user_catg_id == 2 ? 'lawfirm.main' : (Auth::user()->user_catg_id == 3 ? 'lawfirm.main' : 'admin.main'))
 @section('content')
 	<section class="content">
 		<div class="row">

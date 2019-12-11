@@ -1,4 +1,4 @@
-@extends('lawfirm.layouts.main')
+@extends('lawfirm.main')
 @section('content')
 <section class="content">
 	<div class="row">
@@ -6,7 +6,7 @@
 			<div class="box box-primary">
 				<div class="box-header with-border">
 					<h4 class="">Edit To-dos
-						<a href="{{route('todos.show',$todo->id)}}" class="btn btn-sm btn-info pull-right">Back</a>
+						<a href="{{route('todos.show',$todo->id.'_')}}" class="btn btn-sm btn-info pull-right">Back</a>
 					</h4>
 				</div>
 				<div class="box-body">
