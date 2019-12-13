@@ -1,3 +1,19 @@
+
+ .lead {
+      font-size: 16px;
+      font-weight: 300;
+  }
+  .media-object{
+      width: 58px;
+      height: 54px;
+  }
+  .media-object:hover{
+      
+  }
+
+
+
+
 #heading_lawyer {
 font-family: 'Open Sans',sans-serif;
     font-size: 21px;

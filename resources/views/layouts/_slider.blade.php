@@ -8,7 +8,7 @@
   <div class="carousel-inner" role="listbox">
     <div class="carousel-item active">
       <img class="d-block w-100" src='images/slider1.jpg' alt="First slide">
-       <!-- / <div class="carousel-caption">
+       / <div class="carousel-caption">
          <h3>text<br>
         text</h3>
         <p>peragraph</p> 
@@ -17,11 +17,11 @@
          <a href="ask-a-free-question" class="button button-primary button-large" style="background:#00000003; color:#fff; border-color:#fff; font-weight: bold; margin-left: 20px;">Ask a free question</a>
         </div>
         
-       </div> -->
+       </div>
     </div>
     <div class="carousel-item">
       <img class="d-block w-100" src="images/slider2.jpg" alt="Second slide">
-        <!-- //<div class="carousel-caption">
+        //<div class="carousel-caption">
         <h3>text<br>text
         </h3>
         <p>peragraph</p>
@@ -29,11 +29,11 @@
          <a href="legal-advice-phone" class="button button-default button-large">Talk to a lawyer</a>
          <a href="ask-a-free-question" class="button button-primary button-large" style="background:#00000003; color:#fff; border-color:#fff; font-weight: bold; margin-left: 20px;">Ask a free question</a> 
              </div>
-              </div>  -->
+              </div> 
     </div>
     <div class="carousel-item">
       <img class="d-block w-100" src="images/banner3.png" alt="Third slide">
-         <!-- <div class="carousel-caption">
+         <div class="carousel-caption">
           <h3>text<br>
           text</h3>
           <p>test</p>
@@ -41,7 +41,7 @@
            <a href="legal-advice-phone" class="button button-default button-large">Talk to a lawyer</a>
            <a href="ask-a-free-question" class="button button-primary button-large" style="background:#00000003; color:#fff; border-color:#fff; font-weight: bold; margin-left: 20px;">Ask a free question</a> 
                </div>
-                 </div>  -->
+                 </div> 
     </div>
   </div>
   <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
